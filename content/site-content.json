@@ -1,0 +1,556 @@
+{
+  "clinic": {
+    "name": "Kinetic Therapy Clinic",
+    "positioning": "Modern multidisciplinary care for pain, recovery, movement, and long-term health.",
+    "city": "Maple Ridge",
+    "province": "BC",
+    "country": "Canada",
+    "address": "#103 – 12005 238b Street, Maple Ridge, BC V4R 1W1",
+    "phone": "(604) 467-2113",
+    "email": "kineticphysio.maple@gmail.com",
+    "fax": "(604) 608-5505",
+    "janeBookingUrl": "https://kineticphysiotherapy.janeapp.com/",
+    "hours": [
+      {
+        "days": "Monday–Friday",
+        "hours": "8:00am–8:00pm",
+        "needsVerification": true
+      },
+      {
+        "days": "Saturday",
+        "hours": "9:00am–3:00pm",
+        "needsVerification": true
+      },
+      {
+        "days": "Sunday and Public Holidays",
+        "hours": "Closed",
+        "needsVerification": true
+      }
+    ],
+    "trustBadges": [
+      {
+        "label": "ICBC Accepted",
+        "needsVerification": true
+      },
+      {
+        "label": "WSBC Support",
+        "needsVerification": true
+      },
+      {
+        "label": "Direct Billing",
+        "needsVerification": true
+      },
+      {
+        "label": "Open Evenings",
+        "needsVerification": true
+      },
+      {
+        "label": "Multidisciplinary Care",
+        "needsVerification": false
+      }
+    ]
+  },
+  "navigation": [
+    {
+      "label": "Services",
+      "href": "/services"
+    },
+    {
+      "label": "ICBC",
+      "href": "/icbc-physio-maple-ridge"
+    },
+    {
+      "label": "Team",
+      "href": "/team"
+    },
+    {
+      "label": "About",
+      "href": "/about"
+    },
+    {
+      "label": "Resources",
+      "href": "/blog"
+    },
+    {
+      "label": "Contact",
+      "href": "/contact"
+    }
+  ],
+  "homepage": {
+    "hero": {
+      "eyebrow": "Kinetic Therapy Clinic Maple Ridge",
+      "titleLines": [
+        "Move better.",
+        "Recover stronger.",
+        "Live pain-free."
+      ],
+      "subtitle": "Multidisciplinary physiotherapy, massage therapy, chiropractic, kinesiology, acupuncture, and recovery-focused care in Maple Ridge.",
+      "primaryCta": "Book an Appointment",
+      "secondaryCta": "Explore Services"
+    },
+    "painPoints": [
+      {
+        "label": "Back or neck pain",
+        "recommended": [
+          "Physiotherapy",
+          "Chiropractic",
+          "Massage Therapy",
+          "Acupuncture"
+        ]
+      },
+      {
+        "label": "Car accident injury",
+        "recommended": [
+          "Physiotherapy",
+          "RMT",
+          "Kinesiology",
+          "Chiropractic",
+          "Acupuncture"
+        ]
+      },
+      {
+        "label": "Sports injury",
+        "recommended": [
+          "Physiotherapy",
+          "Kinesiology",
+          "Massage Therapy",
+          "Shockwave"
+        ]
+      },
+      {
+        "label": "Massage therapy",
+        "recommended": [
+          "Massage Therapy",
+          "Bodywork",
+          "Hot Stone",
+          "Lymphatic Drainage"
+        ]
+      },
+      {
+        "label": "Pregnancy-related pain",
+        "recommended": [
+          "Pregnancy Massage",
+          "Physiotherapy"
+        ]
+      },
+      {
+        "label": "Work injury",
+        "recommended": [
+          "Physiotherapy",
+          "Kinesiology",
+          "Massage Therapy"
+        ]
+      },
+      {
+        "label": "Chronic pain",
+        "recommended": [
+          "Physiotherapy",
+          "Acupuncture",
+          "Massage Therapy",
+          "Chiropractic"
+        ]
+      },
+      {
+        "label": "Foot pain / orthotics",
+        "recommended": [
+          "Physiotherapy",
+          "Orthotics",
+          "Bracing",
+          "Shockwave"
+        ]
+      },
+      {
+        "label": "Not sure what I need",
+        "recommended": [
+          "Contact the clinic"
+        ]
+      }
+    ]
+  },
+  "services": [
+    {
+      "slug": "physiotherapy-maple-ridge",
+      "name": "Physiotherapy",
+      "shortName": "Physio",
+      "category": "Rehab and Movement",
+      "description": "Personalized care for pain, injury recovery, mobility, strength, and return to daily activity.",
+      "heroTitle": "Physiotherapy in Maple Ridge for pain, injury, and movement recovery.",
+      "heroSubtitle": "Personalized physiotherapy care to help reduce pain, restore mobility, rebuild strength, and support your return to daily life, work, sport, and the activities that matter to you.",
+      "conditions": [
+        "Back pain",
+        "Neck pain",
+        "Shoulder pain",
+        "Knee pain",
+        "Sports injuries",
+        "Motor vehicle accident injuries",
+        "Post-surgical rehab",
+        "Mobility issues",
+        "Chronic pain"
+      ],
+      "process": [
+        "Assessment and history",
+        "Movement testing",
+        "Treatment plan",
+        "Care and education",
+        "Exercise plan and progress tracking"
+      ],
+      "relatedServices": [
+        "kinesiology-active-rehab-maple-ridge",
+        "shockwave-therapy-maple-ridge",
+        "orthotics-bracing-maple-ridge",
+        "icbc-physio-maple-ridge"
+      ],
+      "ctaLabel": "Book Physiotherapy"
+    },
+    {
+      "slug": "massage-therapy-maple-ridge",
+      "name": "Massage Therapy",
+      "shortName": "Massage",
+      "category": "Hands-on Therapy",
+      "description": "Therapeutic massage for muscle tension, soreness, stress, recovery, and relaxation.",
+      "heroTitle": "Massage therapy in Maple Ridge for tension, pain, recovery, and relaxation.",
+      "heroSubtitle": "Therapeutic massage care designed to support muscle tension, stress, soreness, injury recovery, and whole-body relaxation.",
+      "conditions": [
+        "Muscle tension",
+        "Stress",
+        "Soreness",
+        "Sports recovery",
+        "Prenatal comfort",
+        "Relaxation",
+        "General aches"
+      ],
+      "process": [
+        "Discuss your goals",
+        "Treatment plan",
+        "Hands-on massage therapy",
+        "Aftercare recommendations"
+      ],
+      "relatedServices": [
+        "pregnancy-massage-maple-ridge",
+        "lymphatic-drainage-massage-maple-ridge",
+        "hot-stone-massage-maple-ridge",
+        "bodywork-maple-ridge"
+      ],
+      "ctaLabel": "Book Massage Therapy"
+    },
+    {
+      "slug": "chiropractor-maple-ridge",
+      "name": "Chiropractic Care",
+      "shortName": "Chiro",
+      "category": "Pain and Wellness",
+      "description": "Care focused on spine, joint, mobility, and movement concerns.",
+      "heroTitle": "Chiropractic care in Maple Ridge for spine, joint, and movement concerns.",
+      "heroSubtitle": "Chiropractic care focused on pain relief, mobility, and improved function through assessment, manual techniques, soft tissue work, and patient education.",
+      "conditions": [
+        "Back pain",
+        "Neck pain",
+        "Headaches",
+        "Joint stiffness",
+        "Posture-related discomfort"
+      ],
+      "process": [
+        "Assessment",
+        "Treatment planning",
+        "Manual care when appropriate",
+        "Home care guidance"
+      ],
+      "relatedServices": [
+        "physiotherapy-maple-ridge",
+        "massage-therapy-maple-ridge",
+        "acupuncture-maple-ridge"
+      ],
+      "ctaLabel": "Book Chiropractic Care"
+    },
+    {
+      "slug": "kinesiology-active-rehab-maple-ridge",
+      "name": "Kinesiology / Active Rehab",
+      "shortName": "Kinesiology",
+      "category": "Rehab and Movement",
+      "description": "Movement-based rehab to rebuild strength, mobility, confidence, and function.",
+      "heroTitle": "Kinesiology and active rehab in Maple Ridge.",
+      "heroSubtitle": "Movement-based rehabilitation to help you rebuild strength, improve mobility, restore confidence, and return to daily life after injury or pain.",
+      "conditions": [
+        "ICBC active rehab",
+        "Strength rebuilding",
+        "Mobility issues",
+        "Sports performance",
+        "Return-to-work conditioning",
+        "Chronic pain support"
+      ],
+      "process": [
+        "Movement assessment",
+        "Goal setting",
+        "Exercise prescription",
+        "Progressive rehab plan",
+        "Ongoing adjustments"
+      ],
+      "relatedServices": [
+        "physiotherapy-maple-ridge",
+        "icbc-physio-maple-ridge",
+        "corrective-exercise-maple-ridge"
+      ],
+      "ctaLabel": "Book Active Rehab"
+    },
+    {
+      "slug": "acupuncture-maple-ridge",
+      "name": "Acupuncture & Traditional Chinese Medicine",
+      "shortName": "Acupuncture",
+      "category": "Pain and Wellness",
+      "description": "A calming, holistic approach to pain, stress, tension, and whole-body wellness.",
+      "heroTitle": "Acupuncture and Traditional Chinese Medicine in Maple Ridge.",
+      "heroSubtitle": "A calming, holistic approach to pain, stress, tension, sleep, and whole-body wellness using traditional acupuncture and supportive care.",
+      "conditions": [
+        "Pain-related concerns",
+        "Stress and tension",
+        "Headaches",
+        "Muscle and joint discomfort",
+        "Sleep and relaxation support",
+        "General wellness"
+      ],
+      "process": [
+        "Consultation",
+        "Personalized care plan",
+        "Acupuncture session",
+        "Supportive aftercare"
+      ],
+      "relatedServices": [
+        "physiotherapy-maple-ridge",
+        "massage-therapy-maple-ridge",
+        "chiropractor-maple-ridge"
+      ],
+      "ctaLabel": "Book Acupuncture"
+    },
+    {
+      "slug": "icbc-physio-maple-ridge",
+      "name": "ICBC Treatment Support",
+      "shortName": "ICBC",
+      "category": "Insurance and Injury Support",
+      "description": "Guided treatment support after motor vehicle accidents, with care options based on your needs.",
+      "heroTitle": "ICBC treatment support in Maple Ridge after a car accident.",
+      "heroSubtitle": "If you were injured in a motor vehicle accident, Kinetic Therapy can help you understand your treatment options and start a recovery plan with the right mix of care.",
+      "conditions": [
+        "Neck pain",
+        "Back pain",
+        "Whiplash-type symptoms",
+        "Shoulder pain",
+        "Headaches",
+        "Reduced mobility",
+        "General accident-related soreness"
+      ],
+      "process": [
+        "Bring your ICBC claim information",
+        "Get guided to the right service",
+        "Complete assessment",
+        "Start your recovery plan",
+        "Adjust care over time"
+      ],
+      "relatedServices": [
+        "physiotherapy-maple-ridge",
+        "massage-therapy-maple-ridge",
+        "kinesiology-active-rehab-maple-ridge",
+        "chiropractor-maple-ridge",
+        "acupuncture-maple-ridge"
+      ],
+      "ctaLabel": "Book ICBC Treatment",
+      "needsVerification": true
+    },
+    {
+      "slug": "pregnancy-massage-maple-ridge",
+      "name": "Pregnancy Massage",
+      "shortName": "Pregnancy Massage",
+      "category": "Women and Family Care",
+      "description": "Supportive massage designed for expecting mothers, comfort, relaxation, and pregnancy-related aches.",
+      "heroTitle": "Pregnancy massage in Maple Ridge for comfort, relaxation, and support.",
+      "heroSubtitle": "Gentle, supportive massage designed for expecting mothers, with positioning and treatment adapted for comfort during pregnancy.",
+      "conditions": [
+        "Low back discomfort",
+        "Hip tension",
+        "Leg swelling",
+        "Muscle tension",
+        "Stress",
+        "Relaxation"
+      ],
+      "process": [
+        "Discuss comfort and goals",
+        "Supportive positioning",
+        "Gentle therapeutic massage",
+        "Aftercare suggestions"
+      ],
+      "relatedServices": [
+        "massage-therapy-maple-ridge",
+        "physiotherapy-maple-ridge",
+        "lactation-support-maple-ridge"
+      ],
+      "ctaLabel": "Book Pregnancy Massage"
+    },
+    {
+      "slug": "shockwave-therapy-maple-ridge",
+      "name": "Shockwave Therapy",
+      "shortName": "Shockwave",
+      "category": "Pain and Wellness",
+      "description": "Shockwave therapy may be used as part of a treatment plan for certain tendon, muscle, and soft tissue concerns.",
+      "heroTitle": "Shockwave therapy in Maple Ridge for stubborn soft tissue pain.",
+      "heroSubtitle": "Shockwave therapy may be used as part of a treatment plan for certain tendon, muscle, and soft tissue concerns.",
+      "conditions": [
+        "Plantar fasciitis",
+        "Tendon-related pain",
+        "Soft tissue pain",
+        "Chronic muscle or tendon irritation"
+      ],
+      "process": [
+        "Assessment",
+        "Suitability check",
+        "Treatment session",
+        "Progress review"
+      ],
+      "relatedServices": [
+        "physiotherapy-maple-ridge",
+        "orthotics-bracing-maple-ridge",
+        "kinesiology-active-rehab-maple-ridge"
+      ],
+      "ctaLabel": "Ask About Shockwave Therapy",
+      "needsVerification": true
+    },
+    {
+      "slug": "orthotics-bracing-maple-ridge",
+      "name": "Orthotics, Bracing, and Compression",
+      "shortName": "Orthotics & Bracing",
+      "category": "Pain and Wellness",
+      "description": "Support movement, comfort, and recovery with orthotics, braces, compression garments, and related mobility solutions when appropriate.",
+      "heroTitle": "Orthotics, bracing, and compression support in Maple Ridge.",
+      "heroSubtitle": "Support your movement, comfort, and recovery with orthotics, braces, compression garments, and related mobility solutions when appropriate.",
+      "conditions": [
+        "Foot pain",
+        "Knee support",
+        "Post-injury support",
+        "Mobility support",
+        "Compression needs"
+      ],
+      "process": [
+        "Assessment",
+        "Recommendation",
+        "Fitting or referral process",
+        "Follow-up guidance"
+      ],
+      "relatedServices": [
+        "physiotherapy-maple-ridge",
+        "shockwave-therapy-maple-ridge",
+        "kinesiology-active-rehab-maple-ridge"
+      ],
+      "ctaLabel": "Book an Assessment",
+      "needsVerification": true
+    }
+  ],
+  "practitioners": [
+    {
+      "name": "Dilpreet Sandhu",
+      "title": "Registered Massage Therapist",
+      "category": "Massage Therapy",
+      "icbcAccepted": true,
+      "needsVerification": true
+    },
+    {
+      "name": "Jason Shi",
+      "title": "Registered Massage Therapist",
+      "category": "Massage Therapy",
+      "icbcAccepted": true,
+      "needsVerification": true
+    },
+    {
+      "name": "Mike Slade",
+      "title": "Body Worker",
+      "category": "Bodywork",
+      "needsVerification": true
+    },
+    {
+      "name": "Shanu Jadhwani",
+      "title": "Physiotherapist",
+      "category": "Physiotherapy",
+      "icbcAccepted": true,
+      "needsVerification": true
+    },
+    {
+      "name": "Chandni Mistry",
+      "title": "Physiotherapist",
+      "category": "Physiotherapy",
+      "schedule": "Fridays, 9:00am–7:00pm",
+      "icbcAccepted": true,
+      "needsVerification": true
+    },
+    {
+      "name": "Aishwariya Palsule",
+      "title": "Physiotherapist",
+      "category": "Physiotherapy",
+      "schedule": "Saturday, 8:00am–12:00pm",
+      "icbcAccepted": true,
+      "needsVerification": true
+    },
+    {
+      "name": "Ashwin Singh",
+      "title": "Kinesiologist",
+      "category": "Kinesiology",
+      "icbcAccepted": true,
+      "needsVerification": true
+    },
+    {
+      "name": "Ziming Zhao",
+      "title": "Acupuncturist",
+      "category": "Acupuncture & TCM",
+      "icbcAccepted": true,
+      "needsVerification": true
+    },
+    {
+      "name": "Stefanie Henderlin",
+      "title": "Registered Naturotherapy Practitioner / Certified Breastfeeding Specialist",
+      "category": "Naturotherapy and Lactation",
+      "needsVerification": true
+    }
+  ],
+  "testimonials": [
+    {
+      "quote": "I only have good things to say! The atmosphere upon entering is so friendly and welcoming.",
+      "name": "Sabrina Cheema",
+      "rating": 5,
+      "needsVerification": true
+    },
+    {
+      "quote": "Only physiotherapy clinic that ever actually improved my condition.",
+      "name": "Bruce Knipe",
+      "rating": 5,
+      "needsVerification": true
+    },
+    {
+      "quote": "Extremely professional and knowledgeable staff. The atmosphere is super welcoming as well.",
+      "name": "Shabdill Gill",
+      "rating": 5,
+      "needsVerification": true
+    }
+  ],
+  "faqs": [
+    {
+      "question": "Do I need a doctor's referral?",
+      "answer": "In many cases you can book directly, but requirements can vary depending on your insurance or claim. Contact the clinic if you are unsure.",
+      "needsVerification": true
+    },
+    {
+      "question": "Do you accept ICBC claims?",
+      "answer": "Kinetic Therapy offers ICBC-related treatment support. Coverage and eligibility can vary, so please bring your claim information and confirm details with the clinic.",
+      "needsVerification": true
+    },
+    {
+      "question": "Can I book online?",
+      "answer": "Yes. Use the Book Now button to book through Jane online booking.",
+      "needsVerification": false
+    },
+    {
+      "question": "Which service should I choose?",
+      "answer": "If you are not sure what to book, contact the clinic and the team can guide you toward an appropriate starting point.",
+      "needsVerification": false
+    },
+    {
+      "question": "Do you offer direct billing?",
+      "answer": "Direct billing options may be available. Please confirm your provider and coverage with the clinic before booking.",
+      "needsVerification": true
+    }
+  ]
+}

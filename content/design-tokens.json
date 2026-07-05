@@ -1,0 +1,45 @@
+{
+  "colors": {
+    "mint": "#72E0C0",
+    "deepTeal": "#0F8F7A",
+    "charcoal": "#111416",
+    "softBlack": "#1B2023",
+    "warmWhite": "#F7F5F0",
+    "white": "#FFFFFF",
+    "silver": "#D8DAD7",
+    "sage": "#DDEFE8",
+    "ctaOrange": "#F4A261"
+  },
+  "fonts": {
+    "heading": "Sora",
+    "body": "Inter",
+    "accent": "Space Grotesk"
+  },
+  "radius": {
+    "button": "999px",
+    "card": "28px",
+    "panel": "36px"
+  },
+  "shadows": {
+    "card": "0 16px 50px rgba(17, 20, 22, 0.08)",
+    "darkGlow": "0 24px 80px rgba(114, 224, 192, 0.10)",
+    "buttonHover": "0 10px 30px rgba(114, 224, 192, 0.35)"
+  },
+  "motion": {
+    "easePremium": [
+      0.22,
+      1,
+      0.36,
+      1
+    ],
+    "fadeUpDuration": 0.55,
+    "stagger": 0.08,
+    "heroMaxDurationSeconds": 1.5,
+    "respectReducedMotion": true
+  },
+  "layout": {
+    "containerMaxWidth": "1240px",
+    "sectionPaddingDesktop": "112px",
+    "sectionPaddingMobile": "72px"
+  }
+}

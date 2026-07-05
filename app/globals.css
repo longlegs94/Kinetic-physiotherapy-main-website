@@ -1,0 +1,79 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-sora: "Sora", system-ui, sans-serif;
+  --font-inter: "Inter", system-ui, sans-serif;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
+
+  body {
+    @apply bg-warm-white font-body text-charcoal antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-heading;
+    text-wrap: balance;
+  }
+
+  ::selection {
+    background-color: #72E0C0;
+    color: #111416;
+  }
+
+  /* Consistent, accessible focus ring across interactive elements */
+  a:focus-visible,
+  button:focus-visible,
+  input:focus-visible,
+  textarea:focus-visible,
+  select:focus-visible,
+  [tabindex]:focus-visible {
+    outline: 3px solid #0F8F7A;
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+}
+
+@layer components {
+  .container-kt {
+    @apply mx-auto w-full max-w-container px-5 sm:px-8;
+  }
+
+  /* Skip link for keyboard users */
+  .skip-link {
+    @apply sr-only;
+  }
+  .skip-link:focus {
+    @apply not-sr-only fixed left-4 top-4 z-[100] rounded-pill bg-charcoal px-5 py-3 text-sm font-semibold text-warm-white;
+  }
+}
+
+/* Kinetic motion line: dashed path draw. JS toggles the reveal. */
+.kinetic-path {
+  stroke-dasharray: var(--path-length, 1200);
+  stroke-dashoffset: var(--path-length, 1200);
+}
+.kinetic-path.is-drawn {
+  transition: stroke-dashoffset 1.6s cubic-bezier(0.22, 1, 0.36, 1);
+  stroke-dashoffset: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .kinetic-path {
+    stroke-dashoffset: 0 !important;
+    transition: none !important;
+  }
+}
