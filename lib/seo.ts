@@ -11,6 +11,8 @@ type PageMetaInput = {
   title: string;
   description: string;
   path?: string;
+  /** Optional explicit OG image. When omitted, the app-level generated
+   *  opengraph-image (app/opengraph-image.tsx) is inherited automatically. */
   ogImage?: string;
 };
 
@@ -22,7 +24,7 @@ export function pageMetadata({
   title,
   description,
   path = "/",
-  ogImage = "/images/og-default.jpg",
+  ogImage,
 }: PageMetaInput): Metadata {
   const url = `${SITE_URL}${path}`;
   return {
@@ -36,13 +38,13 @@ export function pageMetadata({
       siteName: SITE_NAME,
       locale: "en_CA",
       type: "website",
-      images: [{ url: ogImage, width: 1200, height: 630, alt: SITE_NAME }],
+      ...(ogImage ? { images: [{ url: ogImage, width: 1200, height: 630, alt: SITE_NAME }] } : {}),
     },
     twitter: {
       card: "summary_large_image",
       title,
       description,
-      images: [ogImage],
+      ...(ogImage ? { images: [ogImage] } : {}),
     },
   };
 }

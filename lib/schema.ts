@@ -37,7 +37,7 @@ export function localBusinessSchema() {
       latitude: geo.latitude,
       longitude: geo.longitude,
     },
-    image: `${SITE_URL}/images/og-default.jpg`,
+    image: `${SITE_URL}/opengraph-image`,
     priceRange: "$$",
     openingHoursSpecification: [
       {

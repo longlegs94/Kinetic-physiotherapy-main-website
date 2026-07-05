@@ -17,7 +17,7 @@ export function NotSureCTA({ className }: { className?: string }) {
           Not sure what to book?
         </span>
         <span className="block text-sm text-charcoal/60">
-          Tell us what's going on and we'll guide you.
+          Tell us what&apos;s going on and we&apos;ll guide you.
         </span>
       </span>
       <ArrowRight

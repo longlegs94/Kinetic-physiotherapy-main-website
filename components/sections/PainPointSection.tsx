@@ -12,7 +12,7 @@ export function PainPointSection() {
           title="What brings you in today?"
           align="center"
         >
-          Choose what you're dealing with and we'll guide you toward the right type of care.
+          Choose what you&apos;re dealing with and we&apos;ll guide you toward the right type of care.
         </SectionHeading>
         <div className="mt-12">
           <PainPointSelector />
