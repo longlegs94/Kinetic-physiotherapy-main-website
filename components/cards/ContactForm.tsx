@@ -6,7 +6,22 @@ import { clinic } from "@/lib/site-data";
 import { trackEvent } from "@/lib/analytics";
 import { cn } from "@/lib/utils";
 
-const categories = ["Booking", "Inquiry", "ICBC", "WSBC", "Complaint", "Other"];
+const categories = [
+  "Booking",
+  "Request a callback",
+  "Inquiry",
+  "ICBC",
+  "WSBC",
+  "Complaint",
+  "Other",
+];
+
+const CALLBACK_TIMES = [
+  "Anytime during clinic hours",
+  "Morning (8am–12pm)",
+  "Afternoon (12pm–5pm)",
+  "Evening (5pm–8pm)",
+];
 
 type Status = "idle" | "submitting" | "success" | "error";
 
@@ -24,6 +39,8 @@ const labelClass = "mb-1.5 block text-sm font-semibold text-charcoal";
 export function ContactForm() {
   const [status, setStatus] = useState<Status>("idle");
   const [error, setError] = useState<string>("");
+  const [category, setCategory] = useState<string>("Booking");
+  const wantsCallback = category === "Request a callback" || category === "Booking";
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -41,6 +58,9 @@ export function ContactForm() {
         `Email: ${data.get("email")}`,
         `Phone: ${data.get("phone")}`,
         `Category: ${data.get("category")}`,
+        ...(data.get("callback_time")
+          ? [`Best time to call: ${data.get("callback_time")}`]
+          : []),
         "",
         `${data.get("message")}`,
       ].join("\n");
@@ -136,7 +156,14 @@ export function ContactForm() {
         <label htmlFor="category" className={labelClass}>
           What is this about?
         </label>
-        <select id="category" name="category" required defaultValue="Booking" className={fieldClass}>
+        <select
+          id="category"
+          name="category"
+          required
+          value={category}
+          onChange={(event) => setCategory(event.target.value)}
+          className={fieldClass}
+        >
           {categories.map((c) => (
             <option key={c} value={c}>
               {c}
@@ -144,6 +171,21 @@ export function ContactForm() {
           ))}
         </select>
       </div>
+
+      {wantsCallback && (
+        <div>
+          <label htmlFor="callback_time" className={labelClass}>
+            Best time to call you back
+          </label>
+          <select id="callback_time" name="callback_time" defaultValue={CALLBACK_TIMES[0]} className={fieldClass}>
+            {CALLBACK_TIMES.map((t) => (
+              <option key={t} value={t}>
+                {t}
+              </option>
+            ))}
+          </select>
+        </div>
+      )}
 
       <div>
         <label htmlFor="message" className={labelClass}>

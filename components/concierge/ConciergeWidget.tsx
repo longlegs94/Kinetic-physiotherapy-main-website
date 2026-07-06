@@ -65,6 +65,17 @@ export function ConciergeWidget() {
     inputRef.current?.focus();
   }, [open]);
 
+  // Allow any part of the site (e.g. the FAQ "Ask our assistant" button)
+  // to summon the widget via a global event. The ref is refreshed every
+  // render (below, after handleOpen is defined) so the listener always
+  // calls the latest closure.
+  const handleOpenRef = useRef<() => void>(() => {});
+  useEffect(() => {
+    const listener = () => handleOpenRef.current();
+    window.addEventListener("kt:concierge:open", listener);
+    return () => window.removeEventListener("kt:concierge:open", listener);
+  }, []);
+
   useEffect(() => {
     if (!open) return;
     const onKeyDown = (event: KeyboardEvent) => {
@@ -171,6 +182,9 @@ export function ConciergeWidget() {
     event.preventDefault();
     void sendMessage(input);
   }
+
+  // Keep the global-open listener pointed at the latest closure.
+  handleOpenRef.current = handleOpen;
 
   const panelClassName = cn(
     "glass fixed inset-x-0 bottom-0 z-[80] flex max-h-[80vh] flex-col overflow-hidden rounded-t-panel",
