@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 800" fill="none" role="img" aria-label="Abstract illustration of movement and recovery with flowing mint lines">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="640" y2="800" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#DDEFE8"/>
+      <stop offset="0.55" stop-color="#F7F5F0"/>
+      <stop offset="1" stop-color="#CBEDE0"/>
+    </linearGradient>
+    <linearGradient id="mintline" x1="0" y1="0" x2="640" y2="0" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#72E0C0" stop-opacity="0.15"/>
+      <stop offset="0.5" stop-color="#0F8F7A"/>
+      <stop offset="1" stop-color="#72E0C0" stop-opacity="0.25"/>
+    </linearGradient>
+    <radialGradient id="glow1" cx="0.75" cy="0.22" r="0.5">
+      <stop stop-color="#72E0C0" stop-opacity="0.5"/>
+      <stop offset="1" stop-color="#72E0C0" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="glow2" cx="0.2" cy="0.85" r="0.5">
+      <stop stop-color="#0F8F7A" stop-opacity="0.28"/>
+      <stop offset="1" stop-color="#0F8F7A" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <rect width="640" height="800" fill="url(#bg)"/>
+  <rect width="640" height="800" fill="url(#glow1)"/>
+  <rect width="640" height="800" fill="url(#glow2)"/>
+
+  <!-- flowing kinetic ribbons -->
+  <path d="M-40 620 C 120 520, 200 700, 340 600 S 580 480, 700 560" stroke="url(#mintline)" stroke-width="5" stroke-linecap="round" opacity="0.9"/>
+  <path d="M-40 660 C 130 570, 220 740, 360 645 S 590 530, 700 610" stroke="#72E0C0" stroke-width="2.5" stroke-linecap="round" opacity="0.45"/>
+  <path d="M-40 580 C 110 480, 190 650, 330 560 S 570 440, 700 515" stroke="#0F8F7A" stroke-width="1.8" stroke-linecap="round" opacity="0.3"/>
+
+  <!-- upper motion arcs -->
+  <path d="M120 140 C 240 60, 420 60, 540 150" stroke="#72E0C0" stroke-width="2" stroke-linecap="round" opacity="0.5" stroke-dasharray="1 10"/>
+  <path d="M100 180 C 235 90, 425 90, 560 190" stroke="#0F8F7A" stroke-width="1.6" stroke-linecap="round" opacity="0.28" stroke-dasharray="1 14"/>
+
+  <!-- figure in motion: abstract runner formed of strokes -->
+  <g stroke="#111416" stroke-width="10" stroke-linecap="round" fill="none">
+    <!-- head -->
+    <circle cx="352" cy="256" r="26" fill="#111416" stroke="none"/>
+    <!-- torso -->
+    <path d="M344 300 C 330 350, 318 392, 300 432"/>
+    <!-- front arm -->
+    <path d="M338 322 C 372 340, 402 332, 428 306"/>
+    <!-- back arm -->
+    <path d="M334 330 C 306 356, 280 362, 248 352"/>
+    <!-- front leg -->
+    <path d="M300 432 C 330 470, 366 496, 402 508"/>
+    <!-- back leg -->
+    <path d="M300 432 C 268 474, 246 522, 240 570"/>
+  </g>
+  <!-- mint energy accents around the figure -->
+  <path d="M416 300 C 452 282, 480 276, 512 284" stroke="#72E0C0" stroke-width="5" stroke-linecap="round" opacity="0.85"/>
+  <path d="M408 508 C 444 516, 474 514, 506 500" stroke="#72E0C0" stroke-width="5" stroke-linecap="round" opacity="0.7"/>
+  <path d="M236 566 C 214 594, 204 618, 206 648" stroke="#0F8F7A" stroke-width="4" stroke-linecap="round" opacity="0.55"/>
+
+  <!-- floating nodes -->
+  <circle cx="516" cy="284" r="7" fill="#72E0C0"/>
+  <circle cx="510" cy="498" r="6" fill="#72E0C0" opacity="0.85"/>
+  <circle cx="207" cy="652" r="6" fill="#0F8F7A" opacity="0.7"/>
+  <circle cx="150" cy="220" r="4" fill="#0F8F7A" opacity="0.5"/>
+  <circle cx="560" cy="170" r="5" fill="#72E0C0" opacity="0.6"/>
+
+  <!-- subtle grid dots, lower left -->
+  <g fill="#111416" opacity="0.10">
+    <circle cx="80" cy="700" r="2.5"/><circle cx="104" cy="700" r="2.5"/><circle cx="128" cy="700" r="2.5"/><circle cx="152" cy="700" r="2.5"/>
+    <circle cx="80" cy="724" r="2.5"/><circle cx="104" cy="724" r="2.5"/><circle cx="128" cy="724" r="2.5"/><circle cx="152" cy="724" r="2.5"/>
+    <circle cx="80" cy="748" r="2.5"/><circle cx="104" cy="748" r="2.5"/><circle cx="128" cy="748" r="2.5"/><circle cx="152" cy="748" r="2.5"/>
+  </g>
+</svg>

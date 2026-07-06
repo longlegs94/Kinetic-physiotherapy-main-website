@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600" fill="none" role="img" aria-label="Line illustration of the rehab and exercise area with equipment">
+  <defs>
+    <linearGradient id="gbg" x1="0" y1="600" x2="600" y2="0" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#F7F5F0"/>
+      <stop offset="1" stop-color="#DDEFE8"/>
+    </linearGradient>
+  </defs>
+  <rect width="600" height="600" fill="url(#gbg)"/>
+
+  <!-- wall bars -->
+  <line x1="80" y1="80" x2="80" y2="440" stroke="#111416" stroke-width="3.5"/>
+  <line x1="180" y1="80" x2="180" y2="440" stroke="#111416" stroke-width="3.5"/>
+  <line x1="80" y1="120" x2="180" y2="120" stroke="#111416" stroke-width="3"/>
+  <line x1="80" y1="170" x2="180" y2="170" stroke="#111416" stroke-width="3"/>
+  <line x1="80" y1="220" x2="180" y2="220" stroke="#111416" stroke-width="3"/>
+  <line x1="80" y1="270" x2="180" y2="270" stroke="#111416" stroke-width="3"/>
+  <line x1="80" y1="320" x2="180" y2="320" stroke="#111416" stroke-width="3"/>
+  <line x1="80" y1="370" x2="180" y2="370" stroke="#111416" stroke-width="3"/>
+  <!-- resistance band on bars -->
+  <path d="M180 170 C 240 190, 240 250, 180 270" stroke="#72E0C0" stroke-width="5" stroke-linecap="round"/>
+
+  <!-- exercise ball -->
+  <circle cx="330" cy="400" r="72" fill="#72E0C0" opacity="0.9" stroke="#111416" stroke-width="3.5"/>
+  <path d="M262 386 C 300 366, 360 366, 398 386" stroke="#0F8F7A" stroke-width="3" opacity="0.6"/>
+  <path d="M266 420 C 304 440, 356 440, 394 420" stroke="#0F8F7A" stroke-width="3" opacity="0.6"/>
+
+  <!-- dumbbell rack -->
+  <line x1="440" y1="360" x2="560 " y2="360" stroke="#111416" stroke-width="3.5"/>
+  <line x1="448" y1="360" x2="448" y2="472" stroke="#111416" stroke-width="3.5"/>
+  <line x1="552" y1="360" x2="552" y2="472" stroke="#111416" stroke-width="3.5"/>
+  <line x1="440" y1="416" x2="560" y2="416" stroke="#111416" stroke-width="3.5"/>
+  <!-- dumbbells -->
+  <g stroke="#111416" stroke-width="3">
+    <rect x="458" y="336" width="12" height="22" rx="4" fill="#1B2023"/>
+    <rect x="486" y="336" width="12" height="22" rx="4" fill="#1B2023"/>
+    <line x1="470" y1="347" x2="486" y2="347" stroke-width="4"/>
+    <rect x="510" y="336" width="12" height="22" rx="4" fill="#0F8F7A"/>
+    <rect x="538" y="336" width="12" height="22" rx="4" fill="#0F8F7A"/>
+    <line x1="522" y1="347" x2="538" y2="347" stroke-width="4"/>
+    <rect x="462" y="392" width="12" height="22" rx="4" fill="#72E0C0"/>
+    <rect x="490" y="392" width="12" height="22" rx="4" fill="#72E0C0"/>
+    <line x1="474" y1="403" x2="490" y2="403" stroke-width="4"/>
+  </g>
+
+  <!-- balance mat -->
+  <rect x="222" y="480" width="216" height="14" rx="7" fill="#DDEFE8" stroke="#111416" stroke-width="3"/>
+
+  <!-- floor + kinetic accent -->
+  <line x1="40" y1="472" x2="560" y2="472" stroke="#111416" stroke-width="3" opacity="0.8"/>
+  <path d="M40 532 C 170 512, 300 552, 430 528 S 560 512, 578 524" stroke="#72E0C0" stroke-width="4" stroke-linecap="round" opacity="0.8"/>
+  <circle cx="578" cy="524" r="6" fill="#72E0C0"/>
+
+  <!-- motion arcs above ball -->
+  <path d="M270 300 C 310 280, 360 280, 396 302" stroke="#0F8F7A" stroke-width="2" stroke-dasharray="1 10" stroke-linecap="round" opacity="0.5"/>
+</svg>

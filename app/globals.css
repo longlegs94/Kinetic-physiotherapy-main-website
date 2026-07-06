@@ -24,6 +24,19 @@
     text-rendering: optimizeLegibility;
   }
 
+  /* Soft foggy ambient gradient layer behind the whole site */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background:
+      radial-gradient(48rem 32rem at 85% -5%, rgba(114, 224, 192, 0.10), transparent 60%),
+      radial-gradient(40rem 28rem at -10% 35%, rgba(221, 239, 232, 0.55), transparent 60%),
+      radial-gradient(44rem 30rem at 105% 80%, rgba(15, 143, 122, 0.06), transparent 60%);
+  }
+
   h1, h2, h3, h4, h5, h6 {
     @apply font-heading;
     text-wrap: balance;
@@ -50,6 +63,14 @@
 @layer components {
   .container-kt {
     @apply mx-auto w-full max-w-container px-5 sm:px-8;
+  }
+
+  /* Frosted-glass panel: blur + translucent fill + hairline border */
+  .glass {
+    @apply border border-white/60 bg-white/60 shadow-card backdrop-blur-md;
+  }
+  .glass-dark {
+    @apply border border-white/10 bg-white/[0.06] shadow-dark-glow backdrop-blur-md;
   }
 
   /* Skip link for keyboard users */

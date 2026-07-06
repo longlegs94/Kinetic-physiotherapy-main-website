@@ -14,11 +14,11 @@ export function FAQAccordion({ faqs }: { faqs: Faq[] }) {
   const reduced = useReducedMotionSafe();
 
   return (
-    <div className="divide-y divide-silver/70 overflow-hidden rounded-card border border-silver/60 bg-white">
+    <div className="space-y-3">
       {faqs.map((faq, i) => {
         const isOpen = open === i;
         return (
-          <div key={faq.question}>
+          <div key={faq.question} className="glass overflow-hidden rounded-card transition-colors hover:border-mint/60">
             <h3>
               <button
                 type="button"

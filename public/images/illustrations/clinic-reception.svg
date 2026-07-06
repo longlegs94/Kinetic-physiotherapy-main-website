@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600" fill="none" role="img" aria-label="Line illustration of the clinic reception and waiting area">
+  <defs>
+    <linearGradient id="rbg" x1="0" y1="0" x2="600" y2="600" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#F7F5F0"/>
+      <stop offset="1" stop-color="#DDEFE8"/>
+    </linearGradient>
+  </defs>
+  <rect width="600" height="600" fill="url(#rbg)"/>
+
+  <!-- window light -->
+  <rect x="330" y="80" width="190" height="230" rx="14" stroke="#111416" stroke-width="3" opacity="0.75"/>
+  <line x1="425" y1="80" x2="425" y2="310" stroke="#111416" stroke-width="3" opacity="0.75"/>
+  <path d="M345 300 L 505 95" stroke="#72E0C0" stroke-width="2" opacity="0.5"/>
+
+  <!-- reception desk -->
+  <path d="M70 430 H 340 V 330 C 340 316 330 306 316 306 H 94 C 80 306 70 316 70 330 Z" fill="#FFFFFF" stroke="#111416" stroke-width="3.5"/>
+  <line x1="70" y1="352" x2="340" y2="352" stroke="#DDEFE8" stroke-width="3"/>
+  <rect x="96" y="374" width="66" height="10" rx="5" fill="#72E0C0"/>
+  <rect x="96" y="396" width="42" height="8" rx="4" fill="#D8DAD7"/>
+
+  <!-- small sign on desk -->
+  <rect x="252" y="272" width="64" height="34" rx="8" fill="#111416"/>
+  <rect x="264" y="286" width="40" height="6" rx="3" fill="#72E0C0"/>
+
+  <!-- pendant lights -->
+  <line x1="150" y1="40" x2="150" y2="120" stroke="#111416" stroke-width="3"/>
+  <path d="M126 120 A 24 24 0 0 1 174 120 Z" fill="#72E0C0" stroke="#111416" stroke-width="3"/>
+  <line x1="240" y1="40" x2="240" y2="96" stroke="#111416" stroke-width="3"/>
+  <path d="M220 96 A 20 20 0 0 1 260 96 Z" fill="#DDEFE8" stroke="#111416" stroke-width="3"/>
+
+  <!-- waiting chair -->
+  <path d="M420 430 h 96 v -58 c 0 -10 -8 -18 -18 -18 h -60 c -10 0 -18 8 -18 18 Z" fill="#FFFFFF" stroke="#111416" stroke-width="3.5"/>
+  <path d="M428 354 v -44 c 0 -10 8 -18 18 -18 h 44 c 10 0 18 8 18 18 v 44" stroke="#111416" stroke-width="3.5" fill="#DDEFE8"/>
+  <line x1="432" y1="430" x2="432" y2="474" stroke="#111416" stroke-width="3.5"/>
+  <line x1="504" y1="430" x2="504" y2="474" stroke="#111416" stroke-width="3.5"/>
+
+  <!-- plant -->
+  <path d="M540 430 c -2 -46 8 -74 24 -96" stroke="#0F8F7A" stroke-width="3.5"/>
+  <path d="M544 402 c -14 -10 -22 -24 -22 -42 c 16 4 26 14 30 30" fill="#72E0C0" opacity="0.85"/>
+  <path d="M552 372 c 2 -18 10 -30 26 -38 c 2 16 -4 30 -16 40" fill="#0F8F7A" opacity="0.7"/>
+  <path d="M526 430 h 44 l -6 44 h -32 Z" fill="#FFFFFF" stroke="#111416" stroke-width="3.5"/>
+
+  <!-- floor line + kinetic accent -->
+  <line x1="40" y1="474" x2="560" y2="474" stroke="#111416" stroke-width="3" opacity="0.8"/>
+  <path d="M40 520 C 160 500, 280 540, 400 518 S 560 500, 580 512" stroke="#72E0C0" stroke-width="4" stroke-linecap="round" opacity="0.8"/>
+  <circle cx="580" cy="512" r="6" fill="#72E0C0"/>
+</svg>

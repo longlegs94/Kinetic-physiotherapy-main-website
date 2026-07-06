@@ -3,14 +3,27 @@ import { SectionHeading } from "@/components/ui/SectionHeading";
 import { ScrollReveal } from "@/components/motion/ScrollReveal";
 
 /**
- * Clinic experience collage. Placeholders now — swap in real clinic photos.
+ * Clinic experience collage. Illustrations are placeholders now — swap in
+ * real clinic photography.
  * TODO(assets): add reception, treatment room, and rehab-area photos to
- * /public/images/clinic and replace the placeholder tiles below.
+ * /public/images/clinic and replace the illustration tiles below.
  */
 const tiles = [
-  { label: "Reception & waiting area", span: "sm:col-span-2 sm:row-span-2" },
-  { label: "Treatment room", span: "" },
-  { label: "Rehab & exercise area", span: "" },
+  {
+    label: "Reception & waiting area",
+    src: "/images/illustrations/clinic-reception.svg",
+    span: "sm:col-span-2 sm:row-span-2",
+  },
+  {
+    label: "Treatment room",
+    src: "/images/illustrations/clinic-treatment.svg",
+    span: "",
+  },
+  {
+    label: "Rehab & exercise area",
+    src: "/images/illustrations/clinic-rehab.svg",
+    span: "",
+  },
 ];
 
 export function ClinicExperience() {
@@ -28,11 +41,16 @@ export function ClinicExperience() {
 
           <ScrollReveal className="grid grid-cols-2 gap-4">
             {tiles.map((tile) => (
-              <div
-                key={tile.label}
-                className={`flex aspect-square items-center justify-center rounded-card bg-gradient-to-br from-sage to-mint/30 p-4 text-center ${tile.span}`}
-              >
-                <span className="font-heading text-xs font-semibold uppercase tracking-[0.16em] text-charcoal/40">
+              <div key={tile.label} className={`glass overflow-hidden rounded-card p-1.5 ${tile.span}`}>
+                <div className="aspect-square overflow-hidden rounded-[22px]">
+                  <img
+                    src={tile.src}
+                    alt={`Illustration of the ${tile.label.toLowerCase()}`}
+                    className="h-full w-full rounded-[22px] object-cover"
+                    loading="lazy"
+                  />
+                </div>
+                <span className="block px-3 py-2 text-center text-xs font-semibold uppercase tracking-[0.14em] text-charcoal/50">
                   {tile.label}
                 </span>
               </div>

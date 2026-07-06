@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { FileText, UserCheck, HeartPulse } from "lucide-react";
+import { FileText, UserCheck, HeartPulse, Car } from "lucide-react";
 import { Section, Container } from "@/components/layout/Section";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { BookButton } from "@/components/ui/BookButton";
@@ -44,6 +44,10 @@ export function ICBCSection() {
             {/* Accuracy note: coverage/eligibility wording kept non-guaranteeing.
                 Verify specifics with the clinic before launch. */}
           </SectionHeading>
+
+          <div className="mt-8 hidden h-24 w-24 items-center justify-center rounded-panel bg-mint/20 text-deep-teal lg:flex">
+            <Car className="h-12 w-12" strokeWidth={1.5} aria-hidden="true" />
+          </div>
 
           <div className="relative">
             {/* connecting line */}

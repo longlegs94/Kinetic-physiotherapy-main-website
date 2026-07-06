@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600" fill="none" role="img" aria-label="Line illustration of a treatment room with therapy table">
+  <defs>
+    <linearGradient id="tbg" x1="600" y1="0" x2="0" y2="600" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#F7F5F0"/>
+      <stop offset="1" stop-color="#DDEFE8"/>
+    </linearGradient>
+  </defs>
+  <rect width="600" height="600" fill="url(#tbg)"/>
+
+  <!-- wall shelf with supplies -->
+  <line x1="90" y1="150" x2="290" y2="150" stroke="#111416" stroke-width="3.5"/>
+  <rect x="104" y="106" width="34" height="44" rx="6" fill="#FFFFFF" stroke="#111416" stroke-width="3"/>
+  <rect x="150" y="118" width="26" height="32" rx="5" fill="#72E0C0" stroke="#111416" stroke-width="3"/>
+  <path d="M196 150 v -26 a 14 14 0 0 1 28 0 v 26" fill="#DDEFE8" stroke="#111416" stroke-width="3"/>
+  <rect x="238" y="112" width="30" height="38" rx="6" fill="#FFFFFF" stroke="#111416" stroke-width="3"/>
+
+  <!-- rolled towels -->
+  <circle cx="120" cy="96" r="0" fill="none"/>
+
+  <!-- framed art with motion line -->
+  <rect x="360" y="90" width="150" height="110" rx="12" fill="#FFFFFF" stroke="#111416" stroke-width="3.5"/>
+  <path d="M378 160 C 408 130, 438 176, 468 146 S 496 132, 496 132" stroke="#72E0C0" stroke-width="4" stroke-linecap="round"/>
+  <circle cx="496" cy="132" r="5" fill="#0F8F7A"/>
+
+  <!-- treatment table -->
+  <path d="M110 372 H 470 C 484 372 494 362 494 348 C 494 334 484 324 470 324 H 110 C 96 324 86 334 86 348 C 86 362 96 372 110 372 Z" fill="#FFFFFF" stroke="#111416" stroke-width="3.5"/>
+  <!-- pillow -->
+  <rect x="104" y="298" width="76" height="26" rx="12" fill="#72E0C0" stroke="#111416" stroke-width="3"/>
+  <!-- table legs -->
+  <line x1="140" y1="372" x2="140" y2="470" stroke="#111416" stroke-width="3.5"/>
+  <line x1="440" y1="372" x2="440" y2="470" stroke="#111416" stroke-width="3.5"/>
+  <line x1="120" y1="470" x2="160" y2="470" stroke="#111416" stroke-width="3.5"/>
+  <line x1="420" y1="470" x2="460" y2="470" stroke="#111416" stroke-width="3.5"/>
+  <!-- crossbar -->
+  <line x1="140" y1="420" x2="440" y2="420" stroke="#D8DAD7" stroke-width="3"/>
+
+  <!-- stool -->
+  <circle cx="522" cy="404" r="0" fill="none"/>
+  <ellipse cx="524" cy="382" rx="30" ry="10" fill="#DDEFE8" stroke="#111416" stroke-width="3"/>
+  <line x1="524" y1="392" x2="524" y2="446" stroke="#111416" stroke-width="3.5"/>
+  <path d="M498 466 L 524 446 L 550 466" stroke="#111416" stroke-width="3.5" stroke-linecap="round"/>
+
+  <!-- floor + kinetic accent -->
+  <line x1="40" y1="484" x2="560" y2="484" stroke="#111416" stroke-width="3" opacity="0.8"/>
+  <path d="M40 528 C 180 508, 320 548, 440 524 S 560 508, 578 520" stroke="#72E0C0" stroke-width="4" stroke-linecap="round" opacity="0.8"/>
+  <circle cx="578" cy="520" r="6" fill="#72E0C0"/>
+</svg>

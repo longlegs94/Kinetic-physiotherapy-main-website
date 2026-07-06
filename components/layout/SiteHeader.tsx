@@ -49,15 +49,15 @@ export function SiteHeader() {
                 href={item.href}
                 aria-current={active ? "page" : undefined}
                 className={cn(
-                  "relative rounded-pill px-4 py-2 text-[15px] font-medium text-charcoal/80 transition-colors hover:text-charcoal",
+                  "group relative rounded-pill px-4 py-2 text-[15px] font-medium text-charcoal/80 transition-colors hover:text-charcoal",
                   active && "text-charcoal"
                 )}
               >
                 {item.label}
                 <span
                   className={cn(
-                    "absolute inset-x-4 -bottom-0.5 h-0.5 rounded-full bg-mint transition-transform duration-200 ease-premium",
-                    active ? "scale-x-100" : "scale-x-0"
+                    "absolute inset-x-4 -bottom-0.5 h-0.5 origin-left rounded-full bg-mint transition-transform duration-200 ease-premium",
+                    active ? "scale-x-100" : "scale-x-0 group-hover:scale-x-100"
                   )}
                 />
               </Link>

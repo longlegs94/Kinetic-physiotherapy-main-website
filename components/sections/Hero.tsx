@@ -88,22 +88,25 @@ export function Hero() {
           </motion.div>
         </motion.div>
 
-        {/* Right: image + floating cards */}
+        {/* Right: illustration in a glass frame + floating cards */}
         <div className="relative">
-          <div className="relative aspect-[4/5] overflow-hidden rounded-panel bg-gradient-to-br from-sage via-mint/30 to-deep-teal/20 shadow-card">
-            {/* TODO(assets): replace with real clinic hero image
+          <div className="glass relative aspect-[4/5] overflow-hidden rounded-panel p-2.5">
+            {/* TODO(assets): swap the illustration for a real clinic hero photo
                 (practitioner working with a patient, warm natural light). */}
-            <div className="absolute inset-0 flex items-center justify-center p-8 text-center">
-              <p className="font-heading text-sm font-semibold uppercase tracking-[0.2em] text-charcoal/40">
-                Clinic hero image
-              </p>
-            </div>
+            <motion.img
+              src="/images/illustrations/hero-kinetic.svg"
+              alt="Stylized figure in motion surrounded by flowing mint recovery lines"
+              className="h-full w-full rounded-[28px] object-cover"
+              initial={reduced ? false : { scale: 1.06 }}
+              animate={reduced ? {} : { scale: 1 }}
+              transition={{ duration: 1.6, ease: easePremium }}
+            />
           </div>
 
           {floatingCards.map((card, i) => (
             <motion.div
               key={card.label}
-              className="absolute rounded-2xl border border-silver/60 bg-warm-white/95 px-4 py-3 shadow-card backdrop-blur"
+              className="glass absolute rounded-2xl px-4 py-3"
               style={{
                 top: `${12 + i * 34}%`,
                 [i % 2 === 0 ? "left" : "right"]: "-6%",
