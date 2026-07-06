@@ -14,7 +14,10 @@ export type ConversionEvent =
   | "pain_point_click"
   | "icbc_cta_click"
   | "practitioner_book_click"
-  | "sticky_bar_click";
+  | "sticky_bar_click"
+  | "concierge_open"
+  | "concierge_book_click"
+  | "concierge_service_click";
 
 type EventParams = Record<string, string | number | boolean | undefined>;
 

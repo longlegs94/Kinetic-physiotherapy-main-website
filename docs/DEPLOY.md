@@ -21,6 +21,8 @@ Set these in **Vercel → Project → Settings → Environment Variables** (see 
 | `NEXT_PUBLIC_JANE_BOOKING_URL` | No | Overrides the Jane URL in content if set. |
 | `NEXT_PUBLIC_WEB3FORMS_KEY` | No | Free key from <https://web3forms.com>. Without it, the contact form falls back to opening the visitor's email app. |
 | `NEXT_PUBLIC_GA_ID` | No | Google Analytics 4 Measurement ID (`G-XXXXXXXXXX`). Without it, analytics is disabled. |
+| `ANTHROPIC_API_KEY` | No | Enables the AI booking concierge chat. Server-side only. Without it the widget shows contact options instead. |
+| `CONCIERGE_MODEL` | No | Model for the concierge; defaults to claude-opus-4-8. Set claude-haiku-4-5 for lower cost. |
 
 After changing env vars, redeploy so they take effect.
 
