@@ -39,20 +39,30 @@ Your live WordPress site is untouched until you do this step.
   Maple-Ridge-focused URLs to preserve SEO (see `docs/URL-MIGRATION` note below).
 - Confirm the contact form delivers to the clinic inbox.
 
-## URL migration (WordPress → new site)
-The new service URLs are local-SEO focused (e.g. `/physiotherapy-maple-ridge`). If your
-old WordPress pages used different paths, add redirects in `next.config.mjs`:
+## URL migration (WordPress → new site) — DONE
 
-```js
-async redirects() {
-  return [
-    { source: "/old-physio-path", destination: "/physiotherapy-maple-ridge", permanent: true },
-    // ...one per changed URL
-  ];
-}
-```
+301 redirects for the old `www.kineticphysio.ca` pages are already built into
+`next.config.mjs` (`wordpressRedirects`). They were mapped from the URLs Google had
+indexed, so ranking is preserved after cutover. Examples:
 
-List your current WordPress URLs and we can generate the full redirect map.
+| Old URL | New URL |
+|---|---|
+| `/therapists/` | `/team` |
+| `/maple-ridge-physio-massage-chiro-kinesiology/` | `/services` |
+| `/maple-ridge-physio-contact/` | `/contact` |
+| `/maple-ridge-physio-testimonials/` | `/testimonials` |
+| `/gallery/` | `/about` |
+| `/shop/` | `/orthotics-bracing-maple-ridge` |
+| Massage blog posts | `/massage-therapy-maple-ridge` |
+| Chiropractic blog post | `/chiropractor-maple-ridge` |
+| Other old blog posts | `/blog` |
+
+All verified to resolve to a live page (200). Old trailing-slash URLs normalize first,
+so they land via a short 308 chain — search engines follow this fine.
+
+**After cutover:** open Google Search Console → Coverage/Pages and watch for any old URL
+reporting 404. If one appears that isn't in the map, add a line to `wordpressRedirects`
+in `next.config.mjs` and redeploy.
 
 ## Local development
 ```bash
