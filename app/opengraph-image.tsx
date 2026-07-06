@@ -25,28 +25,40 @@ export default function OgImage() {
         }}
       >
         <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
-          <div
-            style={{
-              width: "64px",
-              height: "64px",
-              borderRadius: "16px",
-              background: "#72E0C0",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              color: "#111416",
-              fontSize: "40px",
-              fontWeight: 800,
-            }}
-          >
-            K
-          </div>
+          <svg width="72" height="72" viewBox="0 0 64 64">
+            <defs>
+              <linearGradient id="flow" x1="54" y1="6" x2="6" y2="50" gradientUnits="userSpaceOnUse">
+                <stop stopColor="#0F8F7A" />
+                <stop offset="0.45" stopColor="#2CC9A6" />
+                <stop offset="1" stopColor="#72E0C0" />
+              </linearGradient>
+              <linearGradient id="leg" x1="22" y1="34" x2="56" y2="62" gradientUnits="userSpaceOnUse">
+                <stop stopColor="#2CC9A6" />
+                <stop offset="1" stopColor="#0F8F7A" />
+              </linearGradient>
+            </defs>
+            <rect x="12" y="4" width="9" height="56" rx="4.5" fill="#F7F5F0" />
+            <path
+              d="M54 6 C40 13 29 25 21.5 34.5 C15.5 42 9.5 46.5 4.5 48.5"
+              stroke="url(#flow)"
+              strokeWidth="8.5"
+              strokeLinecap="round"
+              fill="none"
+            />
+            <path
+              d="M23 35 C32 39.5 43 49 53.5 59"
+              stroke="url(#leg)"
+              strokeWidth="8.5"
+              strokeLinecap="round"
+              fill="none"
+            />
+          </svg>
           <div style={{ display: "flex", flexDirection: "column" }}>
             <span style={{ color: "#F7F5F0", fontSize: "30px", fontWeight: 800, letterSpacing: "1px" }}>
               KINETIC
             </span>
-            <span style={{ color: "#72E0C0", fontSize: "16px", letterSpacing: "6px" }}>
-              THERAPY
+            <span style={{ color: "#72E0C0", fontSize: "18px", letterSpacing: "2px" }}>
+              Therapy
             </span>
           </div>
         </div>

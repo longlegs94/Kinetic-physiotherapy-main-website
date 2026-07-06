@@ -6,18 +6,22 @@ import { cn } from "@/lib/utils";
 import { useReducedMotionSafe } from "./useReducedMotionSafe";
 
 /**
- * Signature mint "kinetic" line.
- * 1. Draws itself in when scrolled into view (stroke-dashoffset via CSS).
- * 2. Then undulates in a slow, continuous wave (path `d` morph via Framer).
- * Reduced motion: static full line, no draw, no wave.
+ * Signature "motion line system" from the brand board: a soft, silk-like
+ * ribbon (blurred glow body + mid sheen + crisp line) that
+ * 1. draws in when scrolled into view, then
+ * 2. undulates in a slow continuous wave (path `d` morph).
+ * Reduced motion: static full ribbon, no draw, no wave.
  */
 
-/** Wave phases — identical command structure so the path can interpolate. */
+/** Wave phases — identical command structure so the paths can interpolate. */
 const WAVE_UP =
   "M0,60 C160,10 320,110 480,60 C640,10 800,110 960,60 C1120,10 1280,110 1440,60";
 const WAVE_DOWN =
   "M0,60 C160,110 320,10 480,60 C640,110 800,10 960,60 C1120,110 1280,10 1440,60";
 const FLAT = "M0,60 C160,60 320,60 480,60 C640,60 800,60 960,60 C1120,60 1280,60 1440,60";
+
+const WAVE_ANIM = { d: [WAVE_UP, WAVE_DOWN, WAVE_UP] };
+const WAVE_TRANSITION = { duration: 11, repeat: Infinity, ease: "easeInOut" as const };
 
 export function KineticMotionLine({
   className,
@@ -55,8 +59,6 @@ export function KineticMotionLine({
   }, []);
 
   // Once the draw-in transition (1.6s) finishes, hand over to the wave loop.
-  // The dash styles must be cleared first or the morphing path length would
-  // reintroduce gaps in the stroke.
   useEffect(() => {
     if (!drawn || reduced || variant !== "wave") return;
     const t = setTimeout(() => setWaving(true), 1700);
@@ -64,6 +66,8 @@ export function KineticMotionLine({
   }, [drawn, reduced, variant]);
 
   const d = variant === "wave" ? WAVE_UP : FLAT;
+  const softVisible = reduced || drawn;
+  const animateD = waving ? WAVE_ANIM : undefined;
 
   return (
     <svg
@@ -73,6 +77,45 @@ export function KineticMotionLine({
       preserveAspectRatio="none"
       aria-hidden="true"
     >
+      <defs>
+        <linearGradient id="kt-mint-gradient" x1="0" y1="0" x2="1440" y2="0" gradientUnits="userSpaceOnUse">
+          <stop stopColor="#72E0C0" stopOpacity="0.2" />
+          <stop offset="0.5" stopColor="#72E0C0" />
+          <stop offset="1" stopColor="#0F8F7A" stopOpacity="0.3" />
+        </linearGradient>
+        <filter id="kt-ribbon-blur" x="-20%" y="-150%" width="140%" height="400%">
+          <feGaussianBlur stdDeviation="7" />
+        </filter>
+        <filter id="kt-ribbon-blur-sm" x="-20%" y="-150%" width="140%" height="400%">
+          <feGaussianBlur stdDeviation="2.5" />
+        </filter>
+      </defs>
+
+      {/* soft glow body */}
+      <motion.path
+        d={d}
+        stroke="url(#kt-mint-gradient)"
+        strokeWidth={30}
+        strokeLinecap="round"
+        filter="url(#kt-ribbon-blur)"
+        className="transition-opacity duration-1000"
+        style={{ opacity: softVisible ? 0.22 : 0 }}
+        animate={animateD}
+        transition={waving ? WAVE_TRANSITION : undefined}
+      />
+      {/* mid sheen */}
+      <motion.path
+        d={d}
+        stroke="url(#kt-mint-gradient)"
+        strokeWidth={12}
+        strokeLinecap="round"
+        filter="url(#kt-ribbon-blur-sm)"
+        className="transition-opacity duration-1000"
+        style={{ opacity: softVisible ? 0.35 : 0 }}
+        animate={animateD}
+        transition={waving ? WAVE_TRANSITION : undefined}
+      />
+      {/* crisp line (draw-in, then wave) */}
       <motion.path
         ref={ref}
         d={d}
@@ -81,24 +124,9 @@ export function KineticMotionLine({
         strokeLinecap="round"
         className={cn(!waving && "kinetic-path", drawn && !waving && "is-drawn")}
         style={waving ? { strokeDasharray: "none" } : undefined}
-        animate={
-          waving
-            ? { d: [WAVE_UP, WAVE_DOWN, WAVE_UP] }
-            : undefined
-        }
-        transition={
-          waving
-            ? { duration: 11, repeat: Infinity, ease: "easeInOut" }
-            : undefined
-        }
+        animate={animateD}
+        transition={waving ? WAVE_TRANSITION : undefined}
       />
-      <defs>
-        <linearGradient id="kt-mint-gradient" x1="0" y1="0" x2="1440" y2="0" gradientUnits="userSpaceOnUse">
-          <stop stopColor="#72E0C0" stopOpacity="0.2" />
-          <stop offset="0.5" stopColor="#72E0C0" />
-          <stop offset="1" stopColor="#0F8F7A" stopOpacity="0.3" />
-        </linearGradient>
-      </defs>
     </svg>
   );
 }
