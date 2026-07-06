@@ -17,7 +17,8 @@ export type ConversionEvent =
   | "sticky_bar_click"
   | "concierge_open"
   | "concierge_book_click"
-  | "concierge_service_click";
+  | "concierge_service_click"
+  | "symptom_router_submit";
 
 type EventParams = Record<string, string | number | boolean | undefined>;
 
