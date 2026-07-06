@@ -39,4 +39,8 @@ export const heroLine: Variants = {
 };
 
 /** Shared viewport config so reveals fire once, slightly before fully in view. */
-export const viewportOnce = { once: true, amount: 0.25 } as const;
+// `amount: "some"` triggers the reveal as soon as any part of the element
+// enters the viewport. A fractional amount (e.g. 0.25) silently never fires
+// for elements taller than ~4x the viewport — on mobile the stacked service
+// and pain-point grids exceed that, which left their cards stuck at opacity 0.
+export const viewportOnce = { once: true, amount: "some" } as const;
