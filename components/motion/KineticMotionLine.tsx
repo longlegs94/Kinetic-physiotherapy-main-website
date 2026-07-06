@@ -1,13 +1,24 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
+import { useReducedMotionSafe } from "./useReducedMotionSafe";
 
 /**
- * Signature mint "kinetic" line — an SVG path that draws itself when
- * scrolled into view (stroke-dashoffset animation via CSS class).
- * Reduced motion shows the full line immediately (handled in globals.css).
+ * Signature mint "kinetic" line.
+ * 1. Draws itself in when scrolled into view (stroke-dashoffset via CSS).
+ * 2. Then undulates in a slow, continuous wave (path `d` morph via Framer).
+ * Reduced motion: static full line, no draw, no wave.
  */
+
+/** Wave phases — identical command structure so the path can interpolate. */
+const WAVE_UP =
+  "M0,60 C160,10 320,110 480,60 C640,10 800,110 960,60 C1120,10 1280,110 1440,60";
+const WAVE_DOWN =
+  "M0,60 C160,110 320,10 480,60 C640,110 800,10 960,60 C1120,110 1280,10 1440,60";
+const FLAT = "M0,60 C160,60 320,60 480,60 C640,60 800,60 960,60 C1120,60 1280,60 1440,60";
+
 export function KineticMotionLine({
   className,
   variant = "wave",
@@ -17,7 +28,10 @@ export function KineticMotionLine({
 }) {
   const ref = useRef<SVGPathElement>(null);
   const [drawn, setDrawn] = useState(false);
+  const [waving, setWaving] = useState(false);
+  const reduced = useReducedMotionSafe();
 
+  // Draw-in on first viewport entry.
   useEffect(() => {
     const path = ref.current;
     if (!path) return;
@@ -40,10 +54,16 @@ export function KineticMotionLine({
     return () => observer.disconnect();
   }, []);
 
-  const d =
-    variant === "wave"
-      ? "M0,60 C160,10 320,110 480,60 C640,10 800,110 960,60 C1120,10 1280,110 1440,60"
-      : "M0,60 L1440,60";
+  // Once the draw-in transition (1.6s) finishes, hand over to the wave loop.
+  // The dash styles must be cleared first or the morphing path length would
+  // reintroduce gaps in the stroke.
+  useEffect(() => {
+    if (!drawn || reduced || variant !== "wave") return;
+    const t = setTimeout(() => setWaving(true), 1700);
+    return () => clearTimeout(t);
+  }, [drawn, reduced, variant]);
+
+  const d = variant === "wave" ? WAVE_UP : FLAT;
 
   return (
     <svg
@@ -53,13 +73,24 @@ export function KineticMotionLine({
       preserveAspectRatio="none"
       aria-hidden="true"
     >
-      <path
+      <motion.path
         ref={ref}
         d={d}
         stroke="url(#kt-mint-gradient)"
         strokeWidth={3}
         strokeLinecap="round"
-        className={cn("kinetic-path", drawn && "is-drawn")}
+        className={cn(!waving && "kinetic-path", drawn && !waving && "is-drawn")}
+        style={waving ? { strokeDasharray: "none" } : undefined}
+        animate={
+          waving
+            ? { d: [WAVE_UP, WAVE_DOWN, WAVE_UP] }
+            : undefined
+        }
+        transition={
+          waving
+            ? { duration: 11, repeat: Infinity, ease: "easeInOut" }
+            : undefined
+        }
       />
       <defs>
         <linearGradient id="kt-mint-gradient" x1="0" y1="0" x2="1440" y2="0" gradientUnits="userSpaceOnUse">
