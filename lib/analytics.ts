@@ -11,6 +11,7 @@ export type ConversionEvent =
   | "phone_click"
   | "contact_submit"
   | "service_card_click"
+  | "pain_point_click"
   | "icbc_cta_click"
   | "practitioner_book_click"
   | "sticky_bar_click";

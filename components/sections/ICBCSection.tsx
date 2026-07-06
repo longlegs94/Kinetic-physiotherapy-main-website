@@ -34,19 +34,21 @@ export function ICBCSection() {
     <Section tone="sage" id="icbc">
       <Container>
         <div className="grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
-          <SectionHeading
-            eyebrow="ICBC & accident recovery"
-            title="Injured in a car accident? We can help you start recovery."
-          >
-            If you have an active ICBC claim, our team can help guide you through the
-            treatment process and match you with the right care for pain, stiffness,
-            mobility, and recovery after an accident.
-            {/* Accuracy note: coverage/eligibility wording kept non-guaranteeing.
-                Verify specifics with the clinic before launch. */}
-          </SectionHeading>
+          <div>
+            <SectionHeading
+              eyebrow="ICBC & accident recovery"
+              title="Injured in a car accident? We can help you start recovery."
+            >
+              If you have an active ICBC claim, our team can help guide you through the
+              treatment process and match you with the right care for pain, stiffness,
+              mobility, and recovery after an accident.
+              {/* Accuracy note: coverage/eligibility wording kept non-guaranteeing.
+                  Verify specifics with the clinic before launch. */}
+            </SectionHeading>
 
-          <div className="mt-8 hidden h-24 w-24 items-center justify-center rounded-panel bg-mint/20 text-deep-teal lg:flex">
-            <Car className="h-12 w-12" strokeWidth={1.5} aria-hidden="true" />
+            <div className="mt-8 hidden h-24 w-24 items-center justify-center rounded-panel bg-mint/20 text-deep-teal lg:flex">
+              <Car className="h-12 w-12" strokeWidth={1.5} aria-hidden="true" />
+            </div>
           </div>
 
           <div className="relative">
@@ -69,7 +71,7 @@ export function ICBCSection() {
               {steps.map((step, i) => (
                 <motion.li
                   key={step.title}
-                  className="relative flex gap-4 rounded-card border border-silver/60 bg-white p-5 shadow-card sm:pl-16"
+                  className="glass relative flex gap-4 rounded-card p-5 shadow-card sm:pl-16"
                   initial={reduced ? { opacity: 1 } : { opacity: 0, y: 16 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={viewportOnce}

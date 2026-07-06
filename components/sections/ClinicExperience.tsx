@@ -43,6 +43,7 @@ export function ClinicExperience() {
             {tiles.map((tile) => (
               <div key={tile.label} className={`glass overflow-hidden rounded-card p-1.5 ${tile.span}`}>
                 <div className="aspect-square overflow-hidden rounded-[22px]">
+                  {/* eslint-disable-next-line @next/next/no-img-element -- local SVG; next/image adds no optimization for SVGs */}
                   <img
                     src={tile.src}
                     alt={`Illustration of the ${tile.label.toLowerCase()}`}

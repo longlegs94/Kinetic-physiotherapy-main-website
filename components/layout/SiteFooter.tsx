@@ -2,6 +2,7 @@ import Link from "next/link";
 import { MapPin, Phone, Mail, Clock } from "lucide-react";
 import { clinic, services, phoneHref, emailHref } from "@/lib/site-data";
 import { Logo } from "./Logo";
+import { BookButton } from "@/components/ui/BookButton";
 import { KineticMotionLine } from "@/components/motion/KineticMotionLine";
 
 const clinicLinks = [
@@ -28,6 +29,13 @@ export function SiteFooter() {
             <p className="mt-4 max-w-xs text-sm leading-relaxed text-warm-white/70">
               {clinic.positioning}
             </p>
+            <BookButton
+              label="Book on Jane"
+              variant="primary"
+              className="mt-6"
+              withIcon
+              source="footer"
+            />
           </div>
 
           <div>

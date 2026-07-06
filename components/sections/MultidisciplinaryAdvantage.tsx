@@ -80,7 +80,7 @@ export function MultidisciplinaryAdvantage() {
                 return (
                   <motion.div
                     key={node}
-                    className="absolute z-10 flex -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-pill border border-mint/40 bg-soft-black px-3 py-1.5 text-xs font-semibold text-warm-white"
+                    className="absolute z-10 flex -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-pill border border-mint/40 bg-soft-black px-3 py-1.5 text-xs font-semibold text-warm-white transition-shadow duration-200 hover:shadow-button-hover hover:border-mint"
                     style={{
                       left: `${(x / 340) * 100}%`,
                       top: `${(y / 340) * 100}%`,

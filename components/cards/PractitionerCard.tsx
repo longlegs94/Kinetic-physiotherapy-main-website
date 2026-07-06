@@ -21,7 +21,14 @@ function initials(name: string) {
  * initials avatar. Bio/specialties render only when present in content.
  * TODO(assets): add practitioner photos to /public/images/team.
  */
-export function PractitionerCard({ practitioner }: { practitioner: Practitioner }) {
+export function PractitionerCard({
+  practitioner,
+  hideBioLink = false,
+}: {
+  practitioner: Practitioner;
+  /** Set on /team itself, where a "View Bio" link back to /team is circular. */
+  hideBioLink?: boolean;
+}) {
   const p = practitioner;
   return (
     <article className="group flex h-full flex-col items-center rounded-card glass p-6 text-center transition-all duration-200 ease-premium hover:-translate-y-1 hover:shadow-dark-glow">
@@ -83,12 +90,14 @@ export function PractitionerCard({ practitioner }: { practitioner: Practitioner 
           className="flex-1"
           source={`practitioner:${p.name}`}
         />
-        <Link
-          href="/team"
-          className="flex-1 rounded-pill border border-charcoal/15 px-4 py-3 text-center text-[15px] font-semibold text-charcoal/70 transition-colors hover:border-deep-teal hover:text-charcoal"
-        >
-          View Bio
-        </Link>
+        {!hideBioLink && (
+          <Link
+            href="/team"
+            className="flex-1 rounded-pill border border-charcoal/15 px-4 py-3 text-center text-[15px] font-semibold text-charcoal/70 transition-colors hover:border-deep-teal hover:text-charcoal"
+          >
+            View Bio
+          </Link>
+        )}
       </div>
     </article>
   );
