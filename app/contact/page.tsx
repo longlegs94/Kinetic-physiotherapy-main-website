@@ -1,4 +1,5 @@
-import { MapPin, Phone, Mail, Printer, Clock, ExternalLink } from "lucide-react";
+import Link from "next/link";
+import { MapPin, Phone, Mail, Printer, Clock, ExternalLink, ClipboardList } from "lucide-react";
 import { PageHero } from "@/components/layout/PageHero";
 import { Section, Container } from "@/components/layout/Section";
 import { ContactForm } from "@/components/cards/ContactForm";
@@ -92,6 +93,21 @@ export default function ContactPage() {
                 <p className="mt-2 text-xs text-charcoal/50">
                   Please confirm current hours when booking.
                 </p>
+              </div>
+
+              <div className="glass rounded-card p-5">
+                <h2 className="font-bold text-charcoal">Coming in for your first visit?</h2>
+                <p className="mt-1.5 text-sm text-charcoal/65">
+                  Save time at the front desk — fill out our pre-visit intake and
+                  we&apos;ll have your summary ready.
+                </p>
+                <Link
+                  href="/intake"
+                  className="mt-4 inline-flex items-center gap-1.5 rounded-pill border border-deep-teal/30 bg-sage/40 px-4 py-2 text-sm font-semibold text-deep-teal transition-colors hover:border-deep-teal"
+                >
+                  <ClipboardList className="h-4 w-4" aria-hidden="true" />
+                  Start pre-visit intake
+                </Link>
               </div>
             </div>
 
