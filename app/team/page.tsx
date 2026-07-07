@@ -55,9 +55,9 @@ export default function TeamPage() {
         <Section key={group.category} tone={idx % 2 === 0 ? "white" : "warm"}>
           <Container>
             <SectionHeading eyebrow="Our team" title={group.category} />
-            <StaggeredGrid className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+            <StaggeredGrid className="mt-8 grid grid-cols-1 items-start gap-5 sm:grid-cols-2 lg:grid-cols-4">
               {group.members.map((p) => (
-                <ScrollItem key={p.name} as="div" className="h-full">
+                <ScrollItem key={p.name} as="div">
                   <PractitionerCard practitioner={p} />
                 </ScrollItem>
               ))}

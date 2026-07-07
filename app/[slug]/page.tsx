@@ -193,9 +193,9 @@ export default async function ServicePage({
         <Section tone="warm">
           <Container>
             <SectionHeading eyebrow="Your team" title="Practitioners for this service." />
-            <StaggeredGrid className="mt-10 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+            <StaggeredGrid className="mt-10 grid grid-cols-1 items-start gap-5 sm:grid-cols-2 lg:grid-cols-4">
               {relevantPractitioners.slice(0, 4).map((p) => (
-                <ScrollItem key={p.name} as="div" className="h-full">
+                <ScrollItem key={p.name} as="div">
                   <PractitionerCard practitioner={p} />
                 </ScrollItem>
               ))}

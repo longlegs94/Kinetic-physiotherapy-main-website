@@ -46,7 +46,7 @@ export function PractitionerCard({ practitioner }: { practitioner: Practitioner 
   const toggle = () => setOpen((v) => !v);
 
   return (
-    <article className="group flex h-full flex-col rounded-card glass p-6 text-center transition-all duration-200 ease-premium hover:-translate-y-1 hover:shadow-dark-glow">
+    <article className="group flex flex-col rounded-card glass p-6 text-center transition-all duration-200 ease-premium hover:-translate-y-1 hover:shadow-dark-glow">
       {/* Clickable header — toggles the bio panel */}
       <button
         type="button"
