@@ -48,7 +48,10 @@ export function ServiceCard({ service }: { service: Service }) {
           onClick={() => trackEvent("service_card_click", { service: service.slug })}
           className="inline-flex items-center gap-1.5 text-sm font-semibold text-deep-teal"
         >
-          Learn more
+          {/* Visible "Learn more"; the service name is in the anchor text (via
+              an sr-only span) so search engines and screen readers get
+              descriptive link text without changing the visual design. */}
+          Learn more<span className="sr-only"> about {service.name}</span>
           <ArrowRight
             className="h-4 w-4 transition-transform duration-200 ease-premium group-hover:translate-x-1"
             aria-hidden="true"

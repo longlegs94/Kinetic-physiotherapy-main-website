@@ -18,7 +18,7 @@ export function PainPointSection() {
         <div className="mt-10">
           <SymptomRouter />
         </div>
-        <p className="mt-10 text-center text-sm font-semibold uppercase tracking-[0.14em] text-charcoal/40">
+        <p className="mt-10 text-center text-sm font-semibold uppercase tracking-[0.14em] text-charcoal/70">
           or pick what fits
         </p>
         {/* Manual selector grid, for those who'd rather tap than type */}

@@ -24,7 +24,7 @@ export function TestimonialCard({
         className={cn("h-8 w-8", tone === "dark" ? "text-mint" : "text-mint")}
         aria-hidden="true"
       />
-      <div className="mt-3 flex gap-0.5" aria-label={`${t.rating} out of 5 stars`}>
+      <div className="mt-3 flex gap-0.5" role="img" aria-label={`${t.rating} out of 5 stars`}>
         {Array.from({ length: 5 }).map((_, i) => (
           <Star
             key={i}

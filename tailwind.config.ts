@@ -17,7 +17,9 @@ const config: Config = {
     extend: {
       colors: {
         mint: "#72E0C0",
-        "deep-teal": "#0F8F7A",
+        // Deepened from the brand board's #0F8F7A to meet WCAG AA (4.5:1) for
+        // small text on light backgrounds — the board hex failed at ~3.7:1.
+        "deep-teal": "#0A6E5C",
         charcoal: "#111416",
         "soft-black": "#1B2023",
         "warm-white": "#F7F5F0",
