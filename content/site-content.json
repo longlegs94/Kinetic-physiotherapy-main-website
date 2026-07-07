@@ -446,6 +446,7 @@
       "name": "Dilpreet Sandhu",
       "title": "Registered Massage Therapist",
       "category": "Massage Therapy",
+      "bio": "Dilpreet is a Registered Massage Therapist at Kinetic Therapy, providing therapeutic massage to help ease muscle tension, support recovery, and improve how you move and feel.",
       "icbcAccepted": true,
       "needsVerification": true
     },
@@ -453,6 +454,7 @@
       "name": "Jason Shi",
       "title": "Registered Massage Therapist",
       "category": "Massage Therapy",
+      "bio": "Jason is a Registered Massage Therapist at Kinetic Therapy, offering hands-on massage care for muscle tension, soreness, stress, and injury recovery.",
       "icbcAccepted": true,
       "needsVerification": true
     },
@@ -460,12 +462,14 @@
       "name": "Mike Slade",
       "title": "Body Worker",
       "category": "Bodywork",
+      "bio": "Mike is a body worker at Kinetic Therapy, using hands-on techniques to help relieve tension and support your recovery and comfort.",
       "needsVerification": true
     },
     {
       "name": "Shanu Jadhwani",
       "title": "Physiotherapist",
       "category": "Physiotherapy",
+      "bio": "Shanu is a registered physiotherapist at Kinetic Therapy, offering assessment-based care for pain, injury recovery, mobility, and getting back to the activities you enjoy.",
       "icbcAccepted": true,
       "needsVerification": true
     },
@@ -473,6 +477,7 @@
       "name": "Chandni Mistry",
       "title": "Physiotherapist",
       "category": "Physiotherapy",
+      "bio": "Chandni is a registered physiotherapist at Kinetic Therapy, providing personalized physiotherapy to reduce pain, restore movement, and rebuild strength.",
       "schedule": "Fridays, 9:00am–7:00pm",
       "icbcAccepted": true,
       "needsVerification": true
@@ -481,6 +486,7 @@
       "name": "Aishwariya Palsule",
       "title": "Physiotherapist",
       "category": "Physiotherapy",
+      "bio": "Aishwariya is a registered physiotherapist at Kinetic Therapy, supporting recovery from pain and injury through assessment, hands-on care, and guided exercise.",
       "schedule": "Saturday, 8:00am–12:00pm",
       "icbcAccepted": true,
       "needsVerification": true
@@ -489,6 +495,7 @@
       "name": "Ashwin Singh",
       "title": "Kinesiologist",
       "category": "Kinesiology",
+      "bio": "Ashwin is a kinesiologist at Kinetic Therapy, guiding movement-based rehabilitation to rebuild strength, mobility, and confidence after injury or pain.",
       "icbcAccepted": true,
       "needsVerification": true
     },
@@ -496,6 +503,7 @@
       "name": "Ziming Zhao",
       "title": "Acupuncturist",
       "category": "Acupuncture & TCM",
+      "bio": "Ziming is an acupuncturist at Kinetic Therapy, providing acupuncture and traditional Chinese medicine to support pain relief, tension, stress, and whole-body wellness.",
       "icbcAccepted": true,
       "needsVerification": true
     },
@@ -503,6 +511,7 @@
       "name": "Stefanie Henderlin",
       "title": "Registered Naturotherapy Practitioner / Certified Breastfeeding Specialist",
       "category": "Naturotherapy and Lactation",
+      "bio": "Stefanie is a registered naturotherapy practitioner and certified breastfeeding specialist at Kinetic Therapy, offering natural wellness support and lactation care.",
       "needsVerification": true
     }
   ],

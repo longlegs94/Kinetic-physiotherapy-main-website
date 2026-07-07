@@ -58,7 +58,7 @@ export default function TeamPage() {
             <StaggeredGrid className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
               {group.members.map((p) => (
                 <ScrollItem key={p.name} as="div" className="h-full">
-                  <PractitionerCard practitioner={p} hideBioLink />
+                  <PractitionerCard practitioner={p} />
                 </ScrollItem>
               ))}
             </StaggeredGrid>
