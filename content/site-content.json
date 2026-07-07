@@ -10,21 +10,25 @@
     "email": "kineticphysio.maple@gmail.com",
     "fax": "(604) 608-5505",
     "janeBookingUrl": "https://kineticphysiotherapy.janeapp.com/",
+    "socials": {
+      "facebook": "https://www.facebook.com/kinetic.theraphyclinic/",
+      "instagram": "https://www.instagram.com/kinetic.therapyclinic/"
+    },
     "hours": [
       {
         "days": "Monday–Friday",
         "hours": "8:00am–8:00pm",
-        "needsVerification": true
+        "needsVerification": false
       },
       {
         "days": "Saturday",
         "hours": "9:00am–3:00pm",
-        "needsVerification": true
+        "needsVerification": false
       },
       {
         "days": "Sunday and Public Holidays",
         "hours": "Closed",
-        "needsVerification": true
+        "needsVerification": false
       }
     ],
     "trustBadges": [
@@ -200,7 +204,33 @@
         "orthotics-bracing-maple-ridge",
         "icbc-physio-maple-ridge"
       ],
-      "ctaLabel": "Book Physiotherapy"
+      "ctaLabel": "Book Physiotherapy",
+      "faqs": [
+        {
+          "question": "Do I need a doctor's referral for physiotherapy?",
+          "answer": "In many cases you can book directly without a referral, but some insurance or claim types may require one. Contact the clinic if you are unsure what your plan needs."
+        },
+        {
+          "question": "How many physiotherapy sessions will I need?",
+          "answer": "This depends on your condition, goals, and how you respond to treatment. Your physiotherapist will discuss an estimated plan after your initial assessment and adjust it as you progress."
+        },
+        {
+          "question": "What should I wear to my first physiotherapy appointment?",
+          "answer": "Loose, comfortable clothing that allows your physiotherapist to assess and move the affected area is best, such as shorts for a knee assessment or a t-shirt for a shoulder concern."
+        },
+        {
+          "question": "Can physiotherapy help with an old injury, not just a new one?",
+          "answer": "Yes, physiotherapy may help with both recent injuries and longstanding issues such as chronic pain or old sports injuries. Your practitioner will assess your history and current function to build an appropriate plan."
+        },
+        {
+          "question": "Will I get exercises to do at home?",
+          "answer": "Most physiotherapy plans include a home exercise program to support progress between visits. Your physiotherapist will walk you through it and adjust it as you improve."
+        },
+        {
+          "question": "What happens during my first physiotherapy assessment?",
+          "answer": "Your physiotherapist will review your history, ask about your goals, and test your movement and strength before discussing a treatment plan tailored to what they find."
+        }
+      ]
     },
     {
       "slug": "massage-therapy-maple-ridge",
@@ -231,7 +261,34 @@
         "hot-stone-massage-maple-ridge",
         "bodywork-maple-ridge"
       ],
-      "ctaLabel": "Book Massage Therapy"
+      "ctaLabel": "Book Massage Therapy",
+      "faqs": [
+        {
+          "question": "Do I need a doctor's referral for massage therapy?",
+          "answer": "No referral is required to book a massage therapy appointment, though your insurance provider may ask for one for reimbursement purposes. Check your plan for details."
+        },
+        {
+          "question": "How firm or deep will the massage be?",
+          "answer": "Pressure is adjusted to your comfort and goals. Let your RMT know during your consultation and at any point in the session if you would like the pressure adjusted."
+        },
+        {
+          "question": "Can massage therapy help with sports recovery, not just relaxation?",
+          "answer": "Yes, massage therapy may support sports recovery by addressing muscle tension and soreness, alongside general relaxation and stress relief. Your RMT will tailor the session to your goals."
+        },
+        {
+          "question": "Will I receive a receipt for insurance?",
+          "answer": "Yes, you will receive a receipt after your appointment that you can submit to your extended health provider. Coverage and eligibility can vary, so confirm your plan details with your insurer.",
+          "needsVerification": true
+        },
+        {
+          "question": "How often should I book massage therapy?",
+          "answer": "This depends on your goals, whether you are managing an ongoing concern or booking for general relaxation. Your RMT can recommend a frequency after your first visit."
+        },
+        {
+          "question": "Is massage therapy safe during pregnancy?",
+          "answer": "General massage sessions can sometimes be adapted for pregnancy-related comfort, though we also offer a dedicated pregnancy massage service with positioning suited to expecting mothers. Your RMT will assess what is appropriate for you."
+        }
+      ]
     },
     {
       "slug": "chiropractor-maple-ridge",
@@ -259,7 +316,33 @@
         "massage-therapy-maple-ridge",
         "acupuncture-maple-ridge"
       ],
-      "ctaLabel": "Book Chiropractic Care"
+      "ctaLabel": "Book Chiropractic Care",
+      "faqs": [
+        {
+          "question": "Do I need a referral to see a chiropractor?",
+          "answer": "No referral is typically required to book chiropractic care, though some insurance plans may have their own requirements. Check with your provider if you plan to claim coverage."
+        },
+        {
+          "question": "Is a hands-on adjustment always part of chiropractic treatment?",
+          "answer": "Not necessarily. Manual care, including adjustments, is used when appropriate based on your assessment — your chiropractor will discuss what techniques fit your condition and comfort level."
+        },
+        {
+          "question": "Can chiropractic care help with headaches?",
+          "answer": "Chiropractic care may help with certain headache patterns linked to neck and joint function. Your chiropractor will assess whether this applies to your specific headaches."
+        },
+        {
+          "question": "What happens during a chiropractic assessment?",
+          "answer": "Your chiropractor will review your history, assess your posture, spine, and joint movement, and discuss a treatment plan based on what they find."
+        },
+        {
+          "question": "Will I get advice for home care?",
+          "answer": "Yes, most chiropractic visits include guidance on posture, stretches, or activity modifications to support your care between appointments."
+        },
+        {
+          "question": "How many chiropractic visits will I need?",
+          "answer": "This varies by condition and how you respond to care. Your chiropractor will outline an estimated plan after your assessment and adjust it as needed."
+        }
+      ]
     },
     {
       "slug": "kinesiology-active-rehab-maple-ridge",
@@ -289,7 +372,34 @@
         "icbc-physio-maple-ridge",
         "corrective-exercise-maple-ridge"
       ],
-      "ctaLabel": "Book Active Rehab"
+      "ctaLabel": "Book Active Rehab",
+      "faqs": [
+        {
+          "question": "What is the difference between kinesiology and physiotherapy?",
+          "answer": "Kinesiology focuses on movement-based, exercise-driven rehabilitation, often working alongside physiotherapy or as a follow-on to it. Your practitioner can help you understand which fits your current stage of recovery."
+        },
+        {
+          "question": "Can kinesiology help me return to work after an injury?",
+          "answer": "Yes, active rehab and return-to-work conditioning are common goals for kinesiology sessions. Your kinesiologist will build a progressive plan around the physical demands of your job."
+        },
+        {
+          "question": "Is kinesiology covered under my ICBC claim?",
+          "answer": "Kinesiology can be one of the active rehab options available through an ICBC claim, up to the treatment limits and conditions that apply. Our team can help you understand your options.",
+          "needsVerification": true
+        },
+        {
+          "question": "Do I need to already be fit to start active rehab?",
+          "answer": "No, active rehab is designed to meet you where you are, with a progressive plan that builds strength and mobility gradually based on your assessment."
+        },
+        {
+          "question": "How is a kinesiology session structured?",
+          "answer": "Sessions typically involve goal setting and supervised exercise prescription that progresses over time, with adjustments made as your strength and mobility improve."
+        },
+        {
+          "question": "Can kinesiology support sports performance, not just recovery?",
+          "answer": "Yes, kinesiology may support sports performance goals as well as recovery from injury. Your kinesiologist will tailor a plan to your specific objectives."
+        }
+      ]
     },
     {
       "slug": "acupuncture-maple-ridge",
@@ -318,7 +428,33 @@
         "massage-therapy-maple-ridge",
         "chiropractor-maple-ridge"
       ],
-      "ctaLabel": "Book Acupuncture"
+      "ctaLabel": "Book Acupuncture",
+      "faqs": [
+        {
+          "question": "Is acupuncture painful?",
+          "answer": "Most people describe acupuncture as producing minimal discomfort, often just a light sensation as the needle is inserted. Your practitioner will check in with you throughout the session."
+        },
+        {
+          "question": "Do I need a referral for acupuncture?",
+          "answer": "No referral is required to book an acupuncture appointment, though your insurance plan may have its own requirements for reimbursement."
+        },
+        {
+          "question": "How many acupuncture sessions will I need?",
+          "answer": "This depends on your goals and the concern being addressed. Your practitioner will discuss an estimated plan after your consultation."
+        },
+        {
+          "question": "Can acupuncture help with sleep and stress, not just pain?",
+          "answer": "Yes, acupuncture is used to support relaxation, sleep, and stress alongside pain-related concerns. Your practitioner will tailor sessions to your goals."
+        },
+        {
+          "question": "What should I do before my acupuncture appointment?",
+          "answer": "Eating a light meal beforehand and wearing comfortable clothing that allows easy access to treatment areas is recommended."
+        },
+        {
+          "question": "Is acupuncture safe to combine with other treatments like physiotherapy?",
+          "answer": "Acupuncture can often be coordinated with other treatments such as physiotherapy or massage therapy as part of a broader care plan. Your practitioner will assess what combination may help you."
+        }
+      ]
     },
     {
       "slug": "icbc-physio-maple-ridge",
@@ -352,6 +488,35 @@
         "acupuncture-maple-ridge"
       ],
       "ctaLabel": "Book ICBC Treatment",
+      "faqs": [
+        {
+          "question": "How many treatment sessions does ICBC cover?",
+          "answer": "If you have an active ICBC claim, you may be able to access up to 12 weeks of treatment — such as physiotherapy, massage, kinesiology, chiropractic, and acupuncture — though conditions and eligibility apply. Our team can help you understand what applies to your specific claim.",
+          "needsVerification": true
+        },
+        {
+          "question": "What do I need to bring to my first ICBC appointment?",
+          "answer": "Please bring your ICBC claim number and any details about your accident so our team can guide you to the right service and get your assessment started."
+        },
+        {
+          "question": "Can I choose which service I use my ICBC treatment on?",
+          "answer": "You can typically choose between services such as physiotherapy, massage therapy, kinesiology, chiropractic, and acupuncture depending on your needs. Our team can help guide you to an appropriate starting point."
+        },
+        {
+          "question": "Do I need a doctor's referral to start ICBC treatment?",
+          "answer": "Requirements can vary depending on your specific claim. Contact the clinic and our team can help clarify what is needed before you book.",
+          "needsVerification": true
+        },
+        {
+          "question": "What if my symptoms started a few weeks after the accident?",
+          "answer": "Delayed-onset symptoms, such as whiplash-type pain, are common after motor vehicle accidents. Your practitioner will assess your current symptoms and history to determine appropriate care."
+        },
+        {
+          "question": "What happens if I need care beyond my initial treatment allowance?",
+          "answer": "Your practitioner will monitor your progress throughout your treatment and can discuss next steps with you if further care may be needed, subject to your claim's conditions and eligibility.",
+          "needsVerification": true
+        }
+      ],
       "needsVerification": true
     },
     {
@@ -381,7 +546,33 @@
         "physiotherapy-maple-ridge",
         "lactation-support-maple-ridge"
       ],
-      "ctaLabel": "Book Pregnancy Massage"
+      "ctaLabel": "Book Pregnancy Massage",
+      "faqs": [
+        {
+          "question": "Is pregnancy massage safe at every stage of pregnancy?",
+          "answer": "Pregnancy massage can often be adapted throughout pregnancy, though your practitioner will ask about your trimester and any complications to determine the safest approach for you. Always check with your care provider if you have specific concerns."
+        },
+        {
+          "question": "How will I be positioned during a pregnancy massage?",
+          "answer": "Your practitioner will use supportive positioning, such as side-lying with pillows or a pregnancy-friendly table setup, to keep you comfortable throughout the session."
+        },
+        {
+          "question": "Can pregnancy massage help with leg swelling?",
+          "answer": "Gentle massage techniques may help support comfort with pregnancy-related leg swelling and tension, though your practitioner will assess what is appropriate for your situation."
+        },
+        {
+          "question": "Do I need my doctor's approval before booking a pregnancy massage?",
+          "answer": "If you have a high-risk pregnancy or specific medical concerns, it's a good idea to check with your care provider first. Let our team know about any complications when you book."
+        },
+        {
+          "question": "How is pregnancy massage different from a regular massage?",
+          "answer": "Pregnancy massage uses adapted positioning, lighter techniques in certain areas, and a focus on pregnancy-related comfort such as low back and hip tension, compared to a standard massage session."
+        },
+        {
+          "question": "Can I combine pregnancy massage with physiotherapy?",
+          "answer": "Yes, pregnancy massage can often be coordinated with physiotherapy or other care as part of a broader plan for pregnancy-related discomfort. Your practitioner will help determine what may help."
+        }
+      ]
     },
     {
       "slug": "shockwave-therapy-maple-ridge",
@@ -409,6 +600,38 @@
         "kinesiology-active-rehab-maple-ridge"
       ],
       "ctaLabel": "Ask About Shockwave Therapy",
+      "faqs": [
+        {
+          "question": "Is shockwave therapy right for my condition?",
+          "answer": "Shockwave therapy may be used as part of a treatment plan for certain tendon, muscle, and soft tissue concerns, but it is not appropriate for everyone. Your practitioner will determine if this is appropriate for you after an assessment.",
+          "needsVerification": true
+        },
+        {
+          "question": "Is shockwave therapy painful?",
+          "answer": "Some people experience mild discomfort during treatment, and this can vary depending on the area treated and your sensitivity. Your practitioner will discuss what to expect and adjust the session to your comfort.",
+          "needsVerification": true
+        },
+        {
+          "question": "How many shockwave sessions will I need?",
+          "answer": "This depends on your condition and how you respond to treatment. Your practitioner will discuss an estimated plan and review your progress along the way.",
+          "needsVerification": true
+        },
+        {
+          "question": "Are there reasons I might not be a candidate for shockwave therapy?",
+          "answer": "Certain conditions and health factors may mean shockwave therapy is not suitable. Your practitioner will complete a suitability check as part of your assessment before recommending this treatment.",
+          "needsVerification": true
+        },
+        {
+          "question": "Can shockwave therapy help with plantar fasciitis?",
+          "answer": "Shockwave therapy is sometimes used as part of a treatment plan for plantar fasciitis and other tendon-related concerns. Your practitioner will assess whether this may be appropriate for your specific case.",
+          "needsVerification": true
+        },
+        {
+          "question": "Is shockwave therapy covered by insurance?",
+          "answer": "Coverage and eligibility can vary by provider and plan. Please confirm with your insurer and our team before booking.",
+          "needsVerification": true
+        }
+      ],
       "needsVerification": true
     },
     {
@@ -438,6 +661,38 @@
         "kinesiology-active-rehab-maple-ridge"
       ],
       "ctaLabel": "Book an Assessment",
+      "faqs": [
+        {
+          "question": "Do I need custom orthotics, or will over-the-counter options work?",
+          "answer": "This depends on your specific foot mechanics and concern. Your practitioner will determine if this is appropriate for you after an assessment, and may recommend custom or off-the-shelf options.",
+          "needsVerification": true
+        },
+        {
+          "question": "How long does it take to get fitted for orthotics or a brace?",
+          "answer": "Timelines can vary depending on whether a custom fitting or referral process is needed. Our team can give you a better estimate once your assessment and recommendation are complete.",
+          "needsVerification": true
+        },
+        {
+          "question": "Will a brace or orthotic be covered by my insurance?",
+          "answer": "Coverage and eligibility can vary by provider and plan. Please confirm your specific coverage with your insurer before booking.",
+          "needsVerification": true
+        },
+        {
+          "question": "Can orthotics or bracing help with knee pain, not just foot pain?",
+          "answer": "Certain orthotic and bracing options may offer support for knee and other joint concerns in addition to foot pain. Your practitioner will assess your needs to determine if this may help.",
+          "needsVerification": true
+        },
+        {
+          "question": "Do I need a referral for an orthotics or bracing assessment?",
+          "answer": "In many cases you can book an assessment directly, but this can depend on your insurance or claim requirements. Contact the clinic if you are unsure.",
+          "needsVerification": true
+        },
+        {
+          "question": "What happens after I receive my orthotics or brace?",
+          "answer": "Your practitioner will provide follow-up guidance to check fit and function, and can make adjustments or recommend further care if needed.",
+          "needsVerification": true
+        }
+      ],
       "needsVerification": true
     }
   ],
@@ -469,7 +724,7 @@
       "name": "Shanu Jadhwani",
       "title": "Physiotherapist",
       "category": "Physiotherapy",
-      "bio": "Shanu is a registered physiotherapist at Kinetic Therapy, offering assessment-based care for pain, injury recovery, mobility, and getting back to the activities you enjoy.",
+      "bio": "Shanu is a registered physiotherapist in BC who completed her Master of Physiotherapy at Manipal University in 2010 and is a certified Clinical Exercise Physiologist through the American College of Sports Medicine.",
       "icbcAccepted": true,
       "needsVerification": true
     },
@@ -477,7 +732,7 @@
       "name": "Chandni Mistry",
       "title": "Physiotherapist",
       "category": "Physiotherapy",
-      "bio": "Chandni is a registered physiotherapist at Kinetic Therapy, providing personalized physiotherapy to reduce pain, restore movement, and rebuild strength.",
+      "bio": "Chandni is a licensed physiotherapist with experience in both India and Canada, holding a Bachelor of Physiotherapy from Ahmedabad Institute of Medical Sciences, with expertise in manual therapy, exercise prescription, and patient education.",
       "schedule": "Fridays, 9:00am–7:00pm",
       "icbcAccepted": true,
       "needsVerification": true
@@ -486,7 +741,7 @@
       "name": "Aishwariya Palsule",
       "title": "Physiotherapist",
       "category": "Physiotherapy",
-      "bio": "Aishwariya is a registered physiotherapist at Kinetic Therapy, supporting recovery from pain and injury through assessment, hands-on care, and guided exercise.",
+      "bio": "Aishwariya (also known as Ash) is a physiotherapist with a Bachelor's in Physiotherapy from Mumbai, India, and experience in musculoskeletal and injury rehabilitation, focusing on spinal health, movement-based recovery, and combining manual therapy with personalized rehab exercises.",
       "schedule": "Saturday, 8:00am–12:00pm",
       "icbcAccepted": true,
       "needsVerification": true
@@ -495,7 +750,7 @@
       "name": "Ashwin Singh",
       "title": "Kinesiologist",
       "category": "Kinesiology",
-      "bio": "Ashwin is a kinesiologist at Kinetic Therapy, guiding movement-based rehabilitation to rebuild strength, mobility, and confidence after injury or pain.",
+      "bio": "Ashwin is a registered kinesiologist in BC who completed his undergraduate degree at Simon Fraser University with a concentration in active rehabilitation.",
       "icbcAccepted": true,
       "needsVerification": true
     },

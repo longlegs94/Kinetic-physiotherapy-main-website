@@ -38,6 +38,7 @@ export function localBusinessSchema() {
       longitude: geo.longitude,
     },
     image: `${SITE_URL}/opengraph-image`,
+    sameAs: [clinic.socials?.facebook, clinic.socials?.instagram].filter(Boolean),
     priceRange: "$$",
     openingHoursSpecification: [
       {

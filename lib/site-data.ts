@@ -19,6 +19,7 @@ export type Clinic = {
   email: string;
   fax?: string;
   janeBookingUrl: string;
+  socials?: { facebook?: string; instagram?: string };
   hours: Hours[];
   trustBadges: TrustBadge[];
 };
@@ -41,6 +42,7 @@ export type Service = {
   ctaLabel: string;
   bookingUrl?: string;
   needsVerification?: boolean;
+  faqs?: Faq[];
 };
 
 export type Practitioner = {

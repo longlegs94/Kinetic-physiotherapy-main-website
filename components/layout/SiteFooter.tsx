@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { MapPin, Phone, Mail, Clock } from "lucide-react";
+import { MapPin, Phone, Mail, Clock, Facebook, Instagram } from "lucide-react";
 import { clinic, services, phoneHref, emailHref } from "@/lib/site-data";
 import { Logo } from "./Logo";
 import { BookButton } from "@/components/ui/BookButton";
@@ -36,6 +36,32 @@ export function SiteFooter() {
               withIcon
               source="footer"
             />
+            {(clinic.socials?.facebook || clinic.socials?.instagram) && (
+              <div className="mt-6 flex gap-3">
+                {clinic.socials?.facebook && (
+                  <a
+                    href={clinic.socials.facebook}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="Kinetic Therapy Clinic on Facebook"
+                    className="flex h-9 w-9 items-center justify-center rounded-full border border-white/15 text-warm-white/70 transition-colors hover:border-mint hover:text-mint"
+                  >
+                    <Facebook className="h-4 w-4" aria-hidden="true" />
+                  </a>
+                )}
+                {clinic.socials?.instagram && (
+                  <a
+                    href={clinic.socials.instagram}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="Kinetic Therapy Clinic on Instagram"
+                    className="flex h-9 w-9 items-center justify-center rounded-full border border-white/15 text-warm-white/70 transition-colors hover:border-mint hover:text-mint"
+                  >
+                    <Instagram className="h-4 w-4" aria-hidden="true" />
+                  </a>
+                )}
+              </div>
+            )}
           </div>
 
           <div>

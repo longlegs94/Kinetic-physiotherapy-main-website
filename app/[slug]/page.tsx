@@ -23,7 +23,7 @@ import { FinalCTA } from "@/components/sections/FinalCTA";
 import { ScrollReveal } from "@/components/motion/ScrollReveal";
 import { StaggeredGrid, ScrollItem } from "@/components/motion/StaggeredGrid";
 import { JsonLd } from "@/components/ui/JsonLd";
-import { serviceSchema, breadcrumbSchema } from "@/lib/schema";
+import { serviceSchema, breadcrumbSchema, faqSchema } from "@/lib/schema";
 
 export const dynamicParams = false;
 
@@ -78,9 +78,13 @@ export default async function ServicePage({
     { name: service.name, path: `/${slug}` },
   ];
 
+  const pageFaqs = service.faqs && service.faqs.length > 0 ? service.faqs : globalFaqs;
+
   return (
     <>
-      <JsonLd data={[serviceSchema(service), breadcrumbSchema(crumbs)]} />
+      <JsonLd
+        data={[serviceSchema(service), breadcrumbSchema(crumbs), faqSchema(pageFaqs)]}
+      />
 
       <PageHero
         title={service.heroTitle}
@@ -204,7 +208,7 @@ export default async function ServicePage({
         </Section>
       )}
 
-      <FAQSection faqs={globalFaqs} eyebrow="FAQ" title="Common questions." />
+      <FAQSection faqs={pageFaqs} eyebrow="FAQ" title="Common questions." />
 
       <FinalCTA source={`service_final:${slug}`} />
     </>
