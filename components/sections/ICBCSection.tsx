@@ -39,11 +39,12 @@ export function ICBCSection() {
               eyebrow="ICBC & accident recovery"
               title="Injured in a car accident? We can help you start recovery."
             >
-              If you have an active ICBC claim, our team can help guide you through the
-              treatment process and match you with the right care for pain, stiffness,
+              If you have an active ICBC claim, you may be able to access up to 12 weeks
+              of treatment (conditions and eligibility apply). Our team helps guide you
+              through the process and match you with the right care for pain, stiffness,
               mobility, and recovery after an accident.
-              {/* Accuracy note: coverage/eligibility wording kept non-guaranteeing.
-                  Verify specifics with the clinic before launch. */}
+              {/* Owner confirmed: ICBC provides up to 12 weeks of treatment, conditions
+                  apply. Wording kept accurate with the "conditions apply" caveat. */}
             </SectionHeading>
 
             <div className="mt-8 hidden h-24 w-24 items-center justify-center rounded-panel bg-mint/20 text-deep-teal lg:flex">
