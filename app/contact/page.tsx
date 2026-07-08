@@ -30,8 +30,10 @@ const crumbs = [
   { name: "Contact", path: "/contact" },
 ];
 
+// Google's canonical address format for the clinic's pin — keep as-is so the
+// link lands on the exact listing rather than a fuzzy search result.
 const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-  `${clinic.name}, ${clinic.address}`
+  "12005 238b St #103, Maple Ridge, BC V4R 1W1"
 )}`;
 
 export default function ContactPage() {
