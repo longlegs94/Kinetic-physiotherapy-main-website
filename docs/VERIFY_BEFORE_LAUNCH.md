@@ -107,7 +107,7 @@ broken, just placeholder.
 - [ ] Real hero image → replace placeholder in `components/sections/Hero.tsx`
 - [ ] Clinic photos → `components/sections/ClinicExperience.tsx`
 - [ ] Practitioner photos → `/public/images/team/` + set `image` in content
-- [ ] Legal pages → replace placeholders in `app/privacy-policy` and `app/terms`
+- [ ] Legal pages → substantive drafts in place — have a lawyer review before launch
 
 ## Pre-launch technical checklist
 

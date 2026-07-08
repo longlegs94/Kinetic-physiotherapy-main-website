@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { PageHero } from "@/components/layout/PageHero";
 import { Section, Container } from "@/components/layout/Section";
 import { IntakeForm } from "@/components/intake/IntakeForm";
@@ -28,11 +29,20 @@ export default function IntakePage() {
       />
       <Section tone="white">
         <Container className="max-w-3xl">
-          <p className="mb-8 text-sm leading-relaxed text-charcoal/60">
-            Your answers are sent to our clinic team to prepare for your visit. This form
-            is not medical advice and is not monitored for urgent needs — if you have
-            urgent symptoms, call 911 or visit an emergency department.
-          </p>
+          <div className="mb-8 rounded-2xl border border-mint/50 bg-sage/40 p-4 text-sm leading-relaxed text-charcoal/75">
+            This form is for pre-visit planning only — it isn&apos;t monitored for urgent
+            messages. If you have severe or worsening symptoms, chest pain, or numbness,
+            call 911 or your doctor. Your answers are used to prepare for your visit,
+            summarized with AI assistance, and delivered securely to our clinic team — see
+            our{" "}
+            <Link
+              href="/privacy-policy"
+              className="font-semibold text-deep-teal underline underline-offset-2 hover:text-deep-teal/80"
+            >
+              Privacy Policy
+            </Link>
+            .
+          </div>
           <IntakeForm />
         </Container>
       </Section>

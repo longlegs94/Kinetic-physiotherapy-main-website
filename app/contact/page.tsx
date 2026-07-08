@@ -1,5 +1,15 @@
 import Link from "next/link";
-import { MapPin, Phone, Mail, Printer, Clock, ExternalLink, ClipboardList } from "lucide-react";
+import {
+  MapPin,
+  Phone,
+  Mail,
+  Printer,
+  Clock,
+  ExternalLink,
+  ClipboardList,
+  Navigation,
+  ParkingCircle,
+} from "lucide-react";
 import { PageHero } from "@/components/layout/PageHero";
 import { Section, Container } from "@/components/layout/Section";
 import { ContactForm } from "@/components/cards/ContactForm";
@@ -69,11 +79,37 @@ export default function ContactPage() {
                   href={mapsUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-deep-teal hover:text-charcoal"
+                  className="mt-5 inline-flex items-center gap-1.5 rounded-pill border border-deep-teal/30 bg-sage/40 px-4 py-2 text-sm font-semibold text-deep-teal transition-colors hover:border-deep-teal"
                 >
                   Open in Google Maps
                   <ExternalLink className="h-4 w-4" aria-hidden="true" />
                 </a>
+              </div>
+
+              <div>
+                <h2 className="flex items-center gap-2 text-xl font-bold text-charcoal">
+                  <Navigation className="h-5 w-5 text-deep-teal" aria-hidden="true" />
+                  Getting here
+                </h2>
+                <ul className="mt-4 space-y-3 text-sm text-charcoal/70">
+                  <li className="flex gap-3">
+                    <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-deep-teal" aria-hidden="true" />
+                    <span>
+                      We&apos;re in the Cottonwood / 238B Street area of Maple Ridge, just off
+                      Dewdney Trunk Road — a short drive from Maple Ridge town centre, serving
+                      Maple Ridge, Pitt Meadows, and the surrounding communities.
+                    </span>
+                  </li>
+                  <li className="flex gap-3">
+                    <ParkingCircle className="mt-0.5 h-4 w-4 shrink-0 text-deep-teal" aria-hidden="true" />
+                    {/* TODO(verify): confirm parking details with clinic */}
+                    <span>Parking is available at the unit.</span>
+                  </li>
+                </ul>
+                <p className="mt-3 text-xs text-charcoal/50">
+                  Service area: Maple Ridge, Pitt Meadows, Albion, Websters Corners, and
+                  Whonnock.
+                </p>
               </div>
 
               <div>

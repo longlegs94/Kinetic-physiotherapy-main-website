@@ -1,39 +1,25 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
+import Link from "next/link";
 import { Send, CheckCircle2, AlertCircle } from "lucide-react";
 import { clinic } from "@/lib/site-data";
 import { trackEvent } from "@/lib/analytics";
 import { cn } from "@/lib/utils";
+import { CONTACT_CATEGORIES, CALLBACK_TIMES } from "@/lib/contact";
 
-const categories = [
-  "Booking",
-  "Request a callback",
-  "Inquiry",
-  "ICBC",
-  "WSBC",
-  "Complaint",
-  "Other",
-];
-
-const CALLBACK_TIMES = [
-  "Anytime during clinic hours",
-  "Morning (8am–12pm)",
-  "Afternoon (12pm–5pm)",
-  "Evening (5pm–8pm)",
-];
+const categories = CONTACT_CATEGORIES;
 
 type Status = "idle" | "submitting" | "success" | "error";
-
-const WEB3FORMS_KEY = process.env.NEXT_PUBLIC_WEB3FORMS_KEY;
 
 const fieldClass =
   "w-full rounded-2xl border border-silver bg-white px-4 py-3 text-charcoal placeholder:text-charcoal/40 focus:border-deep-teal focus:outline-none";
 const labelClass = "mb-1.5 block text-sm font-semibold text-charcoal";
 
 /**
- * Contact form. Posts to Web3Forms when NEXT_PUBLIC_WEB3FORMS_KEY is set;
- * otherwise renders a mailto: fallback so the form is always functional.
+ * Contact form. Posts to the server-side /api/contact relay, which forwards
+ * to Web3Forms using a server-only key. Falls back to a mailto: link if the
+ * relay reports it isn't configured (501), so the form is always functional.
  * Includes a honeypot field for basic spam protection.
  */
 export function ContactForm() {
@@ -50,46 +36,73 @@ export function ContactForm() {
     // Honeypot: bots fill hidden fields.
     if (data.get("botcheck")) return;
 
-    if (!WEB3FORMS_KEY) {
-      // Fallback: open a pre-filled email.
-      const subject = `Website enquiry: ${data.get("category")}`;
-      const body = [
-        `Name: ${data.get("first_name")} ${data.get("last_name")}`,
-        `Email: ${data.get("email")}`,
-        `Phone: ${data.get("phone")}`,
-        `Category: ${data.get("category")}`,
-        ...(data.get("callback_time")
-          ? [`Best time to call: ${data.get("callback_time")}`]
-          : []),
-        "",
-        `${data.get("message")}`,
-      ].join("\n");
-      window.location.href = `mailto:${clinic.email}?subject=${encodeURIComponent(
-        subject
-      )}&body=${encodeURIComponent(body)}`;
-      trackEvent("contact_submit", { method: "mailto" });
-      return;
-    }
+    const category = String(data.get("category") ?? "");
+    const callbackTime = data.get("callback_time") ? String(data.get("callback_time")) : "";
+    const message = String(data.get("message") ?? "");
+    const payload = {
+      name: `${data.get("first_name") ?? ""} ${data.get("last_name") ?? ""}`.trim(),
+      email: String(data.get("email") ?? ""),
+      phone: String(data.get("phone") ?? ""),
+      category,
+      callback_time: callbackTime,
+      message,
+      formName: "contact",
+    };
 
     setStatus("submitting");
     setError("");
-    data.append("access_key", WEB3FORMS_KEY);
-    data.append("subject", `Website enquiry (${data.get("category")}) — Kinetic Therapy`);
-    data.append("from_name", "Kinetic Therapy Website");
 
     try {
-      const res = await fetch("https://api.web3forms.com/submit", {
+      const res = await fetch("/api/contact", {
         method: "POST",
-        body: data,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
       });
-      const json = await res.json();
-      if (json.success) {
+
+      if (res.status === 501) {
+        // Relay isn't configured — fall back to a pre-filled email.
+        const subject = `Website enquiry: ${category}`;
+        const body = [
+          `Name: ${payload.name}`,
+          `Email: ${payload.email}`,
+          `Phone: ${payload.phone}`,
+          `Category: ${category}`,
+          ...(callbackTime ? [`Best time to call: ${callbackTime}`] : []),
+          "",
+          message,
+        ].join("\n");
+        window.location.href = `mailto:${clinic.email}?subject=${encodeURIComponent(
+          subject
+        )}&body=${encodeURIComponent(body)}`;
+        trackEvent("contact_submit", { method: "mailto" });
+        setStatus("idle");
+        return;
+      }
+
+      if (res.status === 429) {
+        const json = await res.json().catch(() => null);
+        setStatus("error");
+        setError(json?.error || "Too many requests. Please wait a moment and try again.");
+        return;
+      }
+
+      if (res.status === 400) {
+        const json = await res.json().catch(() => null);
+        const errors = json?.errors as Record<string, string> | undefined;
+        const firstError = errors ? Object.values(errors)[0] : undefined;
+        setStatus("error");
+        setError(firstError || "Please check the form and try again.");
+        return;
+      }
+
+      const json = await res.json().catch(() => null);
+      if (res.ok && json?.success) {
         setStatus("success");
-        trackEvent("contact_submit", { method: "web3forms" });
+        trackEvent("contact_submit", { method: "relay" });
         form.reset();
       } else {
         setStatus("error");
-        setError(json.message || "Something went wrong. Please call the clinic.");
+        setError(json?.error || "Something went wrong. Please call the clinic.");
       }
     } catch {
       setStatus("error");
@@ -208,6 +221,15 @@ export function ContactForm() {
         </p>
       )}
 
+      <p className="text-xs text-charcoal/50">
+        Your message goes directly to our clinic inbox. Please don&apos;t include detailed
+        health information here — save that for your appointment or the{" "}
+        <Link href="/intake" className="font-semibold text-deep-teal underline underline-offset-2 hover:text-deep-teal/80">
+          pre-visit intake form
+        </Link>
+        .
+      </p>
+
       <button
         type="submit"
         disabled={status === "submitting"}
@@ -216,15 +238,6 @@ export function ContactForm() {
         {status === "submitting" ? "Sending…" : "Send Message"}
         <Send className="h-[18px] w-[18px] transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
       </button>
-
-      {!WEB3FORMS_KEY && (
-        // Visible only in development / before the key is configured.
-        <p className="text-xs text-charcoal/50">
-          {/* TODO(setup): add NEXT_PUBLIC_WEB3FORMS_KEY to enable in-page sending.
-              Until then this opens the visitor's email app. */}
-          Submitting opens your email app pre-filled to {clinic.email}.
-        </p>
-      )}
     </form>
   );
 }

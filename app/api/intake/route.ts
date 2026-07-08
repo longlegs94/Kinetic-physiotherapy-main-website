@@ -8,6 +8,7 @@ import {
   type IntakeInput,
   type IntakeSummary,
 } from "@/lib/intake";
+import { checkRateLimit, getClientIp, isAllowedOrigin } from "@/lib/rate-limit";
 import { services } from "@/lib/site-data";
 
 export const runtime = "nodejs";
@@ -116,6 +117,22 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
+  if (!isAllowedOrigin(request.headers.get("origin"))) {
+    return NextResponse.json({ error: "forbidden" }, { status: 403 });
+  }
+
+  const ip = getClientIp(request);
+  const perMinute = checkRateLimit(`intake:min:${ip}`, { limit: 5, windowMs: 60_000 });
+  const perHour = checkRateLimit(`intake:hr:${ip}`, { limit: 20, windowMs: 3_600_000 });
+  const limited = !perMinute.allowed || !perHour.allowed;
+  if (limited) {
+    const retryAfterSeconds = Math.max(perMinute.retryAfterSeconds, perHour.retryAfterSeconds);
+    return NextResponse.json(
+      { error: "Too many requests. Please wait a moment and try again." },
+      { status: 429, headers: { "Retry-After": String(retryAfterSeconds) } }
+    );
+  }
+
   if (!process.env.ANTHROPIC_API_KEY) {
     return NextResponse.json({ error: "not_configured" }, { status: 503 });
   }

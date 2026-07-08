@@ -41,6 +41,38 @@ const wordpressRedirects = [
   },
 ].map((r) => ({ ...r, permanent: true }));
 
+/**
+ * Content-Security-Policy for the site.
+ *
+ * - Fonts (Sora, Inter) are loaded via next/font/google, which self-hosts the
+ *   font files at build time — no fonts.googleapis.com / fonts.gstatic.com
+ *   entries are needed.
+ * - Google Analytics 4 (components/analytics/Analytics.tsx) is loaded
+ *   conditionally via next/script and needs googletagmanager.com (script) and
+ *   google-analytics.com (script config + beacon/collect requests).
+ * - The contact and intake forms (components/cards/ContactForm.tsx,
+ *   components/intake/IntakeForm.tsx) submit to Web3Forms via `fetch(...)`,
+ *   not a native <form action> POST, so only connect-src needs the Web3Forms
+ *   origin — form-action can stay 'self'.
+ * - Next.js inline runtime/hydration scripts and inline JSON-LD
+ *   (components/ui/JsonLd.tsx) require script-src 'unsafe-inline' (no nonce
+ *   middleware in this project).
+ * - Framer Motion applies animated styles inline, requiring style-src
+ *   'unsafe-inline'.
+ */
+const cspDirectives = [
+  "default-src 'self'",
+  "script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://*.google-analytics.com",
+  "style-src 'self' 'unsafe-inline'",
+  "img-src 'self' data: blob: https://*.google-analytics.com",
+  "font-src 'self' data:",
+  "connect-src 'self' https://www.googletagmanager.com https://*.google-analytics.com https://api.web3forms.com",
+  "frame-ancestors 'self'",
+  "base-uri 'self'",
+  "form-action 'self'",
+  "object-src 'none'",
+];
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
@@ -59,6 +91,12 @@ const nextConfig = {
           { key: "X-Content-Type-Options", value: "nosniff" },
           { key: "X-Frame-Options", value: "SAMEORIGIN" },
           { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+          { key: "Strict-Transport-Security", value: "max-age=63072000; includeSubDomains" },
+          {
+            key: "Permissions-Policy",
+            value: "camera=(), microphone=(), geolocation=(), payment=()",
+          },
+          { key: "Content-Security-Policy", value: cspDirectives.join("; ") },
         ],
       },
     ];

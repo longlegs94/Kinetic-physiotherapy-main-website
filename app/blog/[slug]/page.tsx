@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import { ArrowLeft, Clock } from "lucide-react";
-import { getPost, getPublishedSlugs } from "@/lib/blog";
+import { getPost, getPublishedSlugs, showDrafts } from "@/lib/blog";
 import { Section, Container } from "@/components/layout/Section";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import { FinalCTA } from "@/components/sections/FinalCTA";
@@ -55,6 +55,8 @@ export default async function BlogPostPage({
   const { slug } = await params;
   const post = getPost(slug);
   if (!post) notFound();
+  // Defense in depth: block draft posts in production even if generated.
+  if (post.draft && !showDrafts) notFound();
 
   const crumbs = [
     { name: "Home", path: "/" },

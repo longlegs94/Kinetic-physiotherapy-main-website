@@ -14,8 +14,6 @@ const CATEGORIES = [
   "Other",
 ];
 
-const WEB3FORMS_KEY = process.env.NEXT_PUBLIC_WEB3FORMS_KEY;
-
 const fieldClass =
   "w-full rounded-2xl border border-silver bg-white px-4 py-3 text-charcoal placeholder:text-charcoal/40 focus:border-deep-teal focus:outline-none";
 const labelClass = "mb-1.5 block text-sm font-semibold text-charcoal";
@@ -156,31 +154,44 @@ export function IntakeForm() {
     setSendError("");
     const subject = `Pre-visit intake — ${fields.firstName} ${fields.lastName}`.trim();
     const message = buildDeliveryText(fields, ai);
-
-    if (!WEB3FORMS_KEY) {
-      window.location.href = `mailto:${clinic.email}?subject=${encodeURIComponent(
-        subject
-      )}&body=${encodeURIComponent(message)}`;
-      trackEvent("contact_submit", { method: "intake_mailto" });
-      setPhase("sent");
-      return;
-    }
+    const name = `${fields.firstName} ${fields.lastName}`.trim() || "Website visitor";
+    const email = fields.email || clinic.email;
 
     setPending(true);
     try {
-      const data = new FormData();
-      data.append("access_key", WEB3FORMS_KEY);
-      data.append("subject", subject);
-      data.append("from_name", "Kinetic Therapy Website");
-      data.append("email", fields.email || clinic.email);
-      data.append("message", message);
-      const res = await fetch("https://api.web3forms.com/submit", {
+      const res = await fetch("/api/contact", {
         method: "POST",
-        body: data,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name,
+          email,
+          phone: fields.phone,
+          category: fields.category,
+          message,
+          subject,
+          formName: "intake",
+        }),
       });
-      const json = await res.json();
-      if (json.success) {
-        trackEvent("contact_submit", { method: "intake_web3forms" });
+
+      if (res.status === 501) {
+        // Relay isn't configured — fall back to a pre-filled email.
+        window.location.href = `mailto:${clinic.email}?subject=${encodeURIComponent(
+          subject
+        )}&body=${encodeURIComponent(message)}`;
+        trackEvent("contact_submit", { method: "intake_mailto" });
+        setPhase("sent");
+        return;
+      }
+
+      if (res.status === 429) {
+        const json = await res.json().catch(() => null);
+        setSendError(json?.error || "Too many requests. Please wait a moment and try again.");
+        return;
+      }
+
+      const json = await res.json().catch(() => null);
+      if (res.ok && json?.success) {
+        trackEvent("contact_submit", { method: "intake_relay" });
         setPhase("sent");
       } else {
         setSendError(`Something went wrong. Please call us at ${clinic.phone}.`);

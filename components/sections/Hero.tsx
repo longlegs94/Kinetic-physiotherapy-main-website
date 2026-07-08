@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { motion } from "framer-motion";
 import { CalendarCheck, ShieldCheck, Users } from "lucide-react";
 import { Container } from "@/components/layout/Section";
@@ -81,6 +82,32 @@ export function Hero() {
             <LinkButton href="/services" variant="secondary" size="lg" withArrow={false}>
               {hero.secondaryCta}
             </LinkButton>
+          </motion.div>
+
+          <motion.div
+            variants={reduced ? undefined : heroLine}
+            className="mt-6 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-charcoal/60"
+          >
+            <div className="flex flex-wrap items-center gap-x-2">
+              {[
+                { name: "Physiotherapy", slug: "physiotherapy-maple-ridge" },
+                { name: "Massage Therapy", slug: "massage-therapy-maple-ridge" },
+                { name: "Chiropractic", slug: "chiropractor-maple-ridge" },
+                { name: "Kinesiology", slug: "kinesiology-active-rehab-maple-ridge" },
+                { name: "Acupuncture", slug: "acupuncture-maple-ridge" },
+              ].map((service, i) => (
+                <span key={service.slug} className="flex items-center gap-x-2">
+                  <Link
+                    href={`/${service.slug}`}
+                    className="font-medium transition-colors duration-200 hover:text-mint"
+                  >
+                    {service.name}
+                  </Link>
+                  {i < 4 && <span className="text-charcoal/40">·</span>}
+                </span>
+              ))}
+            </div>
+            <span className="whitespace-nowrap text-charcoal/60">in Maple Ridge</span>
           </motion.div>
 
           <motion.div variants={reduced ? undefined : heroLine} className="mt-8">

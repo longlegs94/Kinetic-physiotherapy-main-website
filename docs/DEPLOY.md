@@ -19,7 +19,8 @@ Set these in **Vercel → Project → Settings → Environment Variables** (see 
 |---|---|---|
 | `NEXT_PUBLIC_SITE_URL` | Yes | Production URL, no trailing slash (e.g. `https://www.kinetictherapyclinic.ca`). Drives canonical URLs, sitemap, and schema. |
 | `NEXT_PUBLIC_JANE_BOOKING_URL` | No | Overrides the Jane URL in content if set. |
-| `NEXT_PUBLIC_WEB3FORMS_KEY` | No | Free key from <https://web3forms.com>. Without it, the contact form falls back to opening the visitor's email app. |
+| `WEB3FORMS_KEY` | No | Free key from <https://web3forms.com>, read server-side by `app/api/contact/route.ts`. Preferred over `NEXT_PUBLIC_WEB3FORMS_KEY` — it's never exposed to the browser. Without either set, the relay returns 501 and the contact/intake forms fall back to opening the visitor's email app. |
+| `NEXT_PUBLIC_WEB3FORMS_KEY` | No | Legacy client-side fallback for the same key. Only kept so existing deployments that set this continue to work; new setups should use `WEB3FORMS_KEY` instead. |
 | `NEXT_PUBLIC_GA_ID` | No | Google Analytics 4 Measurement ID (`G-XXXXXXXXXX`). Without it, analytics is disabled. |
 | `ANTHROPIC_API_KEY` | No | Enables the AI booking concierge chat. Server-side only. Without it the widget shows contact options instead. |
 | `CONCIERGE_MODEL` | No | Model for the concierge; defaults to claude-opus-4-8. Set claude-haiku-4-5 for lower cost. |
@@ -38,6 +39,14 @@ Your live WordPress site is untouched until you do this step.
 - If migrating from WordPress, set up 301 redirects from old URLs to the new
   Maple-Ridge-focused URLs to preserve SEO (see `docs/URL-MIGRATION` note below).
 - Confirm the contact form delivers to the clinic inbox.
+
+## Monitoring
+- Enable Vercel's built-in **Error/Runtime Monitoring** and **Web Analytics**
+  from the project dashboard (Vercel → Project → Analytics / Observability) —
+  no code changes needed, just a toggle per project.
+- GA4 conversion events already fire from the app (see `lib/analytics.ts`)
+  for booking clicks, phone clicks, and contact/intake form submissions —
+  they'll show up automatically in GA4 once `NEXT_PUBLIC_GA_ID` is set.
 
 ## URL migration (WordPress → new site) — DONE
 

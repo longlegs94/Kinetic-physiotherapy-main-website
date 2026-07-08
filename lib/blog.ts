@@ -9,6 +9,11 @@ import matter from "gray-matter";
 
 const BLOG_DIR = path.join(process.cwd(), "content", "blog");
 
+// Drafts are hidden in production builds unless explicitly enabled for preview/staging.
+export const showDrafts =
+  process.env.NODE_ENV !== "production" ||
+  process.env.NEXT_PUBLIC_SHOW_DRAFTS === "1";
+
 export type PostMeta = {
   slug: string;
   title: string;
@@ -60,7 +65,7 @@ export function getPost(slug: string): Post | undefined {
  * review them on the deployed site (they render with a "Draft" badge and are
  * marked noindex + excluded from the sitemap until `draft: false`).
  */
-export function getAllPosts(includeDrafts = true): PostMeta[] {
+export function getAllPosts(includeDrafts = showDrafts): PostMeta[] {
   return readFileSlugs()
     .map((slug) => getPost(slug))
     .filter((p): p is Post => Boolean(p))
@@ -69,9 +74,9 @@ export function getAllPosts(includeDrafts = true): PostMeta[] {
     .map(({ content: _content, ...meta }) => meta);
 }
 
-/** All slugs (including drafts) — used to statically generate post pages. */
+/** Slugs to statically generate. Includes drafts only if showDrafts is true. */
 export function getPublishedSlugs(): string[] {
-  return getAllPosts(true).map((p) => p.slug);
+  return getAllPosts(showDrafts).map((p) => p.slug);
 }
 
 /** Only published (non-draft) posts — used for the sitemap. */
