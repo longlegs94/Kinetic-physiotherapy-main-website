@@ -13,12 +13,16 @@ export type ConversionEvent =
   | "service_card_click"
   | "pain_point_click"
   | "icbc_cta_click"
+  | "icbc_callback_submit"
   | "practitioner_book_click"
   | "sticky_bar_click"
   | "concierge_open"
   | "concierge_book_click"
   | "concierge_service_click"
-  | "symptom_router_submit";
+  | "symptom_router_submit"
+  | "review_google_click"
+  | "review_feedback_submit"
+  | "review_cta_click";
 
 type EventParams = Record<string, string | number | boolean | undefined>;
 

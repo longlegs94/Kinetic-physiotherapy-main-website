@@ -6,13 +6,17 @@ import { ArrowLeft, Clock } from "lucide-react";
 import { getPost, getPublishedSlugs, showDrafts } from "@/lib/blog";
 import { Section, Container } from "@/components/layout/Section";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
+import { SectionHeading } from "@/components/ui/SectionHeading";
+import { ServiceCard } from "@/components/cards/ServiceCard";
 import { FinalCTA } from "@/components/sections/FinalCTA";
 import { KineticMotionLine } from "@/components/motion/KineticMotionLine";
+import { StaggeredGrid, ScrollItem } from "@/components/motion/StaggeredGrid";
 import { JsonLd } from "@/components/ui/JsonLd";
 import { breadcrumbSchema } from "@/lib/schema";
 import { pageMetadata, SITE_URL, SITE_NAME } from "@/lib/seo";
 import { clinic } from "@/lib/site-data";
 import { mdxComponents } from "@/components/blog/MdxComponents";
+import { getRelatedServicesForPost } from "@/lib/related";
 
 export const dynamicParams = false;
 
@@ -57,6 +61,8 @@ export default async function BlogPostPage({
   if (!post) notFound();
   // Defense in depth: block draft posts in production even if generated.
   if (post.draft && !showDrafts) notFound();
+
+  const relatedServices = getRelatedServicesForPost(slug);
 
   const crumbs = [
     { name: "Home", path: "/" },
@@ -117,6 +123,21 @@ export default async function BlogPostPage({
           </div>
         </Container>
       </Section>
+
+      {relatedServices.length > 0 && (
+        <Section tone="sage">
+          <Container>
+            <SectionHeading eyebrow="Related services" title="Care that pairs with this article." />
+            <StaggeredGrid className="mt-10 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+              {relatedServices.map((service) => (
+                <ScrollItem key={service.slug} as="article" className="h-full">
+                  <ServiceCard service={service} />
+                </ScrollItem>
+              ))}
+            </StaggeredGrid>
+          </Container>
+        </Section>
+      )}
 
       <FinalCTA source={`blog_post:${slug}`} />
     </>

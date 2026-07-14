@@ -20,10 +20,12 @@ import { ServiceCard } from "@/components/cards/ServiceCard";
 import { PractitionerCard } from "@/components/cards/PractitionerCard";
 import { FAQSection } from "@/components/sections/FAQSection";
 import { FinalCTA } from "@/components/sections/FinalCTA";
+import { RelatedReading } from "@/components/sections/RelatedReading";
 import { ScrollReveal } from "@/components/motion/ScrollReveal";
 import { StaggeredGrid, ScrollItem } from "@/components/motion/StaggeredGrid";
 import { JsonLd } from "@/components/ui/JsonLd";
 import { serviceSchema, breadcrumbSchema, faqSchema } from "@/lib/schema";
+import { getRelatedPostsForService } from "@/lib/related";
 
 export const dynamicParams = false;
 
@@ -66,6 +68,7 @@ export default async function ServicePage({
   if (!service) notFound();
 
   const related = resolveRelated(service.relatedServices);
+  const relatedPosts = getRelatedPostsForService(slug);
   const relevantPractitioners = practitioners.filter(
     (p) =>
       p.category.toLowerCase().includes(service.shortName.toLowerCase()) ||
@@ -207,6 +210,8 @@ export default async function ServicePage({
           </Container>
         </Section>
       )}
+
+      <RelatedReading posts={relatedPosts} />
 
       <FAQSection faqs={pageFaqs} eyebrow="FAQ" title="Common questions." />
 

@@ -50,9 +50,12 @@ export type ContactValidation =
 
 /**
  * Validates a raw JSON body for the /api/contact relay. `formName`
- * distinguishes the public contact form ("contact", the default) from
- * other callers (e.g. "intake") that reuse this endpoint but don't use the
- * same fixed category list — for those, category is just length-checked.
+ * distinguishes the public contact form ("contact", the default) from any
+ * other caller that reuses this endpoint (e.g. "feedback", "icbc-callback",
+ * "intake") but doesn't share the same fixed category list. For "contact",
+ * category must be one of CONTACT_CATEGORIES; for everything else, category
+ * is optional — when present it's just length-checked, when absent it's
+ * skipped — so new forms can post here without enumerating each formName.
  */
 export function validateContactPayload(record: Record<string, unknown>): ContactValidation {
   const errors: Record<string, string> = {};
@@ -62,13 +65,25 @@ export function validateContactPayload(record: Record<string, unknown>): Contact
       ? record.formName.trim().slice(0, 40)
       : "contact";
 
+  // The public contact form requires a name and a valid email. Other callers
+  // that reuse this relay (feedback, icbc-callback) collect different fields —
+  // for them name and email are optional, and email is only format-checked
+  // when the visitor actually provides one.
+  const isContactForm = formName === "contact";
+
   const name = typeof record.name === "string" ? record.name.trim() : "";
-  if (name.length < 1 || name.length > 100) {
+  if (isContactForm && (name.length < 1 || name.length > 100)) {
     errors.name = "Please enter your name.";
+  } else if (name.length > 100) {
+    errors.name = "Name is too long.";
   }
 
   const email = typeof record.email === "string" ? record.email.trim() : "";
-  if (!isValidEmail(email)) {
+  if (isContactForm) {
+    if (!isValidEmail(email)) {
+      errors.email = "Please enter a valid email address.";
+    }
+  } else if (email && !isValidEmail(email)) {
     errors.email = "Please enter a valid email address.";
   }
 
@@ -84,8 +99,8 @@ export function validateContactPayload(record: Record<string, unknown>): Contact
     if (!CONTACT_CATEGORIES.includes(category as ContactCategory)) {
       errors.category = "Please choose a valid category.";
     }
-  } else if (category.length < 1 || category.length > 100) {
-    errors.category = "Please choose a category.";
+  } else if (category && category.length > 100) {
+    errors.category = "Category is too long.";
   }
 
   const callbackTime =

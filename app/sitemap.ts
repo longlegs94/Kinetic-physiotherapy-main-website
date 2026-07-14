@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 import { services } from "@/lib/site-data";
 import { getIndexablePosts } from "@/lib/blog";
+import { locations } from "@/content/locations";
 import { SITE_URL } from "@/lib/seo";
 
 export default function sitemap(): MetadataRoute.Sitemap {
@@ -15,6 +16,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: "/blog", priority: 0.6 },
     { path: "/contact", priority: 0.8 },
     { path: "/intake", priority: 0.5 },
+    { path: "/locations", priority: 0.7 },
   ].map((r) => ({
     url: `${SITE_URL}${r.path}`,
     lastModified: now,
@@ -29,6 +31,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.85,
   }));
 
+  const locationRoutes = locations.map((l) => ({
+    url: `${SITE_URL}/locations/${l.slug}`,
+    lastModified: now,
+    changeFrequency: "monthly" as const,
+    priority: 0.75,
+  }));
+
   const blogRoutes = getIndexablePosts().map((p) => ({
     url: `${SITE_URL}/blog/${p.slug}`,
     lastModified: p.date ? new Date(p.date) : now,
@@ -36,5 +45,5 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.5,
   }));
 
-  return [...staticRoutes, ...serviceRoutes, ...blogRoutes];
+  return [...staticRoutes, ...serviceRoutes, ...locationRoutes, ...blogRoutes];
 }

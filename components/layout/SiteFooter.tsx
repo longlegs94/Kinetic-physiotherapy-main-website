@@ -12,6 +12,7 @@ const clinicLinks = [
   { label: "Testimonials", href: "/testimonials" },
   { label: "Resources", href: "/blog" },
   { label: "Contact", href: "/contact" },
+  { label: "Leave a Review", href: "/review" },
 ];
 
 /** Dark charcoal footer with mint accent line and four columns. */

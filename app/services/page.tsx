@@ -16,7 +16,7 @@ import { BookButton } from "@/components/ui/BookButton";
 import { LinkButton } from "@/components/ui/Button";
 
 export const metadata = pageMetadata({
-  title: "Services in Maple Ridge | Physio, Massage, Chiro, Acupuncture & More",
+  title: "Services in Maple Ridge — Physio, Massage, Chiro & More | Kinetic Therapy Clinic",
   description:
     "Explore Kinetic Therapy's multidisciplinary services in Maple Ridge: physiotherapy, massage therapy, chiropractic, kinesiology, acupuncture, ICBC support, pregnancy massage, shockwave, orthotics and bracing.",
   path: "/services",

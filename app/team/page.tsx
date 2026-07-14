@@ -12,7 +12,7 @@ import { pageMetadata } from "@/lib/seo";
 import { BookButton } from "@/components/ui/BookButton";
 
 export const metadata = pageMetadata({
-  title: "Our Team | Physiotherapists, RMTs, Chiropractor & More in Maple Ridge",
+  title: "Our Team in Maple Ridge — Physiotherapists, RMTs & More | Kinetic Therapy Clinic",
   description:
     "Meet the multidisciplinary team at Kinetic Therapy Clinic in Maple Ridge — physiotherapists, registered massage therapists, kinesiologist, acupuncturist, and more, working together on your recovery.",
   path: "/team",

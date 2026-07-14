@@ -7,10 +7,12 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 /**
- * Server-side relay for the public contact form and the pre-visit intake
- * form's final "send to clinic" step. Keeps the Web3Forms access key off
- * the client, adds origin/rate-limit checks, and validates the payload
- * server-side before forwarding.
+ * Server-side relay for the public contact form and any other on-site form
+ * that reuses it (the pre-visit intake form's final "send to clinic" step,
+ * the /review page's private-feedback form, etc — see formName handling in
+ * lib/contact.ts). Keeps the Web3Forms access key off the client, adds
+ * origin/rate-limit checks, and validates the payload server-side before
+ * forwarding.
  */
 export async function POST(request: Request) {
   if (!isAllowedOrigin(request.headers.get("origin"))) {
@@ -62,8 +64,20 @@ export async function POST(request: Request) {
   }
 
   const { name, email, phone, category, callbackTime, message, subject, formName } = validation.data;
-  const subjectPrefix = formName === "intake" ? "Pre-visit intake" : "Website enquiry";
-  const finalSubject = subject || `${subjectPrefix} (${category}) — Kinetic Therapy`;
+  // Readable Web3Forms subject per formName so the clinic inbox shows at a
+  // glance which surface the message came from. Unlisted/future formNames
+  // (relaxed via lib/contact.ts) fall back to "Website enquiry".
+  const subjectPrefixes: Record<string, string> = {
+    contact: "Website enquiry",
+    intake: "Pre-visit intake",
+    feedback: "Website feedback",
+    "icbc-callback": "ICBC callback request",
+  };
+  const subjectPrefix = subjectPrefixes[formName] || "Website enquiry";
+  const finalSubject =
+    subject || (category
+      ? `${subjectPrefix} (${category}) — Kinetic Therapy`
+      : `${subjectPrefix} — Kinetic Therapy`);
 
   try {
     const res = await fetch("https://api.web3forms.com/submit", {
@@ -76,7 +90,8 @@ export async function POST(request: Request) {
         name,
         email,
         phone: phone || undefined,
-        category,
+        category: category || undefined,
+        formName,
         ...(callbackTime ? { callback_time: callbackTime } : {}),
         message,
       }),

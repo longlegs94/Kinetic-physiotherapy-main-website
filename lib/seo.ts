@@ -28,7 +28,10 @@ export function pageMetadata({
 }: PageMetaInput): Metadata {
   const url = `${SITE_URL}${path}`;
   return {
-    title,
+    // `absolute` bypasses the root layout's "%s | Kinetic Therapy Clinic"
+    // template. Page titles here already include the brand where wanted, so
+    // the template would otherwise double it ("… | Clinic | Clinic").
+    title: { absolute: title },
     description,
     alternates: { canonical: url },
     openGraph: {

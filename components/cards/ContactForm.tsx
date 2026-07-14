@@ -2,11 +2,15 @@
 
 import { useState, type FormEvent } from "react";
 import Link from "next/link";
-import { Send, CheckCircle2, AlertCircle } from "lucide-react";
+import { Send, CheckCircle2, AlertCircle, ArrowRight } from "lucide-react";
 import { clinic } from "@/lib/site-data";
 import { trackEvent } from "@/lib/analytics";
 import { cn } from "@/lib/utils";
 import { CONTACT_CATEGORIES, CALLBACK_TIMES } from "@/lib/contact";
+
+function trackReviewCtaClick(source: string) {
+  trackEvent("review_cta_click", { source });
+}
 
 const categories = CONTACT_CATEGORIES;
 
@@ -119,6 +123,14 @@ export function ContactForm() {
           Thanks for reaching out — our team will get back to you soon. For urgent needs,
           please call {clinic.phone}.
         </p>
+        <Link
+          href="/review"
+          onClick={() => trackReviewCtaClick("contact_success")}
+          className="group mt-1 inline-flex items-center gap-1.5 text-sm font-semibold text-deep-teal hover:text-deep-teal/80"
+        >
+          Loved your visit? Leave us a review
+          <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
+        </Link>
       </div>
     );
   }

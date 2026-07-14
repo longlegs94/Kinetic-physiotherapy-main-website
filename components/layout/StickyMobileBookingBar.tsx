@@ -1,15 +1,20 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 import { Calendar, Phone } from "lucide-react";
 import { janeBookingUrl, phoneHref, clinic } from "@/lib/site-data";
 import { trackEvent } from "@/lib/analytics";
+
+/** Pages that render their own dedicated sticky CTA and must not stack this one. */
+const SUPPRESSED_PATHS = ["/icbc-claims"];
 
 /**
  * Mobile-only sticky booking bar. Appears after the user scrolls ~20% down
  * the page so booking is always one tap away.
  */
 export function StickyMobileBookingBar() {
+  const pathname = usePathname();
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
@@ -21,6 +26,8 @@ export function StickyMobileBookingBar() {
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  if (SUPPRESSED_PATHS.includes(pathname)) return null;
 
   return (
     <div
