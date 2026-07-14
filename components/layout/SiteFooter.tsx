@@ -1,9 +1,12 @@
+"use client";
+
 import Link from "next/link";
 import { MapPin, Phone, Mail, Clock, Facebook, Instagram } from "lucide-react";
 import { clinic, services, phoneHref, emailHref } from "@/lib/site-data";
 import { Logo } from "./Logo";
 import { BookButton } from "@/components/ui/BookButton";
 import { KineticMotionLine } from "@/components/motion/KineticMotionLine";
+import { trackEvent } from "@/lib/analytics";
 
 const clinicLinks = [
   { label: "Services", href: "/services" },
@@ -87,7 +90,15 @@ export function SiteFooter() {
             <ul className="mt-4 space-y-2.5 text-sm text-warm-white/75">
               {clinicLinks.map((l) => (
                 <li key={l.href}>
-                  <Link href={l.href} className="hover:text-mint">
+                  <Link
+                    href={l.href}
+                    onClick={
+                      l.href === "/review"
+                        ? () => trackEvent("review_cta_click", { source: "footer" })
+                        : undefined
+                    }
+                    className="hover:text-mint"
+                  >
                     {l.label}
                   </Link>
                 </li>

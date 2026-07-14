@@ -11,6 +11,7 @@ import { KineticMotionLine } from "@/components/motion/KineticMotionLine";
 import { useReducedMotionSafe } from "@/components/motion/useReducedMotionSafe";
 import { homepage } from "@/lib/site-data";
 import { heroLine, easePremium } from "@/lib/motion";
+import { trackEvent } from "@/lib/analytics";
 
 const floatingCards = [
   { icon: CalendarCheck, label: "Same-week appointments" },
@@ -99,6 +100,12 @@ export function Hero() {
                 <span key={service.slug} className="flex items-center gap-x-2">
                   <Link
                     href={`/${service.slug}`}
+                    onClick={() =>
+                      trackEvent("service_card_click", {
+                        source: "hero_strip",
+                        service: service.slug,
+                      })
+                    }
                     className="font-medium transition-colors duration-200 hover:text-mint"
                   >
                     {service.name}

@@ -117,7 +117,6 @@ export function IntakeForm() {
     if (data.get("botcheck")) return; // honeypot
 
     setPending(true);
-    trackEvent("contact_submit", { method: "intake_prepare" });
     try {
       const res = await fetch("/api/intake", {
         method: "POST",
@@ -178,7 +177,7 @@ export function IntakeForm() {
         window.location.href = `mailto:${clinic.email}?subject=${encodeURIComponent(
           subject
         )}&body=${encodeURIComponent(message)}`;
-        trackEvent("contact_submit", { method: "intake_mailto" });
+        trackEvent("intake_submit", { method: "mailto" });
         setPhase("sent");
         return;
       }
@@ -191,7 +190,7 @@ export function IntakeForm() {
 
       const json = await res.json().catch(() => null);
       if (res.ok && json?.success) {
-        trackEvent("contact_submit", { method: "intake_relay" });
+        trackEvent("intake_submit", { method: "relay" });
         setPhase("sent");
       } else {
         setSendError(`Something went wrong. Please call us at ${clinic.phone}.`);

@@ -66,7 +66,7 @@ export function SiteHeader() {
         </nav>
 
         <div className="flex items-center gap-2">
-          <BookButton label="Book Now" className="hidden sm:inline-flex" />
+          <BookButton label="Book Now" className="hidden sm:inline-flex" source="header" />
           <button
             type="button"
             onClick={() => setMenuOpen(true)}
