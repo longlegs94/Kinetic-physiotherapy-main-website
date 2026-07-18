@@ -106,7 +106,7 @@ export function Hero() {
                         service: service.slug,
                       })
                     }
-                    className="font-medium transition-colors duration-200 hover:text-mint"
+                    className="font-medium transition-colors duration-200 hover:text-deep-teal"
                   >
                     {service.name}
                   </Link>

@@ -233,7 +233,7 @@ export function ContactForm() {
         </p>
       )}
 
-      <p className="text-xs text-charcoal/50">
+      <p className="text-xs text-charcoal/60">
         Your message goes directly to our clinic inbox. Please don&apos;t include detailed
         health information here — save that for your appointment or the{" "}
         <Link href="/intake" className="font-semibold text-deep-teal underline underline-offset-2 hover:text-deep-teal/80">

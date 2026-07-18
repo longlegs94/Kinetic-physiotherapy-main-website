@@ -8,6 +8,7 @@ import { cn } from "@/lib/utils";
 import { trackEvent } from "@/lib/analytics";
 import { janeBookingUrl, clinic, phoneHref } from "@/lib/site-data";
 import { useReducedMotionSafe } from "@/components/motion/useReducedMotionSafe";
+import { useFocusTrap } from "@/components/hooks/useFocusTrap";
 import { easePremium } from "@/lib/motion";
 
 type ServiceLink = { name: string; slug: string };
@@ -59,6 +60,10 @@ export function ConciergeWidget() {
   const panelRef = useRef<HTMLDivElement>(null);
 
   const reducedMotion = useReducedMotionSafe();
+
+  // Runs before the input-focus effect below so it captures the launcher
+  // button (not the chat input) as the element to restore focus to on close.
+  useFocusTrap(open, panelRef);
 
   useEffect(() => {
     if (!open) return;

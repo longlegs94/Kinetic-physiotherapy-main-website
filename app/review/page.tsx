@@ -32,7 +32,7 @@ export default function ReviewPage() {
           <ReviewOptions />
         </div>
 
-        <p className="mt-8 text-center text-sm text-charcoal/50">
+        <p className="mt-8 text-center text-sm text-charcoal/60">
           Prefer to talk it through? Call us at{" "}
           <a href={phoneHref} className="font-semibold text-deep-teal hover:underline">
             {clinic.phone}

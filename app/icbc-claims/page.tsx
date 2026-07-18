@@ -172,7 +172,7 @@ export default function IcbcClaimsPage() {
 
       {/* Objection-handling FAQ, kept short for a focused landing page */}
       {faqs.length > 0 && (
-        <Section tone="warm">
+        <Section tone="warm" id="faq" ariaLabel="Frequently asked questions">
           <Container>
             <SectionHeading eyebrow="Good to know" title="Common questions." />
             <div className="mt-10 grid gap-5 sm:grid-cols-3">

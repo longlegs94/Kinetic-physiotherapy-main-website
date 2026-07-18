@@ -63,7 +63,7 @@ export default function ServicesPage() {
           </>
         }
       >
-        <p className="mt-8 text-sm font-semibold uppercase tracking-[0.18em] text-charcoal/50">
+        <p className="mt-8 text-sm font-semibold uppercase tracking-[0.18em] text-charcoal/60">
           Physio • RMT • Chiro • Kinesiology • Acupuncture • ICBC Care
         </p>
       </PageHero>

@@ -22,8 +22,16 @@ const SERVICE_TO_POST_SLUGS: Record<string, string[]> = {
   "icbc-physio-maple-ridge": ["icbc-physiotherapy-what-patients-should-know"],
   "pregnancy-massage-maple-ridge": ["physio-vs-massage-which-should-you-book"],
   // kinesiology-active-rehab, acupuncture, shockwave-therapy, and
-  // orthotics-bracing have no published post yet — omitted on purpose so
-  // RelatedReading renders nothing for them rather than an empty section.
+  // orthotics-bracing don't have a topically dedicated published post yet
+  // (their natural matches — e.g. the shockwave/plantar-fasciitis and
+  // active-rehab-after-a-car-accident drafts — are still draft:true). Until
+  // those publish, point them at the general conservative-care overview so
+  // every service page satisfies "links to ≥1 post" rather than rendering
+  // an empty RelatedReading section. Revisit once more drafts go live.
+  "kinesiology-active-rehab-maple-ridge": ["best-treatment-options-for-lower-back-pain"],
+  "acupuncture-maple-ridge": ["best-treatment-options-for-lower-back-pain"],
+  "shockwave-therapy-maple-ridge": ["best-treatment-options-for-lower-back-pain"],
+  "orthotics-bracing-maple-ridge": ["best-treatment-options-for-lower-back-pain"],
 };
 
 const POST_TO_SERVICE_SLUGS: Record<string, string[]> = {

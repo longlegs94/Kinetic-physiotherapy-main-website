@@ -65,7 +65,7 @@ export function PractitionerCard({ practitioner }: { practitioner: Practitioner 
             />
           ) : (
             <span className="flex h-full w-full items-center justify-center bg-gradient-to-br from-sage to-mint/50">
-              <span className="font-heading text-2xl font-bold text-charcoal/40">
+              <span className="font-heading text-2xl font-bold text-charcoal/60">
                 {initials(p.name)}
               </span>
             </span>

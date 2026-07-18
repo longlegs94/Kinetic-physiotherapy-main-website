@@ -62,6 +62,10 @@ gate) and a step-by-step guide for configuring Jane's post-appointment notificat
 to send it with the `/review` link. Owner enables it in Jane.
 **Accept:** templates in `docs/REVIEW_CAMPAIGN.md`; owner confirms first automated
 send; target +15 Google reviews/month tracked monthly.
+✅ **Dev half done** — `docs/REVIEW_CAMPAIGN.md` committed (email/SMS/QR templates,
+Jane setup steps, tracking). 🚫 Blocked on owner: `NEXT_PUBLIC_GOOGLE_REVIEW_URL` is
+still a placeholder in `app/review/ReviewOptions.tsx` — set it before enabling any
+send, then complete the Jane setup and first automated send.
 
 ### B3 · GBP optimization checklist — `DEV` doc · `OWNER` execution · S
 Categories, all 9 services listed, hours, photos (reuses A1 assets), Q&A seeding,
@@ -99,6 +103,14 @@ week. Dev maintains a publish schedule table in the doc.
 links inside blog posts, location pages cross-linked. One systematic pass, not ad hoc.
 **Accept:** every service page links ≥1 post; every post links ≥1 service; crawl
 (e.g. Screaming Frog or a link-check script) shows no orphan pages.
+✅ **Done** — a 2026-07-18 audit found 4 of 9 services (kinesiology-active-rehab,
+acupuncture, shockwave-therapy, orthotics-bracing) had no post mapped in
+`lib/related.ts` because their natural topical match is still a draft post. Mapped
+all 4 to the general back-pain overview post as an interim link so no service page
+renders an empty `RelatedReading` section; revisit with a better topical match once
+the shockwave/active-rehab drafts (ticket C2) publish. The "every post links ≥1
+service" side was already satisfied, though only because 7 of 10 posts are still
+unpublished — re-verify once more drafts go live.
 
 ### C4 · Post-launch rich-results & schema audit — `DEV` · S · depends A4, A5
 Validate LocalBusiness, Service, FAQ, Breadcrumb, Article schema in Google's Rich
@@ -131,6 +143,8 @@ geo-targeting (Maple Ridge/Pitt Meadows + radius), $1–1.5k/mo cap, and the kil
 rule: CAC < $60 per booked new patient scales, > $100 pauses.
 **Accept:** doc committed; owner approves budget; campaign launches within 2 weeks
 of A4.
+✅ **Dev done** — `docs/ICBC_ADS.md` committed. 🚫 Owner: approve budget, grant
+Google Ads access (ticket D2), launch after A4.
 
 ---
 

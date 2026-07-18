@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
 import { X } from "lucide-react";
@@ -8,6 +8,7 @@ import { navigation, clinic } from "@/lib/site-data";
 import { Logo } from "./Logo";
 import { BookButton } from "@/components/ui/BookButton";
 import { CallButton } from "@/components/ui/CallButton";
+import { useFocusTrap } from "@/components/hooks/useFocusTrap";
 import { easePremium } from "@/lib/motion";
 
 /** Full-height mobile navigation sheet with Book / Call at the top. */
@@ -18,11 +19,21 @@ export function MobileNavSheet({
   open: boolean;
   onClose: () => void;
 }) {
-  // Lock body scroll while open and close on Escape.
+  const panelRef = useRef<HTMLDivElement>(null);
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
+
+  // Runs before the close-button-focus effect below so it captures the
+  // hamburger button (not the close button) as the element to restore
+  // focus to when the sheet closes.
+  useFocusTrap(open, panelRef);
+
+  // Lock body scroll while open, close on Escape, and move focus into the
+  // sheet so keyboard users land inside it rather than on the page behind.
   useEffect(() => {
     if (!open) return;
     const original = document.body.style.overflow;
     document.body.style.overflow = "hidden";
+    closeButtonRef.current?.focus();
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
     window.addEventListener("keydown", onKey);
     return () => {
@@ -35,6 +46,7 @@ export function MobileNavSheet({
     <AnimatePresence>
       {open && (
         <motion.div
+          ref={panelRef}
           className="fixed inset-0 z-[70] md:hidden"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -55,6 +67,7 @@ export function MobileNavSheet({
             <div className="flex items-center justify-between border-b border-silver/60 px-5 py-4">
               <Logo />
               <button
+                ref={closeButtonRef}
                 type="button"
                 onClick={onClose}
                 aria-label="Close menu"

@@ -76,6 +76,7 @@ export default async function BlogPostPage({
     headline: post.title,
     description: post.description,
     datePublished: post.date,
+    image: [`${SITE_URL}/opengraph-image`],
     author: { "@type": "Organization", name: post.author ?? clinic.name },
     publisher: { "@type": "Organization", name: clinic.name },
     mainEntityOfPage: `${SITE_URL}/blog/${slug}`,

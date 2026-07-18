@@ -245,7 +245,7 @@ export function IntakeForm() {
                 {ai.flags.join(" · ")}
               </div>
             )}
-            <p className="text-xs text-charcoal/50">
+            <p className="text-xs text-charcoal/60">
               Patient-reported information — our practitioner will confirm everything with
               you in person.
             </p>
