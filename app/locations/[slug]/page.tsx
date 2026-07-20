@@ -74,7 +74,7 @@ export default async function LocationPage({
         actions={
           <>
             <BookButton label="Book Now" size="lg" withIcon source={`location:${slug}`} />
-            <CallButton variant="secondary" size="lg" />
+            <CallButton variant="secondary" size="lg" source={`location:${slug}`} />
           </>
         }
       >
@@ -177,7 +177,7 @@ export default async function LocationPage({
                   withIcon
                   source={`location_getting_here:${slug}`}
                 />
-                <CallButton variant="secondary-dark" size="lg" />
+                <CallButton variant="secondary-dark" size="lg" source={`location_getting_here:${slug}`} />
               </div>
             </div>
           </div>

@@ -90,7 +90,7 @@ export default function IcbcClaimsPage() {
 
               <div className="mt-8 flex flex-col gap-3 sm:flex-row">
                 <TrackedCta cta="hero_call">
-                  <CallButton variant="primary" size="lg" />
+                  <CallButton variant="primary" size="lg" source="icbc_ads_hero" />
                 </TrackedCta>
                 <TrackedCta cta="hero_callback">
                   <a
@@ -207,7 +207,7 @@ export default function IcbcClaimsPage() {
             </p>
             <div className="relative mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
               <TrackedCta cta="final_call">
-                <CallButton variant="secondary-dark" size="lg" />
+                <CallButton variant="secondary-dark" size="lg" source="icbc_ads_final" />
               </TrackedCta>
               <TrackedCta cta="final_callback">
                 <a

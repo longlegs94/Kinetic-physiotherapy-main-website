@@ -66,7 +66,7 @@ export function MobileNavSheet({
 
             <div className="flex flex-col gap-3 px-5 py-5">
               <BookButton label="Book Now" size="lg" className="w-full" withIcon source="mobile_nav" />
-              <CallButton variant="secondary" size="lg" className="w-full" />
+              <CallButton variant="secondary" size="lg" className="w-full" source="mobile_nav" />
             </div>
 
             <nav className="flex flex-col px-2 py-2" aria-label="Primary">

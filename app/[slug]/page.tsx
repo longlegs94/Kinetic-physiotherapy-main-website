@@ -96,7 +96,7 @@ export default async function ServicePage({
         actions={
           <>
             <BookButton label={service.ctaLabel} size="lg" withIcon source={`service:${slug}`} />
-            <CallButton variant="secondary" size="lg" />
+            <CallButton variant="secondary" size="lg" source={`service:${slug}`} />
           </>
         }
       >

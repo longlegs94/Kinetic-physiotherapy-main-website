@@ -101,7 +101,7 @@ export function ICBCSection() {
 
             <div className="mt-6 flex flex-col gap-3 sm:flex-row">
               <BookButton label="Book ICBC Treatment" source="icbc_section" />
-              <CallButton variant="secondary" />
+              <CallButton variant="secondary" source="icbc_section" />
             </div>
           </div>
         </div>

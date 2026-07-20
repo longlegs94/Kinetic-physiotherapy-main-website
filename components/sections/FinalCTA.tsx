@@ -30,7 +30,7 @@ export function FinalCTA({
           </p>
           <div className="relative mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
             <BookButton label="Book Now" size="lg" withIcon source={source} />
-            <CallButton variant="secondary-dark" size="lg" />
+            <CallButton variant="secondary-dark" size="lg" source={source} />
           </div>
         </div>
       </Container>

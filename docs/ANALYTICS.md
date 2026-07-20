@@ -41,7 +41,7 @@ fires, its params, and the funnel stage / KPI it feeds (see `ROADMAP.md` §3).
 |---|---|---|---|
 | `jane_outbound_click` | `components/ui/BookButton.tsx` — every "Book Now" style CTA across the site (hero, header, footer, mobile nav, service pages, practitioner cards, service cards, location pages, about/team/testimonials/services/blog final CTAs, ICBC section, 404 page). Fires whenever the button's `href` resolves to the default Jane booking URL (true for every current call site). | `{ source }` — a string identifying the CTA's placement, e.g. `hero`, `header`, `footer`, `mobile_nav`, `service:{slug}`, `service_why:{slug}`, `service_final:{slug}`, `service_card:{slug}`, `practitioner:{name}`, `location:{slug}`, `about_hero`, `icbc_section`, `404`, etc. Defaults to `generic` if a caller omits `source`. | **Convert** — this is the primary "booking-start" signal. See Attribution Rules (§3). |
 | `book_now_click` | Same component (`BookButton.tsx`), same code path, but only when a caller passes a custom `href` that is *not* the Jane URL. **No current call site does this** — every `BookButton` on the site uses the default Jane href, so this branch is live code but currently unreachable in practice. Kept for a future non-Jane booking flow. | `{ source }` | Convert (would be booking-start via a non-Jane path, if ever used) |
-| `phone_click` | `components/ui/CallButton.tsx` — every click-to-call button (header, hero, service pages, location pages, ICBC page, sticky bars, concierge fallback links are plain `<a>` tags and do *not* fire this — see gap note below). | none | **Convert** — phone-in booking intent. |
+| `phone_click` | `components/ui/CallButton.tsx` — every click-to-call button built from the shared component (hero, final CTAs, service pages, location pages, ICBC section, mobile nav sheet). Sticky bars and the header use their own raw `<a>` links tracked under `sticky_bar_click`/`icbc_cta_click` instead — see those rows. Concierge fallback links are plain `<a>` tags and do *not* fire any event. | `{ source }` — placement identifier, e.g. `hero`, `final_cta`, `service:{slug}`, `location:{slug}`, `location_getting_here:{slug}`, `icbc_section`, `icbc_ads_hero`, `icbc_ads_final`, `mobile_nav`. Defaults to `generic` if a caller omits `source`. | **Convert** — phone-in booking intent. |
 | `contact_submit` | `components/cards/ContactForm.tsx` — general contact form, on successful send. | `{ method: "mailto" \| "relay" }` | Convert — general enquiry/callback request. |
 | `intake_submit` *(added this audit)* | `components/intake/IntakeForm.tsx` — pre-visit intake form, on successful send (after the AI-summary review step). | `{ method: "mailto" \| "relay" }` | Convert — pre-visit intake completion; a strong high-intent signal (patient has already committed to a visit and prepped for it). |
 | `service_card_click` | `components/cards/ServiceCard.tsx` — title and "Learn more" links on service cards (used in related-services grids etc). `components/sections/Hero.tsx` — the 5 homepage hero service-strip links *(added this audit)*. | `ServiceCard.tsx`: `{ service: slug }`. `Hero.tsx`: `{ source: "hero_strip", service: slug }`. See Params Consistency note below — the `source` key isn't populated by `ServiceCard.tsx`'s own calls. | Attract → Convert — service-page navigation intent. |
@@ -85,17 +85,10 @@ fires, its params, and the funnel stage / KPI it feeds (see `ROADMAP.md` §3).
 | The footer "Leave a Review" link (`components/layout/SiteFooter.tsx`) had no click tracking, even though ticket B4's acceptance criterion is "CTAs render, link to `/review`, GA4 event fires" for *both* the contact-form success state and the footer. Only the contact-form one fired. | Added `review_cta_click` with `{ source: "footer" }`. This required adding `"use client"` to `SiteFooter.tsx` (it was a server component; the onClick handler needs it). |
 | Header (`SiteHeader.tsx`) and mobile nav sheet (`MobileNavSheet.tsx`) "Book Now" buttons didn't pass a `source` prop, so both fell into the `generic` bucket, indistinguishable from each other and from any other unlabeled future call site. | Added `source="header"` and `source="mobile_nav"` respectively. |
 | `lib/analytics.ts`'s docstring claimed events are "always sent to Vercel Analytics if present" — there is no `@vercel/analytics` dependency and no code that calls it. | Corrected the comment to describe only what actually happens (GA4 + the `kt:conversion` CustomEvent). |
+| `phone_click` carried no params anywhere, unlike every other repeatable CTA (§2.3 in the prior audit pass), making it impossible to break call-tracking down by placement. | Added a `source` prop to `CallButton.tsx` (default `"generic"`, same convention as `BookButton`) and threaded a placement-specific value through all 8 call sites: `FinalCTA.tsx` (reuses its own `source` prop), `ICBCSection.tsx` (`icbc_section`), `MobileNavSheet.tsx` (`mobile_nav`), `app/[slug]/page.tsx` (`service:{slug}`), `app/locations/[slug]/page.tsx` (`location:{slug}` and `location_getting_here:{slug}`), and `app/icbc-claims/page.tsx` (`icbc_ads_hero`, `icbc_ads_final` — additive to the `icbc_cta_click` wrapper event, not a replacement for it). |
 
 ### 2.3 Known inconsistency, flagged but not fixed (surgical scope)
 
-- **`phone_click` carries no params anywhere.** Every other repeatable CTA
-  (`sticky_bar_click`, `icbc_cta_click`, `jane_outbound_click`/`book_now_click`)
-  carries a `source` (or `action`/`cta`) key identifying where it fired, but
-  `CallButton.tsx` doesn't accept or forward one. Threading a `source` prop
-  through `CallButton` touches ~10 call sites across the app; left as a
-  Recommended item (§6) rather than done here, since the ICBC page already gets
-  page-level phone-click resolution for free via the `icbc_cta_click` wrapper
-  (§2, `icbc_cta_click` row).
 - **`service_card_click` doesn't uniformly carry `source`.** `ServiceCard.tsx`'s
   two call sites only send `{ service }`; only the new `Hero.tsx` hero-strip
   call sends `{ source, service }`. Fixing this fully would mean adding a
@@ -284,9 +277,6 @@ which KPI so the two documents stay consistent.
 Ideas surfaced during this audit that are real but out of the surgical scope of
 E1/E3. Not built, not counted anywhere above as if they exist.
 
-- **`source` param on `phone_click`** (§2.3) — would let call-tracking be
-  broken down by placement (hero vs. header vs. service page vs. sticky bar)
-  the same way `jane_outbound_click` already is via `source`.
 - **`source` param threaded through `ServiceCard`** (§2.3) — would make
   `service_card_click` fully consistent across all its call sites.
 - **UTM-aware page behavior for ICBC ads traffic** — ticket D1 calls for

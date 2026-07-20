@@ -11,6 +11,7 @@ type CallButtonProps = {
   className?: string;
   showNumber?: boolean;
   label?: string;
+  source?: string;
 };
 
 const base =
@@ -36,12 +37,13 @@ export function CallButton({
   className,
   showNumber = true,
   label = "Call the Clinic",
+  source = "generic",
 }: CallButtonProps) {
   return (
     <a
       href={phoneHref}
       className={cn(base, variants[variant], sizes[size], className)}
-      onClick={() => trackEvent("phone_click")}
+      onClick={() => trackEvent("phone_click", { source })}
       aria-label={`Call the clinic at ${clinic.phone}`}
     >
       <Phone className="h-[18px] w-[18px]" aria-hidden="true" />
