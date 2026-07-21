@@ -8,6 +8,10 @@ import { useReducedMotionSafe } from "@/components/motion/useReducedMotionSafe";
 import { easePremium } from "@/lib/motion";
 import { cn } from "@/lib/utils";
 
+function slugify(text: string) {
+  return text.toLowerCase().replace(/[^a-z0-9]+/g, "-");
+}
+
 /** Accessible FAQ accordion with plus/minus rotation and smooth height. */
 export function FAQAccordion({ faqs }: { faqs: Faq[] }) {
   const [open, setOpen] = useState<number | null>(0);
@@ -17,6 +21,7 @@ export function FAQAccordion({ faqs }: { faqs: Faq[] }) {
     <div className="space-y-3">
       {faqs.map((faq, i) => {
         const isOpen = open === i;
+        const panelId = `faq-panel-${slugify(faq.question)}`;
         return (
           <div key={faq.question} className="glass overflow-hidden rounded-card transition-colors hover:border-mint/60">
             <h3>
@@ -24,6 +29,7 @@ export function FAQAccordion({ faqs }: { faqs: Faq[] }) {
                 type="button"
                 onClick={() => setOpen(isOpen ? null : i)}
                 aria-expanded={isOpen}
+                aria-controls={panelId}
                 className="flex w-full items-center justify-between gap-4 px-5 py-5 text-left sm:px-7"
               >
                 <span className="text-base font-semibold text-charcoal sm:text-lg">
@@ -41,6 +47,8 @@ export function FAQAccordion({ faqs }: { faqs: Faq[] }) {
             <AnimatePresence initial={false}>
               {isOpen && (
                 <motion.div
+                  id={panelId}
+                  role="region"
                   initial={reduced ? { opacity: 0 } : { height: 0, opacity: 0 }}
                   animate={reduced ? { opacity: 1 } : { height: "auto", opacity: 1 }}
                   exit={reduced ? { opacity: 0 } : { height: 0, opacity: 0 }}

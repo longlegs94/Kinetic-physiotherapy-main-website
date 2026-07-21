@@ -70,7 +70,7 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
-  if (!isAllowedOrigin(request.headers.get("origin"))) {
+  if (!isAllowedOrigin(request.headers.get("origin"), request.headers.get("host"))) {
     return NextResponse.json({ error: "forbidden" }, { status: 403 });
   }
 

@@ -29,6 +29,7 @@ const labelClass = "mb-1.5 block text-sm font-semibold text-charcoal";
 export function ContactForm() {
   const [status, setStatus] = useState<Status>("idle");
   const [error, setError] = useState<string>("");
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [category, setCategory] = useState<string>("Booking");
   const wantsCallback = category === "Request a callback" || category === "Booking";
 
@@ -55,6 +56,7 @@ export function ContactForm() {
 
     setStatus("submitting");
     setError("");
+    setFieldErrors({});
 
     try {
       const res = await fetch("/api/contact", {
@@ -95,6 +97,7 @@ export function ContactForm() {
         const errors = json?.errors as Record<string, string> | undefined;
         const firstError = errors ? Object.values(errors)[0] : undefined;
         setStatus("error");
+        setFieldErrors(errors || {});
         setError(firstError || "Please check the form and try again.");
         return;
       }
@@ -167,13 +170,40 @@ export function ContactForm() {
           <label htmlFor="email" className={labelClass}>
             Email
           </label>
-          <input id="email" name="email" type="email" required className={fieldClass} autoComplete="email" />
+          <input
+            id="email"
+            name="email"
+            type="email"
+            required
+            className={fieldClass}
+            autoComplete="email"
+            aria-invalid={Boolean(fieldErrors.email)}
+            aria-describedby={fieldErrors.email ? "email-error" : undefined}
+          />
+          {fieldErrors.email && (
+            <p id="email-error" className="mt-1 text-xs text-red-600">
+              {fieldErrors.email}
+            </p>
+          )}
         </div>
         <div>
           <label htmlFor="phone" className={labelClass}>
             Phone
           </label>
-          <input id="phone" name="phone" type="tel" className={fieldClass} autoComplete="tel" />
+          <input
+            id="phone"
+            name="phone"
+            type="tel"
+            className={fieldClass}
+            autoComplete="tel"
+            aria-invalid={Boolean(fieldErrors.phone)}
+            aria-describedby={fieldErrors.phone ? "phone-error" : undefined}
+          />
+          {fieldErrors.phone && (
+            <p id="phone-error" className="mt-1 text-xs text-red-600">
+              {fieldErrors.phone}
+            </p>
+          )}
         </div>
       </div>
 
@@ -188,6 +218,8 @@ export function ContactForm() {
           value={category}
           onChange={(event) => setCategory(event.target.value)}
           className={fieldClass}
+          aria-invalid={Boolean(fieldErrors.category)}
+          aria-describedby={fieldErrors.category ? "category-error" : undefined}
         >
           {categories.map((c) => (
             <option key={c} value={c}>
@@ -195,6 +227,11 @@ export function ContactForm() {
             </option>
           ))}
         </select>
+        {fieldErrors.category && (
+          <p id="category-error" className="mt-1 text-xs text-red-600">
+            {fieldErrors.category}
+          </p>
+        )}
       </div>
 
       {wantsCallback && (
@@ -223,7 +260,14 @@ export function ContactForm() {
           required
           className={cn(fieldClass, "resize-y")}
           placeholder="Tell us what's going on and we'll guide you to the right care."
+          aria-invalid={Boolean(fieldErrors.message)}
+          aria-describedby={fieldErrors.message ? "message-error" : undefined}
         />
+        {fieldErrors.message && (
+          <p id="message-error" className="mt-1 text-xs text-red-600">
+            {fieldErrors.message}
+          </p>
+        )}
       </div>
 
       {status === "error" && (
@@ -233,7 +277,7 @@ export function ContactForm() {
         </p>
       )}
 
-      <p className="text-xs text-charcoal/50">
+      <p className="text-xs text-charcoal/70">
         Your message goes directly to our clinic inbox. Please don&apos;t include detailed
         health information here — save that for your appointment or the{" "}
         <Link href="/intake" className="font-semibold text-deep-teal underline underline-offset-2 hover:text-deep-teal/80">

@@ -1,15 +1,16 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
-import { Star, ExternalLink, Send, CheckCircle2, AlertCircle } from "lucide-react";
-import { clinic } from "@/lib/site-data";
+import { Star, ExternalLink, Send, CheckCircle2, AlertCircle, Phone } from "lucide-react";
+import { clinic, phoneHref } from "@/lib/site-data";
 import { trackEvent } from "@/lib/analytics";
 import { cn } from "@/lib/utils";
 
 // The clinic's Google Business Profile place ID isn't confirmed yet.
 // TODO(verify): set NEXT_PUBLIC_GOOGLE_REVIEW_URL to the clinic's Google review link (find via Google Business Profile).
-const GOOGLE_REVIEW_URL =
-  process.env.NEXT_PUBLIC_GOOGLE_REVIEW_URL || "https://search.google.com/local/writereview?placeid=REPLACE_ME";
+const CONFIGURED_REVIEW_URL = process.env.NEXT_PUBLIC_GOOGLE_REVIEW_URL;
+const GOOGLE_REVIEW_URL_CONFIGURED = Boolean(CONFIGURED_REVIEW_URL);
+const GOOGLE_REVIEW_URL = CONFIGURED_REVIEW_URL || "https://search.google.com/local/writereview?placeid=REPLACE_ME";
 
 type Status = "idle" | "submitting" | "success" | "error";
 
@@ -192,16 +193,29 @@ export function ReviewOptions() {
             Takes under a minute, and helps other people in Maple Ridge find us.
           </p>
         </div>
-        <a
-          href={GOOGLE_REVIEW_URL}
-          target="_blank"
-          rel="noopener noreferrer"
-          onClick={() => trackEvent("review_google_click")}
-          className="group mt-auto inline-flex w-full items-center justify-center gap-2 rounded-pill bg-mint px-6 py-3.5 text-[15px] font-semibold text-charcoal transition-all duration-200 ease-premium hover:-translate-y-0.5 hover:shadow-button-hover"
-        >
-          Leave a Google review
-          <ExternalLink className="h-4 w-4 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
-        </a>
+        {GOOGLE_REVIEW_URL_CONFIGURED ? (
+          <a
+            href={GOOGLE_REVIEW_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={() => trackEvent("review_google_click")}
+            className="group mt-auto inline-flex w-full items-center justify-center gap-2 rounded-pill bg-mint px-6 py-3.5 text-[15px] font-semibold text-charcoal transition-all duration-200 ease-premium hover:-translate-y-0.5 hover:shadow-button-hover"
+          >
+            Leave a Google review
+            <ExternalLink className="h-4 w-4 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
+          </a>
+        ) : (
+          // Google review link isn't configured yet — call the clinic
+          // instead of shipping a link to a generic, broken Google search.
+          <a
+            href={phoneHref}
+            onClick={() => trackEvent("review_google_click", { fallback: "phone" })}
+            className="group mt-auto inline-flex w-full items-center justify-center gap-2 rounded-pill border-2 border-deep-teal bg-transparent px-6 py-3.5 text-[15px] font-semibold text-deep-teal transition-all duration-200 ease-premium hover:-translate-y-0.5 hover:bg-deep-teal hover:text-warm-white"
+          >
+            Call us at {clinic.phone}
+            <Phone className="h-4 w-4 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
+          </a>
+        )}
       </div>
 
       <div className="flex flex-col gap-4 rounded-panel border border-silver/60 bg-warm-white p-6 shadow-card sm:p-8">

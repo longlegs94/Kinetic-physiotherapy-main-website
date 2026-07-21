@@ -50,12 +50,20 @@ export function checkRateLimit(
 /**
  * Derives the client IP from standard proxy headers. Falls back to
  * "unknown" when neither header is present (e.g. some local/dev requests).
+ *
+ * x-forwarded-for is a comma-separated hop chain ("client, proxy1, proxy2, ...")
+ * that proxies APPEND to rather than overwrite — so the LAST entry is the one
+ * added by the proxy immediately in front of this server (trustworthy on a
+ * single-hop platform like Vercel), while the FIRST entry is whatever the
+ * original request supplied, which a client can set to anything. Reading the
+ * first entry (as this used to) let a request forge its own rate-limit key.
  */
 export function getClientIp(request: Request): string {
   const forwardedFor = request.headers.get("x-forwarded-for");
   if (forwardedFor) {
-    const first = forwardedFor.split(",")[0]?.trim();
-    if (first) return first;
+    const parts = forwardedFor.split(",").map((p) => p.trim()).filter(Boolean);
+    const last = parts[parts.length - 1];
+    if (last) return last;
   }
 
   const realIp = request.headers.get("x-real-ip");
@@ -65,27 +73,34 @@ export function getClientIp(request: Request): string {
 }
 
 /**
- * Same-origin check for state-changing API routes. Only enforced when both
- * an Origin header and NEXT_PUBLIC_SITE_URL are present, so it never blocks
- * server-to-server calls (health checks, curl, etc.) or local dev.
+ * Same-origin check for state-changing API routes. Prefers comparing against
+ * the request's own Host header (always available, can't be misconfigured)
+ * and falls back to NEXT_PUBLIC_SITE_URL only if Host is somehow missing.
+ * Only blocks when an Origin header is present and resolvable — this never
+ * blocks server-to-server calls (health checks, curl, etc.) or local dev,
+ * which typically send no Origin header at all.
  */
-export function isAllowedOrigin(originHeader: string | null): boolean {
+export function isAllowedOrigin(originHeader: string | null, hostHeader: string | null = null): boolean {
   if (!originHeader) return true;
 
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL;
-  if (!siteUrl) return true;
-
   let originHost: string;
-  let siteHost: string;
   try {
     originHost = new URL(originHeader).host;
-    siteHost = new URL(siteUrl).host;
   } catch {
-    // Malformed header/env value — don't block on something we can't parse.
+    // Malformed Origin header — don't block on something we can't parse.
     return true;
   }
 
-  if (originHost === siteHost) return true;
+  if (hostHeader && originHost === hostHeader) return true;
+
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL;
+  if (siteUrl) {
+    try {
+      if (originHost === new URL(siteUrl).host) return true;
+    } catch {
+      // Malformed env value — fall through to the localhost/failure checks.
+    }
+  }
 
   const originHostname = originHost.split(":")[0];
   if (originHostname === "localhost" || originHostname === "127.0.0.1") return true;

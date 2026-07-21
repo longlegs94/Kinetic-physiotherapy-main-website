@@ -25,6 +25,7 @@ const labelClass = "mb-1.5 block text-sm font-semibold text-charcoal";
 export function IcbcCallbackForm({ id = "callback-form" }: { id?: string }) {
   const [status, setStatus] = useState<Status>("idle");
   const [error, setError] = useState<string>("");
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -69,6 +70,7 @@ export function IcbcCallbackForm({ id = "callback-form" }: { id?: string }) {
 
     setStatus("submitting");
     setError("");
+    setFieldErrors({});
 
     try {
       const res = await fetch("/api/contact", {
@@ -111,6 +113,7 @@ export function IcbcCallbackForm({ id = "callback-form" }: { id?: string }) {
         const errors = json?.errors as Record<string, string> | undefined;
         const firstError = errors ? Object.values(errors)[0] : undefined;
         setStatus("error");
+        setFieldErrors(errors || {});
         setError(
           firstError ||
             "Please check the form and try again — or just call us, that's faster anyway."
@@ -159,7 +162,7 @@ export function IcbcCallbackForm({ id = "callback-form" }: { id?: string }) {
     >
       <div>
         <h3 className="text-xl font-bold text-charcoal">Request a callback</h3>
-        <p className="mt-1 text-sm text-charcoal/60">
+        <p className="mt-1 text-sm text-charcoal/70">
           Prefer us to call you? Leave your details and our team will reach out to help you
           understand your next steps.
         </p>
@@ -202,7 +205,14 @@ export function IcbcCallbackForm({ id = "callback-form" }: { id?: string }) {
             className={fieldClass}
             autoComplete="tel"
             placeholder="(604) 555-0123"
+            aria-invalid={Boolean(fieldErrors.phone)}
+            aria-describedby={fieldErrors.phone ? "icbc-phone-error" : undefined}
           />
+          {fieldErrors.phone && (
+            <p id="icbc-phone-error" className="mt-1 text-xs text-red-600">
+              {fieldErrors.phone}
+            </p>
+          )}
         </div>
         <div>
           <label htmlFor="icbc-email" className={labelClass}>
@@ -214,7 +224,14 @@ export function IcbcCallbackForm({ id = "callback-form" }: { id?: string }) {
             type="email"
             className={fieldClass}
             autoComplete="email"
+            aria-invalid={Boolean(fieldErrors.email)}
+            aria-describedby={fieldErrors.email ? "icbc-email-error" : undefined}
           />
+          {fieldErrors.email && (
+            <p id="icbc-email-error" className="mt-1 text-xs text-red-600">
+              {fieldErrors.email}
+            </p>
+          )}
         </div>
       </div>
 
@@ -278,7 +295,7 @@ export function IcbcCallbackForm({ id = "callback-form" }: { id?: string }) {
         />
       </button>
 
-      <p className="flex items-center gap-1.5 text-xs text-charcoal/50">
+      <p className="flex items-center gap-1.5 text-xs text-charcoal/70">
         <PhoneCall className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
         Need help sooner? Call {clinic.phone} directly.
       </p>

@@ -26,7 +26,7 @@ export function BlogCard({ post }: { post: PostMeta }) {
         )}
       </div>
       <div className="flex flex-1 flex-col p-6">
-        <div className="flex items-center gap-3 text-xs text-charcoal/50">
+        <div className="flex items-center gap-3 text-xs text-charcoal/70">
           <span>{formatDate(post.date)}</span>
           <span className="inline-flex items-center gap-1">
             <Clock className="h-3.5 w-3.5" aria-hidden="true" />

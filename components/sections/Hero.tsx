@@ -87,7 +87,7 @@ export function Hero() {
 
           <motion.div
             variants={reduced ? undefined : heroLine}
-            className="mt-6 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-charcoal/60"
+            className="mt-6 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-charcoal/70"
           >
             <div className="flex flex-wrap items-center gap-x-2">
               {[
@@ -114,7 +114,7 @@ export function Hero() {
                 </span>
               ))}
             </div>
-            <span className="whitespace-nowrap text-charcoal/60">in Maple Ridge</span>
+            <span className="whitespace-nowrap text-charcoal/70">in Maple Ridge</span>
           </motion.div>
 
           <motion.div variants={reduced ? undefined : heroLine} className="mt-8">
@@ -131,6 +131,11 @@ export function Hero() {
               src="/images/illustrations/hero-kinetic.svg"
               alt="Stylized figure in motion surrounded by flowing mint recovery lines"
               className="h-full w-full rounded-[28px] object-cover"
+              // This is the LCP candidate — hint the browser to fetch it
+              // eagerly rather than waiting to discover it after hydration.
+              fetchPriority="high"
+              loading="eager"
+              decoding="sync"
               initial={reduced ? false : { scale: 1.06 }}
               animate={reduced ? {} : { scale: 1 }}
               transition={{ duration: 1.6, ease: easePremium }}

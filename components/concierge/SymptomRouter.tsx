@@ -87,7 +87,7 @@ export function SymptomRouter() {
           Describe it in your own words
         </h3>
       </div>
-      <p className="mt-1 text-sm text-charcoal/60">
+      <p className="mt-1 text-sm text-charcoal/70">
         Tell us what&apos;s going on and we&apos;ll point you to the right care — guidance
         only, not medical advice.
       </p>
@@ -178,7 +178,7 @@ export function SymptomRouter() {
               <button
                 type="button"
                 onClick={reset}
-                className="rounded-pill px-3 py-1.5 text-xs font-semibold text-charcoal/50 transition-colors hover:text-charcoal"
+                className="rounded-pill px-3 py-1.5 text-xs font-semibold text-charcoal/70 transition-colors hover:text-charcoal"
               >
                 Ask again
               </button>

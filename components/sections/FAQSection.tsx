@@ -21,7 +21,7 @@ export function FAQSection({
           <FAQAccordion faqs={faqs} />
         </div>
         <div className="mt-8 flex flex-col items-center gap-2 text-center">
-          <p className="text-sm text-charcoal/60">
+          <p className="text-sm text-charcoal/70">
             Didn&apos;t find your answer?
           </p>
           <AskAssistantButton />

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu } from "lucide-react";
@@ -18,6 +18,8 @@ export function SiteHeader() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const pathname = usePathname();
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
+  const wasOpen = useRef(false);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -25,6 +27,17 @@ export function SiteHeader() {
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  // Return focus to the trigger button once the sheet finishes closing,
+  // however it was closed (X button, Escape, backdrop, or nav link click).
+  useEffect(() => {
+    if (menuOpen) {
+      wasOpen.current = true;
+    } else if (wasOpen.current) {
+      wasOpen.current = false;
+      menuButtonRef.current?.focus();
+    }
+  }, [menuOpen]);
 
   return (
     <header
@@ -68,10 +81,12 @@ export function SiteHeader() {
         <div className="flex items-center gap-2">
           <BookButton label="Book Now" className="hidden sm:inline-flex" source="header" />
           <button
+            ref={menuButtonRef}
             type="button"
             onClick={() => setMenuOpen(true)}
             aria-label="Open menu"
             aria-expanded={menuOpen}
+            aria-controls="mobile-nav-sheet"
             className="rounded-pill p-2 text-charcoal hover:bg-sage/60 md:hidden"
           >
             <Menu className="h-6 w-6" />

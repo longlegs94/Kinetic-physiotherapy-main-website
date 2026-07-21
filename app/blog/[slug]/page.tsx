@@ -89,7 +89,7 @@ export default async function BlogPostPage({
         <KineticMotionLine className="absolute inset-x-0 bottom-0 h-20 opacity-40" />
         <Container className="relative max-w-3xl">
           <Breadcrumbs items={crumbs} />
-          <div className="mt-4 flex flex-wrap items-center gap-3 text-sm text-charcoal/50">
+          <div className="mt-4 flex flex-wrap items-center gap-3 text-sm text-charcoal/70">
             <span>{formatDate(post.date)}</span>
             <span className="inline-flex items-center gap-1">
               <Clock className="h-4 w-4" aria-hidden="true" />

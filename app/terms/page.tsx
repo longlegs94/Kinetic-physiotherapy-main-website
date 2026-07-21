@@ -21,12 +21,12 @@ export default function TermsPage() {
       <PageHero title="Terms of Use" crumbs={crumbs} />
       <Section tone="white">
         <Container className="max-w-3xl space-y-5 text-[17px] leading-relaxed text-charcoal/80">
-          <p className="italic text-charcoal/60">
+          <p className="italic text-charcoal/70">
             This document is a working draft prepared for the clinic and should be reviewed
             by a legal professional before launch.
           </p>
 
-          <p className="text-sm text-charcoal/60">Last updated: July 8, 2026</p>
+          <p className="text-sm text-charcoal/70">Last updated: July 8, 2026</p>
 
           <p>
             These terms govern your use of this website, operated by {clinic.name}. By using

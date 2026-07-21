@@ -223,7 +223,7 @@ export function IntakeForm() {
         </h3>
 
         {aiUnavailable && (
-          <p className="mt-2 text-sm text-charcoal/60">
+          <p className="mt-2 text-sm text-charcoal/70">
             Our assistant couldn&apos;t summarize right now — we&apos;ll send your answers
             as written.
           </p>
@@ -245,7 +245,7 @@ export function IntakeForm() {
                 {ai.flags.join(" · ")}
               </div>
             )}
-            <p className="text-xs text-charcoal/50">
+            <p className="text-xs text-charcoal/70">
               Patient-reported information — our practitioner will confirm everything with
               you in person.
             </p>
@@ -370,7 +370,7 @@ export function IntakeForm() {
             prepare for my visit, and that it is not monitored for urgent medical needs.
           </span>
         </label>
-        <p className="mt-2 pl-7 text-xs text-charcoal/55">
+        <p className="mt-2 pl-7 text-xs text-charcoal/70">
           If you have urgent symptoms, call 911 or visit an emergency department.
         </p>
       </div>

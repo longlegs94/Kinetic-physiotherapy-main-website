@@ -12,6 +12,7 @@ const clinicLinks = [
   { label: "Services", href: "/services" },
   { label: "Our Team", href: "/team" },
   { label: "About", href: "/about" },
+  { label: "Locations We Serve", href: "/locations" },
   { label: "Testimonials", href: "/testimonials" },
   { label: "Resources", href: "/blog" },
   { label: "Contact", href: "/contact" },

@@ -16,7 +16,7 @@ export function NotSureCTA({ className }: { className?: string }) {
         <span className="block text-[15px] font-semibold text-charcoal">
           Not sure what to book?
         </span>
-        <span className="block text-sm text-charcoal/60">
+        <span className="block text-sm text-charcoal/70">
           Tell us what&apos;s going on and we&apos;ll guide you.
         </span>
       </span>

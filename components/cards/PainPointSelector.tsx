@@ -94,7 +94,7 @@ export function PainPointSelector() {
                 />
               </div>
               <h3 className="mt-4 text-lg font-bold text-charcoal">{point.label}</h3>
-              <p className="mt-2 text-sm text-charcoal/60">
+              <p className="mt-2 text-sm text-charcoal/70">
                 <span className="font-semibold text-deep-teal">Recommended: </span>
                 {point.recommended.join(", ")}
               </p>

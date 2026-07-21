@@ -108,7 +108,7 @@ export default function ContactPage() {
                     <span>Parking is available at the unit.</span>
                   </li>
                 </ul>
-                <p className="mt-3 text-xs text-charcoal/50">
+                <p className="mt-3 text-xs text-charcoal/70">
                   Service area: Maple Ridge, Pitt Meadows, Albion, Websters Corners, and
                   Whonnock.
                 </p>
@@ -128,7 +128,7 @@ export default function ContactPage() {
                   ))}
                 </ul>
                 {/* Hours flagged needsVerification in content — confirm before launch. */}
-                <p className="mt-2 text-xs text-charcoal/50">
+                <p className="mt-2 text-xs text-charcoal/70">
                   Please confirm current hours when booking.
                 </p>
               </div>
@@ -152,7 +152,7 @@ export default function ContactPage() {
             {/* Form */}
             <div className="rounded-panel border border-silver/60 bg-warm-white p-6 shadow-card sm:p-8">
               <h2 className="text-xl font-bold text-charcoal">Send us a message</h2>
-              <p className="mt-1.5 text-sm text-charcoal/60">
+              <p className="mt-1.5 text-sm text-charcoal/70">
                 For bookings, the fastest option is Jane online booking — but we&apos;re happy
                 to help with any question.
               </p>

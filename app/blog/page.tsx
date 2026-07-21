@@ -35,7 +35,7 @@ export default function BlogPage() {
       <Section tone="white">
         <Container>
           {posts.length === 0 ? (
-            <p className="text-center text-lg text-charcoal/60">
+            <p className="text-center text-lg text-charcoal/70">
               New articles are on the way. Check back soon.
             </p>
           ) : (

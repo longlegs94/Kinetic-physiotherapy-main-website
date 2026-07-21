@@ -57,12 +57,19 @@ export function ConciergeWidget() {
   const inputRef = useRef<HTMLInputElement>(null);
   const endOfMessagesRef = useRef<HTMLDivElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
+  const launcherRef = useRef<HTMLButtonElement>(null);
+  const wasOpen = useRef(false);
 
   const reducedMotion = useReducedMotionSafe();
 
   useEffect(() => {
-    if (!open) return;
-    inputRef.current?.focus();
+    if (open) {
+      wasOpen.current = true;
+      inputRef.current?.focus();
+    } else if (wasOpen.current) {
+      wasOpen.current = false;
+      launcherRef.current?.focus();
+    }
   }, [open]);
 
   // Allow any part of the site (e.g. the FAQ "Ask our assistant" button)
@@ -79,7 +86,28 @@ export function ConciergeWidget() {
   useEffect(() => {
     if (!open) return;
     const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setOpen(false);
+      if (event.key === "Escape") {
+        setOpen(false);
+        return;
+      }
+      if (event.key !== "Tab" || !panelRef.current) return;
+
+      const focusable = Array.from(
+        panelRef.current.querySelectorAll<HTMLElement>(
+          'a[href], button:not([disabled]), input:not([disabled]), [tabindex]:not([tabindex="-1"])'
+        )
+      );
+      if (focusable.length === 0) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
     };
     document.addEventListener("keydown", onKeyDown);
     return () => document.removeEventListener("keydown", onKeyDown);
@@ -348,9 +376,12 @@ export function ConciergeWidget() {
   return (
     <>
       <button
+        ref={launcherRef}
         type="button"
         onClick={handleOpen}
         aria-label="Not sure what to book? Chat with our booking assistant"
+        aria-expanded={open}
+        aria-controls="concierge-panel"
         className={cn(
           "fixed bottom-24 right-4 z-[75] flex items-center gap-2 rounded-pill bg-mint px-4 py-3.5 font-semibold text-charcoal shadow-button-hover transition-transform hover:scale-105",
           "md:bottom-6"
@@ -363,13 +394,22 @@ export function ConciergeWidget() {
       <AnimatePresence>
         {open &&
           (reducedMotion ? (
-            <div ref={panelRef} role="dialog" aria-label="Booking assistant chat" className={panelClassName}>
+            <div
+              id="concierge-panel"
+              ref={panelRef}
+              role="dialog"
+              aria-modal="true"
+              aria-label="Booking assistant chat"
+              className={panelClassName}
+            >
               {panelBody}
             </div>
           ) : (
             <motion.div
+              id="concierge-panel"
               ref={panelRef}
               role="dialog"
+              aria-modal="true"
               aria-label="Booking assistant chat"
               initial={{ opacity: 0, y: 24 }}
               animate={{ opacity: 1, y: 0 }}

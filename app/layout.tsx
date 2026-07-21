@@ -4,7 +4,7 @@ import "./globals.css";
 import { SiteHeader } from "@/components/layout/SiteHeader";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { StickyMobileBookingBar } from "@/components/layout/StickyMobileBookingBar";
-import { ConciergeWidget } from "@/components/concierge/ConciergeWidget";
+import { ConciergeWidgetLoader } from "@/components/concierge/ConciergeWidgetLoader";
 import { Analytics } from "@/components/analytics/Analytics";
 import { JsonLd } from "@/components/ui/JsonLd";
 import { localBusinessSchema } from "@/lib/schema";
@@ -67,10 +67,12 @@ export default function RootLayout({
         </a>
         <JsonLd data={localBusinessSchema()} />
         <SiteHeader />
-        <main id="main">{children}</main>
+        <main id="main" tabIndex={-1} className="outline-none">
+          {children}
+        </main>
         <SiteFooter />
         <StickyMobileBookingBar />
-        <ConciergeWidget />
+        <ConciergeWidgetLoader />
         <Analytics />
       </body>
     </html>

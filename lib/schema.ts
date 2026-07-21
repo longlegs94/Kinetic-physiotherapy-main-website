@@ -13,6 +13,12 @@ const geo = {
   longitude: -122.601,
 };
 
+/** Schema.org/Google prefer E.164 telephone numbers over display formatting. */
+function toE164(displayPhone: string, countryCode = "1") {
+  const digits = displayPhone.replace(/\D/g, "");
+  return `+${countryCode}${digits}`;
+}
+
 export function localBusinessSchema() {
   return {
     "@context": "https://schema.org",
@@ -21,7 +27,7 @@ export function localBusinessSchema() {
     name: clinic.name,
     description: clinic.positioning,
     url: SITE_URL,
-    telephone: clinic.phone,
+    telephone: toE164(clinic.phone),
     email: clinic.email,
     faxNumber: clinic.fax,
     address: {

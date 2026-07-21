@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
 import { Check, ChevronDown, CalendarClock, Stethoscope } from "lucide-react";
 import type { Practitioner } from "@/lib/site-data";
@@ -57,10 +58,12 @@ export function PractitionerCard({ practitioner }: { practitioner: Practitioner 
       >
         <span className="h-24 w-24 overflow-hidden rounded-full">
           {p.image ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
+            <Image
               src={p.image}
               alt={`${p.name}, ${p.title} at Kinetic Therapy Clinic`}
+              width={96}
+              height={96}
+              sizes="96px"
               className="h-full w-full object-cover transition-transform duration-300 ease-premium group-hover:scale-[1.05]"
             />
           ) : (
@@ -146,7 +149,7 @@ export function PractitionerCard({ practitioner }: { practitioner: Practitioner 
               )}
 
               {p.languages && p.languages.length > 0 && (
-                <p className="mt-3 text-xs text-charcoal/60">
+                <p className="mt-3 text-xs text-charcoal/70">
                   <span className="font-semibold text-charcoal">Languages: </span>
                   {p.languages.join(", ")}
                 </p>
