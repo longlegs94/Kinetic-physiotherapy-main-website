@@ -106,7 +106,7 @@ export function Hero() {
                         service: service.slug,
                       })
                     }
-                    className="font-medium transition-colors duration-200 hover:text-mint"
+                    className="font-medium transition-colors duration-200 hover:text-deep-teal"
                   >
                     {service.name}
                   </Link>
@@ -127,10 +127,18 @@ export function Hero() {
           <div className="glass relative aspect-[4/5] overflow-hidden rounded-panel p-2.5">
             {/* TODO(assets): swap the illustration for a real clinic hero photo
                 (practitioner working with a patient, warm natural light). */}
+            {/* fetchPriority hints the browser this is the LCP element — it's
+                the largest above-the-fold graphic on the homepage. Plain
+                <img> (not next/image) is deliberate: this is a vector SVG
+                illustration, so next/image's raster resizing/compression
+                buys nothing (see the same choice + rationale in
+                ClinicExperience.tsx). */}
             <motion.img
               src="/images/illustrations/hero-kinetic.svg"
               alt="Stylized figure in motion surrounded by flowing mint recovery lines"
               className="h-full w-full rounded-[28px] object-cover"
+              fetchPriority="high"
+              decoding="async"
               initial={reduced ? false : { scale: 1.06 }}
               animate={reduced ? {} : { scale: 1 }}
               transition={{ duration: 1.6, ease: easePremium }}

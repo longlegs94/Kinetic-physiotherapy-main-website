@@ -85,6 +85,32 @@ export function ConciergeWidget() {
     return () => document.removeEventListener("keydown", onKeyDown);
   }, [open]);
 
+  // Keep keyboard focus inside the dialog while it's open (WCAG 2.4.3 / no
+  // keyboard trap escape hatch besides Escape, which is handled above).
+  useEffect(() => {
+    if (!open) return;
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key !== "Tab") return;
+      const panel = panelRef.current;
+      if (!panel) return;
+      const focusable = panel.querySelectorAll<HTMLElement>(
+        'a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])'
+      );
+      if (focusable.length === 0) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    };
+    document.addEventListener("keydown", onKeyDown);
+    return () => document.removeEventListener("keydown", onKeyDown);
+  }, [open]);
+
   useEffect(() => {
     endOfMessagesRef.current?.scrollIntoView({
       behavior: reducedMotion ? "auto" : "smooth",
@@ -363,13 +389,20 @@ export function ConciergeWidget() {
       <AnimatePresence>
         {open &&
           (reducedMotion ? (
-            <div ref={panelRef} role="dialog" aria-label="Booking assistant chat" className={panelClassName}>
+            <div
+              ref={panelRef}
+              role="dialog"
+              aria-modal="true"
+              aria-label="Booking assistant chat"
+              className={panelClassName}
+            >
               {panelBody}
             </div>
           ) : (
             <motion.div
               ref={panelRef}
               role="dialog"
+              aria-modal="true"
               aria-label="Booking assistant chat"
               initial={{ opacity: 0, y: 24 }}
               animate={{ opacity: 1, y: 0 }}

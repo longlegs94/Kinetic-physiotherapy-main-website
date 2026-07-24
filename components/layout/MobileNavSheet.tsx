@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
 import { X } from "lucide-react";
@@ -18,6 +18,8 @@ export function MobileNavSheet({
   open: boolean;
   onClose: () => void;
 }) {
+  const sheetRef = useRef<HTMLDivElement>(null);
+
   // Lock body scroll while open and close on Escape.
   useEffect(() => {
     if (!open) return;
@@ -30,6 +32,31 @@ export function MobileNavSheet({
       window.removeEventListener("keydown", onKey);
     };
   }, [open, onClose]);
+
+  // Keep keyboard focus inside the sheet while it's open.
+  useEffect(() => {
+    if (!open) return;
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key !== "Tab") return;
+      const sheet = sheetRef.current;
+      if (!sheet) return;
+      const focusable = sheet.querySelectorAll<HTMLElement>(
+        'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])'
+      );
+      if (focusable.length === 0) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    };
+    document.addEventListener("keydown", onKeyDown);
+    return () => document.removeEventListener("keydown", onKeyDown);
+  }, [open]);
 
   return (
     <AnimatePresence>
@@ -46,6 +73,7 @@ export function MobileNavSheet({
         >
           <div className="absolute inset-0 bg-charcoal/40" onClick={onClose} />
           <motion.div
+            ref={sheetRef}
             className="absolute inset-y-0 right-0 flex w-full max-w-sm flex-col bg-warm-white shadow-2xl"
             initial={{ x: "100%" }}
             animate={{ x: 0 }}
@@ -58,7 +86,7 @@ export function MobileNavSheet({
                 type="button"
                 onClick={onClose}
                 aria-label="Close menu"
-                className="rounded-pill p-2 text-charcoal hover:bg-sage/60"
+                className="rounded-pill p-2.5 text-charcoal hover:bg-sage/60"
               >
                 <X className="h-6 w-6" />
               </button>

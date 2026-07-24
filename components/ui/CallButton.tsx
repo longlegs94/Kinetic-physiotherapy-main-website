@@ -14,7 +14,7 @@ type CallButtonProps = {
 };
 
 const base =
-  "group inline-flex items-center justify-center gap-2 rounded-pill font-semibold transition-all duration-200 ease-premium focus-visible:outline-none";
+  "group inline-flex items-center justify-center gap-2 rounded-pill font-semibold transition-all duration-200 ease-premium";
 
 const variants = {
   primary: "bg-mint text-charcoal hover:shadow-button-hover hover:-translate-y-0.5",

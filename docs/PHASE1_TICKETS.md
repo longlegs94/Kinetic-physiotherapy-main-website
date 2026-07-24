@@ -159,6 +159,35 @@ the event dictionary in `docs/ANALYTICS.md`.
 
 ---
 
+## Epic F — Security hardening follow-ups (from automated audit)
+
+### F1 · CSP nonce middleware — `DEV` · M · buildable now
+`next.config.mjs`'s CSP currently allows `script-src 'self' 'unsafe-inline'`
+and `style-src 'unsafe-inline'`, which neutralizes most of a CSP's XSS
+mitigation value. Add `middleware.ts` that generates a per-request nonce,
+forwards it via a request header, and have `app/layout.tsx` read it to set
+`nonce` on any inline `<script>`/`<Script>` tags; drop `'unsafe-inline'`
+from `script-src` once all inline scripts carry a nonce. `style-src
+'unsafe-inline'` is harder to remove (framer-motion injects inline
+styles) — track separately, lower priority.
+**Accept:** CSP has no `'unsafe-inline'` in `script-src`; site renders and
+functions identically; no CSP violations in browser console across all
+routes.
+
+### F2 · Durable rate-limit store — `DEV` + `OWNER` account · S
+`lib/rate-limit.ts` is an in-memory `Map`, explicitly documented as a soft
+throttle. On Vercel's serverless model, each function invocation can land
+on a fresh instance, so the 5/min and 10/min limits on `/api/intake` and
+`/api/concierge` (both calling the paid Anthropic API) are bypassable —
+a real cost-DoS exposure, not just casual-bot noise. Wire in an external
+store (Upstash Redis or Vercel KV) behind the same `checkRateLimit`
+interface so callers don't change.
+**Accept:** rate limit holds under concurrent requests hitting different
+serverless instances; owner has created the Upstash/Vercel KV resource
+and set its env vars.
+
+---
+
 ## Sequencing at a glance
 
 ```

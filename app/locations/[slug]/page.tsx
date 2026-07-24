@@ -168,7 +168,7 @@ export default async function LocationPage({
               <div className="flex gap-3">
                 <ParkingCircle className="mt-0.5 h-5 w-5 shrink-0 text-mint" aria-hidden="true" />
                 {/* TODO(verify): confirm parking details with clinic */}
-                <span>Free parking is available at the unit.</span>
+                <span>Parking is available at the unit.</span>
               </div>
               <div className="flex flex-col gap-3 pt-2 sm:flex-row">
                 <BookButton

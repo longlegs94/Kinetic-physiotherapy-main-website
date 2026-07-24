@@ -7,9 +7,16 @@ import { trackEvent } from "@/lib/analytics";
 import { cn } from "@/lib/utils";
 
 // The clinic's Google Business Profile place ID isn't confirmed yet.
-// TODO(verify): set NEXT_PUBLIC_GOOGLE_REVIEW_URL to the clinic's Google review link (find via Google Business Profile).
+// TODO(verify): set NEXT_PUBLIC_GOOGLE_REVIEW_URL to the clinic's direct
+// "write a review" deep link (Google Business Profile > "Ask for reviews" >
+// copy link). Until that's set, fall back to a Maps search for the clinic
+// by name + address — a real, working page the visitor can review from —
+// rather than a placeholder URL that would 404.
 const GOOGLE_REVIEW_URL =
-  process.env.NEXT_PUBLIC_GOOGLE_REVIEW_URL || "https://search.google.com/local/writereview?placeid=REPLACE_ME";
+  process.env.NEXT_PUBLIC_GOOGLE_REVIEW_URL ||
+  `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+    `${clinic.name} ${clinic.address}`
+  )}`;
 
 type Status = "idle" | "submitting" | "success" | "error";
 

@@ -114,6 +114,10 @@ broken, just placeholder.
 - [ ] `NEXT_PUBLIC_SITE_URL` set to the real production domain (canonical/sitemap/schema).
 - [ ] `NEXT_PUBLIC_WEB3FORMS_KEY` set (or accept the mailto fallback).
 - [ ] `NEXT_PUBLIC_GA_ID` set to enable analytics.
+- [ ] `NEXT_PUBLIC_GOOGLE_REVIEW_URL` set to the clinic's direct Google
+      "write a review" link (Google Business Profile > "Ask for reviews" >
+      copy link) — until set, the `/review` page's Google review button
+      falls back to a Maps search instead of a direct review deep link.
 - [ ] `ANTHROPIC_API_KEY` set to enable the AI concierge, symptom router, and intake summarizer.
 - [ ] `npm run build` passes; `npm run typecheck` and `npm run lint` clean. *(Currently all pass.)*
 - [ ] Test Book Now → Jane opens; click-to-call works on mobile; contact form delivers.

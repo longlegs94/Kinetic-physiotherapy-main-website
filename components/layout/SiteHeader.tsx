@@ -56,7 +56,7 @@ export function SiteHeader() {
                 {item.label}
                 <span
                   className={cn(
-                    "absolute inset-x-4 -bottom-0.5 h-0.5 origin-left rounded-full bg-mint transition-transform duration-200 ease-premium",
+                    "absolute inset-x-4 -bottom-0.5 h-0.5 origin-left rounded-full bg-deep-teal transition-transform duration-200 ease-premium",
                     active ? "scale-x-100" : "scale-x-0 group-hover:scale-x-100"
                   )}
                 />
@@ -72,7 +72,7 @@ export function SiteHeader() {
             onClick={() => setMenuOpen(true)}
             aria-label="Open menu"
             aria-expanded={menuOpen}
-            className="rounded-pill p-2 text-charcoal hover:bg-sage/60 md:hidden"
+            className="rounded-pill p-2.5 text-charcoal hover:bg-sage/60 md:hidden"
           >
             <Menu className="h-6 w-6" />
           </button>
