@@ -50,12 +50,19 @@ export function checkRateLimit(
 /**
  * Derives the client IP from standard proxy headers. Falls back to
  * "unknown" when neither header is present (e.g. some local/dev requests).
+ *
+ * x-forwarded-for is a comma-separated list that each proxy *appends* to
+ * (client, proxy1, proxy2, ...). The first entry is whatever the client
+ * claims and is trivially spoofable; on Vercel the last entry is the one
+ * the edge network appended based on the real TCP connection, so it's the
+ * only hop that's actually trustworthy for rate-limiting.
  */
 export function getClientIp(request: Request): string {
   const forwardedFor = request.headers.get("x-forwarded-for");
   if (forwardedFor) {
-    const first = forwardedFor.split(",")[0]?.trim();
-    if (first) return first;
+    const parts = forwardedFor.split(",");
+    const last = parts[parts.length - 1]?.trim();
+    if (last) return last;
   }
 
   const realIp = request.headers.get("x-real-ip");
@@ -65,27 +72,33 @@ export function getClientIp(request: Request): string {
 }
 
 /**
- * Same-origin check for state-changing API routes. Only enforced when both
- * an Origin header and NEXT_PUBLIC_SITE_URL are present, so it never blocks
- * server-to-server calls (health checks, curl, etc.) or local dev.
+ * Same-origin check for state-changing API routes. Falls back to comparing
+ * against the request's own Host header when NEXT_PUBLIC_SITE_URL isn't
+ * set, so the check still enforces same-origin instead of failing open.
  */
-export function isAllowedOrigin(originHeader: string | null): boolean {
+export function isAllowedOrigin(originHeader: string | null, request: Request): boolean {
   if (!originHeader) return true;
 
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL;
-  if (!siteUrl) return true;
+  const host = request.headers.get("host");
 
   let originHost: string;
-  let siteHost: string;
   try {
     originHost = new URL(originHeader).host;
-    siteHost = new URL(siteUrl).host;
   } catch {
-    // Malformed header/env value — don't block on something we can't parse.
+    // Malformed Origin header — don't block on something we can't parse.
     return true;
   }
 
-  if (originHost === siteHost) return true;
+  if (siteUrl) {
+    try {
+      if (originHost === new URL(siteUrl).host) return true;
+    } catch {
+      // Malformed env value — fall through to the Host-header comparison.
+    }
+  }
+
+  if (host && originHost === host) return true;
 
   const originHostname = originHost.split(":")[0];
   if (originHostname === "localhost" || originHostname === "127.0.0.1") return true;

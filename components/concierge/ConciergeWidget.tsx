@@ -8,6 +8,7 @@ import { cn } from "@/lib/utils";
 import { trackEvent } from "@/lib/analytics";
 import { janeBookingUrl, clinic, phoneHref } from "@/lib/site-data";
 import { useReducedMotionSafe } from "@/components/motion/useReducedMotionSafe";
+import { useFocusTrap } from "@/components/ui/useFocusTrap";
 import { easePremium } from "@/lib/motion";
 
 type ServiceLink = { name: string; slug: string };
@@ -64,6 +65,8 @@ export function ConciergeWidget() {
     if (!open) return;
     inputRef.current?.focus();
   }, [open]);
+
+  useFocusTrap(panelRef, open);
 
   // Allow any part of the site (e.g. the FAQ "Ask our assistant" button)
   // to summon the widget via a global event. The ref is refreshed every
@@ -363,13 +366,14 @@ export function ConciergeWidget() {
       <AnimatePresence>
         {open &&
           (reducedMotion ? (
-            <div ref={panelRef} role="dialog" aria-label="Booking assistant chat" className={panelClassName}>
+            <div ref={panelRef} role="dialog" aria-modal="true" aria-label="Booking assistant chat" className={panelClassName}>
               {panelBody}
             </div>
           ) : (
             <motion.div
               ref={panelRef}
               role="dialog"
+              aria-modal="true"
               aria-label="Booking assistant chat"
               initial={{ opacity: 0, y: 24 }}
               animate={{ opacity: 1, y: 0 }}
