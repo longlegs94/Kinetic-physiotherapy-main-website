@@ -7,7 +7,7 @@ import { clinic, faqs, homepage, services } from "@/lib/site-data";
  * byte-stable across requests so Anthropic's prompt caching can reuse it.
  */
 
-export const CONCIERGE_MODEL = process.env.CONCIERGE_MODEL || "claude-opus-4-8";
+export const CONCIERGE_MODEL = process.env.CONCIERGE_MODEL || "claude-opus-5";
 
 export type ConciergeReply = {
   reply: string;

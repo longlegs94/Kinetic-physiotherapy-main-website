@@ -8,7 +8,7 @@ import { services } from "@/lib/site-data";
  * reuse it.
  */
 
-export const INTAKE_MODEL = process.env.CONCIERGE_MODEL || "claude-opus-4-8";
+export const INTAKE_MODEL = process.env.CONCIERGE_MODEL || "claude-opus-5";
 
 export type IntakeInput = {
   category: string;

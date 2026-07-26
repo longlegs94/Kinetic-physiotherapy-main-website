@@ -23,7 +23,7 @@ Set these in **Vercel → Project → Settings → Environment Variables** (see 
 | `NEXT_PUBLIC_WEB3FORMS_KEY` | No | Legacy client-side fallback for the same key. Only kept so existing deployments that set this continue to work; new setups should use `WEB3FORMS_KEY` instead. |
 | `NEXT_PUBLIC_GA_ID` | No | Google Analytics 4 Measurement ID (`G-XXXXXXXXXX`). Without it, analytics is disabled. |
 | `ANTHROPIC_API_KEY` | No | Enables the AI booking concierge chat. Server-side only. Without it the widget shows contact options instead. |
-| `CONCIERGE_MODEL` | No | Model for the concierge; defaults to claude-opus-4-8. Set claude-haiku-4-5 for lower cost. |
+| `CONCIERGE_MODEL` | No | Model for the concierge; defaults to claude-opus-5. Set claude-haiku-4-5-20251001 for lower cost. |
 
 After changing env vars, redeploy so they take effect.
 

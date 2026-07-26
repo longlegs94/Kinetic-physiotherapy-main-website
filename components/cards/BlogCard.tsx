@@ -16,7 +16,7 @@ export function BlogCard({ post }: { post: PostMeta }) {
     <article className="group relative flex h-full flex-col overflow-hidden rounded-card border border-silver/60 bg-white shadow-card transition-all duration-200 ease-premium hover:-translate-y-1 hover:border-mint">
       <div className="relative flex aspect-[16/9] items-center justify-center bg-gradient-to-br from-sage to-mint/30">
         {/* TODO(assets): optional featured image per post. */}
-        <span className="font-heading text-xs font-semibold uppercase tracking-[0.16em] text-charcoal/30">
+        <span className="font-heading text-xs font-semibold uppercase tracking-[0.16em] text-charcoal/60">
           {post.tags[0] ?? "Article"}
         </span>
         {post.draft && (
