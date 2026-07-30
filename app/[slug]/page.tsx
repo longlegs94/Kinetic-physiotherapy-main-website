@@ -41,6 +41,16 @@ const titleMap: Record<string, string> = {
     "Chiropractor Maple Ridge | Chiropractic Care | Kinetic Therapy",
   "icbc-physio-maple-ridge":
     "ICBC Physiotherapy Maple Ridge | Accident Recovery | Kinetic Therapy",
+  "kinesiology-active-rehab-maple-ridge":
+    "Kinesiology & Active Rehab Maple Ridge | Movement-Based Recovery | Kinetic Therapy",
+  "acupuncture-maple-ridge":
+    "Acupuncture Maple Ridge | Traditional Chinese Medicine | Kinetic Therapy",
+  "pregnancy-massage-maple-ridge":
+    "Pregnancy Massage Maple Ridge | Prenatal Massage Therapy | Kinetic Therapy",
+  "shockwave-therapy-maple-ridge":
+    "Shockwave Therapy Maple Ridge | Tendon & Muscle Recovery | Kinetic Therapy",
+  "orthotics-bracing-maple-ridge":
+    "Orthotics & Bracing Maple Ridge | Custom Support & Compression | Kinetic Therapy",
 };
 
 export async function generateMetadata({

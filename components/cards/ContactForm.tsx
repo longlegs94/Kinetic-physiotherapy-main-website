@@ -29,6 +29,7 @@ const labelClass = "mb-1.5 block text-sm font-semibold text-charcoal";
 export function ContactForm() {
   const [status, setStatus] = useState<Status>("idle");
   const [error, setError] = useState<string>("");
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [category, setCategory] = useState<string>("Booking");
   const wantsCallback = category === "Request a callback" || category === "Booking";
 
@@ -55,6 +56,7 @@ export function ContactForm() {
 
     setStatus("submitting");
     setError("");
+    setFieldErrors({});
 
     try {
       const res = await fetch("/api/contact", {
@@ -95,6 +97,7 @@ export function ContactForm() {
         const errors = json?.errors as Record<string, string> | undefined;
         const firstError = errors ? Object.values(errors)[0] : undefined;
         setStatus("error");
+        setFieldErrors(errors ?? {});
         setError(firstError || "Please check the form and try again.");
         return;
       }
@@ -152,7 +155,20 @@ export function ContactForm() {
           <label htmlFor="first_name" className={labelClass}>
             First name
           </label>
-          <input id="first_name" name="first_name" required className={fieldClass} autoComplete="given-name" />
+          <input
+            id="first_name"
+            name="first_name"
+            required
+            className={fieldClass}
+            autoComplete="given-name"
+            aria-invalid={fieldErrors.name ? true : undefined}
+            aria-describedby={fieldErrors.name ? "name-error" : undefined}
+          />
+          {fieldErrors.name && (
+            <p id="name-error" className="mt-1 text-xs font-medium text-red-600" role="alert">
+              {fieldErrors.name}
+            </p>
+          )}
         </div>
         <div>
           <label htmlFor="last_name" className={labelClass}>
@@ -167,13 +183,40 @@ export function ContactForm() {
           <label htmlFor="email" className={labelClass}>
             Email
           </label>
-          <input id="email" name="email" type="email" required className={fieldClass} autoComplete="email" />
+          <input
+            id="email"
+            name="email"
+            type="email"
+            required
+            className={fieldClass}
+            autoComplete="email"
+            aria-invalid={fieldErrors.email ? true : undefined}
+            aria-describedby={fieldErrors.email ? "email-error" : undefined}
+          />
+          {fieldErrors.email && (
+            <p id="email-error" className="mt-1 text-xs font-medium text-red-600" role="alert">
+              {fieldErrors.email}
+            </p>
+          )}
         </div>
         <div>
           <label htmlFor="phone" className={labelClass}>
             Phone
           </label>
-          <input id="phone" name="phone" type="tel" className={fieldClass} autoComplete="tel" />
+          <input
+            id="phone"
+            name="phone"
+            type="tel"
+            className={fieldClass}
+            autoComplete="tel"
+            aria-invalid={fieldErrors.phone ? true : undefined}
+            aria-describedby={fieldErrors.phone ? "phone-error" : undefined}
+          />
+          {fieldErrors.phone && (
+            <p id="phone-error" className="mt-1 text-xs font-medium text-red-600" role="alert">
+              {fieldErrors.phone}
+            </p>
+          )}
         </div>
       </div>
 
@@ -188,6 +231,8 @@ export function ContactForm() {
           value={category}
           onChange={(event) => setCategory(event.target.value)}
           className={fieldClass}
+          aria-invalid={fieldErrors.category ? true : undefined}
+          aria-describedby={fieldErrors.category ? "category-error" : undefined}
         >
           {categories.map((c) => (
             <option key={c} value={c}>
@@ -195,6 +240,11 @@ export function ContactForm() {
             </option>
           ))}
         </select>
+        {fieldErrors.category && (
+          <p id="category-error" className="mt-1 text-xs font-medium text-red-600" role="alert">
+            {fieldErrors.category}
+          </p>
+        )}
       </div>
 
       {wantsCallback && (
@@ -223,7 +273,14 @@ export function ContactForm() {
           required
           className={cn(fieldClass, "resize-y")}
           placeholder="Tell us what's going on and we'll guide you to the right care."
+          aria-invalid={fieldErrors.message ? true : undefined}
+          aria-describedby={fieldErrors.message ? "message-error" : undefined}
         />
+        {fieldErrors.message && (
+          <p id="message-error" className="mt-1 text-xs font-medium text-red-600" role="alert">
+            {fieldErrors.message}
+          </p>
+        )}
       </div>
 
       {status === "error" && (

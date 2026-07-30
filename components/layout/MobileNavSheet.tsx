@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
 import { X } from "lucide-react";
@@ -9,6 +9,7 @@ import { Logo } from "./Logo";
 import { BookButton } from "@/components/ui/BookButton";
 import { CallButton } from "@/components/ui/CallButton";
 import { easePremium } from "@/lib/motion";
+import { useFocusTrap } from "@/components/motion/useFocusTrap";
 
 /** Full-height mobile navigation sheet with Book / Call at the top. */
 export function MobileNavSheet({
@@ -18,6 +19,18 @@ export function MobileNavSheet({
   open: boolean;
   onClose: () => void;
 }) {
+  const sheetRef = useRef<HTMLDivElement>(null);
+  useFocusTrap(open, sheetRef);
+
+  // Move focus into the sheet once it's mounted and open.
+  useEffect(() => {
+    if (!open) return;
+    const first = sheetRef.current?.querySelector<HTMLElement>(
+      'a[href], button:not([disabled])'
+    );
+    first?.focus();
+  }, [open]);
+
   // Lock body scroll while open and close on Escape.
   useEffect(() => {
     if (!open) return;
@@ -46,6 +59,7 @@ export function MobileNavSheet({
         >
           <div className="absolute inset-0 bg-charcoal/40" onClick={onClose} />
           <motion.div
+            ref={sheetRef}
             className="absolute inset-y-0 right-0 flex w-full max-w-sm flex-col bg-warm-white shadow-2xl"
             initial={{ x: "100%" }}
             animate={{ x: 0 }}

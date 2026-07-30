@@ -5,10 +5,12 @@
   "description": "Premium multidisciplinary clinic website for Kinetic Therapy Clinic, Maple Ridge BC.",
   "scripts": {
     "dev": "next dev",
+    "prebuild": "node scripts/check-verification.mjs",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "check-verification": "node scripts/check-verification.mjs"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.110.0",
