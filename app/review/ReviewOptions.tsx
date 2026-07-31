@@ -98,7 +98,11 @@ function FeedbackForm() {
 
   if (status === "success") {
     return (
-      <div className="flex flex-col items-center gap-2 rounded-card border border-mint/50 bg-sage/40 p-6 text-center">
+      <div
+        className="flex flex-col items-center gap-2 rounded-card border border-mint/50 bg-sage/40 p-6 text-center"
+        role="status"
+        aria-live="polite"
+      >
         <CheckCircle2 className="h-8 w-8 text-deep-teal" aria-hidden="true" />
         <h3 className="text-lg font-bold text-charcoal">Thank you</h3>
         <p className="text-sm text-charcoal/70">

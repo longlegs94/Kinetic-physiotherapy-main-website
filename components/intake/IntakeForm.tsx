@@ -204,7 +204,11 @@ export function IntakeForm() {
 
   if (phase === "sent") {
     return (
-      <div className="flex flex-col items-center gap-3 rounded-card border border-mint/50 bg-sage/40 p-8 text-center">
+      <div
+        className="flex flex-col items-center gap-3 rounded-card border border-mint/50 bg-sage/40 p-8 text-center"
+        role="status"
+        aria-live="polite"
+      >
         <CheckCircle2 className="h-10 w-10 text-deep-teal" aria-hidden="true" />
         <h3 className="text-xl font-bold text-charcoal">Thanks — we&apos;ll see you soon!</h3>
         <p className="text-charcoal/70">

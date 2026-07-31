@@ -99,6 +99,12 @@ week. Dev maintains a publish schedule table in the doc.
 links inside blog posts, location pages cross-linked. One systematic pass, not ad hoc.
 **Accept:** every service page links ≥1 post; every post links ≥1 service; crawl
 (e.g. Screaming Frog or a link-check script) shows no orphan pages.
+**Status (2026-07-31 audit):** module is built (`lib/related.ts`, `RelatedReading`
+component) and wired into service pages, posts, and location pages. Gap: 4 of 9
+services have zero related posts today; 3 of those (kinesiology, orthotics,
+shockwave) resolve once the matching C2 drafts publish, but
+`acupuncture-maple-ridge` has no post at all, draft or published — needs a new
+post before this ticket's accept bar is fully met.
 
 ### C4 · Post-launch rich-results & schema audit — `DEV` · S · depends A4, A5
 Validate LocalBusiness, Service, FAQ, Breadcrumb, Article schema in Google's Rich
