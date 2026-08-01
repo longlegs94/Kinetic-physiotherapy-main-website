@@ -73,7 +73,7 @@ export function localBusinessSchema() {
 export function serviceSchema(service: Service) {
   return {
     "@context": "https://schema.org",
-    "@type": "MedicalTherapy",
+    "@type": "Service",
     name: service.name,
     description: service.description,
     url: `${SITE_URL}/${service.slug}`,

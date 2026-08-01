@@ -112,6 +112,9 @@ broken, just placeholder.
 ## Pre-launch technical checklist
 
 - [ ] `NEXT_PUBLIC_SITE_URL` set to the real production domain (canonical/sitemap/schema).
+- [ ] `NEXT_PUBLIC_GOOGLE_REVIEW_URL` set to the clinic's real Google review deep link —
+      without it, the `/review` page's Google review button silently points at a dead
+      placeholder URL (`placeid=REPLACE_ME`).
 - [ ] `NEXT_PUBLIC_WEB3FORMS_KEY` set (or accept the mailto fallback).
 - [ ] `NEXT_PUBLIC_GA_ID` set to enable analytics.
 - [ ] `ANTHROPIC_API_KEY` set to enable the AI concierge, symptom router, and intake summarizer.

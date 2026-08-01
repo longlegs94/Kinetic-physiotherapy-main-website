@@ -116,7 +116,11 @@ export function ContactForm() {
 
   if (status === "success") {
     return (
-      <div className="flex flex-col items-center gap-3 rounded-card border border-mint/50 bg-sage/40 p-8 text-center">
+      <div
+        role="status"
+        aria-live="polite"
+        className="flex flex-col items-center gap-3 rounded-card border border-mint/50 bg-sage/40 p-8 text-center"
+      >
         <CheckCircle2 className="h-10 w-10 text-deep-teal" aria-hidden="true" />
         <h3 className="text-xl font-bold text-charcoal">Message sent</h3>
         <p className="text-charcoal/70">
@@ -233,7 +237,7 @@ export function ContactForm() {
         </p>
       )}
 
-      <p className="text-xs text-charcoal/50">
+      <p className="text-xs text-charcoal/70">
         Your message goes directly to our clinic inbox. Please don&apos;t include detailed
         health information here — save that for your appointment or the{" "}
         <Link href="/intake" className="font-semibold text-deep-teal underline underline-offset-2 hover:text-deep-teal/80">

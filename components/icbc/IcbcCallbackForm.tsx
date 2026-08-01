@@ -137,6 +137,8 @@ export function IcbcCallbackForm({ id = "callback-form" }: { id?: string }) {
     return (
       <div
         id={id}
+        role="status"
+        aria-live="polite"
         className="flex scroll-mt-24 flex-col items-center gap-3 rounded-card border border-mint/50 bg-sage/40 p-8 text-center"
       >
         <CheckCircle2 className="h-10 w-10 text-deep-teal" aria-hidden="true" />
@@ -278,7 +280,7 @@ export function IcbcCallbackForm({ id = "callback-form" }: { id?: string }) {
         />
       </button>
 
-      <p className="flex items-center gap-1.5 text-xs text-charcoal/50">
+      <p className="flex items-center gap-1.5 text-xs text-charcoal/70">
         <PhoneCall className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
         Need help sooner? Call {clinic.phone} directly.
       </p>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu } from "lucide-react";
@@ -18,6 +18,7 @@ export function SiteHeader() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const pathname = usePathname();
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -68,18 +69,23 @@ export function SiteHeader() {
         <div className="flex items-center gap-2">
           <BookButton label="Book Now" className="hidden sm:inline-flex" source="header" />
           <button
+            ref={menuButtonRef}
             type="button"
             onClick={() => setMenuOpen(true)}
             aria-label="Open menu"
             aria-expanded={menuOpen}
-            className="rounded-pill p-2 text-charcoal hover:bg-sage/60 md:hidden"
+            className="rounded-pill p-2.5 text-charcoal hover:bg-sage/60 md:hidden"
           >
             <Menu className="h-6 w-6" />
           </button>
         </div>
       </div>
 
-      <MobileNavSheet open={menuOpen} onClose={() => setMenuOpen(false)} />
+      <MobileNavSheet
+        open={menuOpen}
+        onClose={() => setMenuOpen(false)}
+        triggerRef={menuButtonRef}
+      />
     </header>
   );
 }

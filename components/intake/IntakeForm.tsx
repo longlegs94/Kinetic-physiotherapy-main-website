@@ -204,7 +204,11 @@ export function IntakeForm() {
 
   if (phase === "sent") {
     return (
-      <div className="flex flex-col items-center gap-3 rounded-card border border-mint/50 bg-sage/40 p-8 text-center">
+      <div
+        role="status"
+        aria-live="polite"
+        className="flex flex-col items-center gap-3 rounded-card border border-mint/50 bg-sage/40 p-8 text-center"
+      >
         <CheckCircle2 className="h-10 w-10 text-deep-teal" aria-hidden="true" />
         <h3 className="text-xl font-bold text-charcoal">Thanks — we&apos;ll see you soon!</h3>
         <p className="text-charcoal/70">
@@ -370,7 +374,7 @@ export function IntakeForm() {
             prepare for my visit, and that it is not monitored for urgent medical needs.
           </span>
         </label>
-        <p className="mt-2 pl-7 text-xs text-charcoal/55">
+        <p className="mt-2 pl-7 text-xs text-charcoal/70">
           If you have urgent symptoms, call 911 or visit an emergency department.
         </p>
       </div>
