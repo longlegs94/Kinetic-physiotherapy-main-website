@@ -50,16 +50,24 @@ export function checkRateLimit(
 /**
  * Derives the client IP from standard proxy headers. Falls back to
  * "unknown" when neither header is present (e.g. some local/dev requests).
+ *
+ * `x-real-ip` is set by the platform's own edge/proxy and can't be
+ * overridden by the client, so it's trusted first. For `x-forwarded-for`,
+ * the LEFTMOST entry is whatever the client sent and is trivially spoofable
+ * (a scripted attacker can send a fresh value per request to dodge the rate
+ * limit); the RIGHTMOST entry is the one appended by our own trusted
+ * edge hop, so that's the one we trust.
  */
 export function getClientIp(request: Request): string {
-  const forwardedFor = request.headers.get("x-forwarded-for");
-  if (forwardedFor) {
-    const first = forwardedFor.split(",")[0]?.trim();
-    if (first) return first;
-  }
-
   const realIp = request.headers.get("x-real-ip");
   if (realIp) return realIp.trim();
+
+  const forwardedFor = request.headers.get("x-forwarded-for");
+  if (forwardedFor) {
+    const parts = forwardedFor.split(",").map((p) => p.trim()).filter(Boolean);
+    const last = parts[parts.length - 1];
+    if (last) return last;
+  }
 
   return "unknown";
 }

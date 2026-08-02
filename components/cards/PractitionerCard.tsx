@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
 import { Check, ChevronDown, CalendarClock, Stethoscope } from "lucide-react";
 import type { Practitioner } from "@/lib/site-data";
@@ -55,13 +56,14 @@ export function PractitionerCard({ practitioner }: { practitioner: Practitioner 
         aria-controls={panelId}
         className="flex flex-col items-center rounded-2xl outline-none focus-visible:ring-2 focus-visible:ring-deep-teal"
       >
-        <span className="h-24 w-24 overflow-hidden rounded-full">
+        <span className="relative h-24 w-24 overflow-hidden rounded-full">
           {p.image ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
+            <Image
               src={p.image}
               alt={`${p.name}, ${p.title} at Kinetic Therapy Clinic`}
-              className="h-full w-full object-cover transition-transform duration-300 ease-premium group-hover:scale-[1.05]"
+              fill
+              sizes="96px"
+              className="object-cover transition-transform duration-300 ease-premium group-hover:scale-[1.05]"
             />
           ) : (
             <span className="flex h-full w-full items-center justify-center bg-gradient-to-br from-sage to-mint/50">

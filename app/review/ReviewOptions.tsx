@@ -8,8 +8,12 @@ import { cn } from "@/lib/utils";
 
 // The clinic's Google Business Profile place ID isn't confirmed yet.
 // TODO(verify): set NEXT_PUBLIC_GOOGLE_REVIEW_URL to the clinic's Google review link (find via Google Business Profile).
+// Until it's set, fall back to a Google search for the business name rather
+// than a guaranteed-broken placeid=REPLACE_ME link — a visitor lands
+// somewhere useful (the Business Profile in search) instead of a dead page.
 const GOOGLE_REVIEW_URL =
-  process.env.NEXT_PUBLIC_GOOGLE_REVIEW_URL || "https://search.google.com/local/writereview?placeid=REPLACE_ME";
+  process.env.NEXT_PUBLIC_GOOGLE_REVIEW_URL ||
+  `https://www.google.com/search?q=${encodeURIComponent(`${clinic.name} ${clinic.city} reviews`)}`;
 
 type Status = "idle" | "submitting" | "success" | "error";
 
@@ -98,7 +102,11 @@ function FeedbackForm() {
 
   if (status === "success") {
     return (
-      <div className="flex flex-col items-center gap-2 rounded-card border border-mint/50 bg-sage/40 p-6 text-center">
+      <div
+        role="status"
+        aria-live="polite"
+        className="flex flex-col items-center gap-2 rounded-card border border-mint/50 bg-sage/40 p-6 text-center"
+      >
         <CheckCircle2 className="h-8 w-8 text-deep-teal" aria-hidden="true" />
         <h3 className="text-lg font-bold text-charcoal">Thank you</h3>
         <p className="text-sm text-charcoal/70">

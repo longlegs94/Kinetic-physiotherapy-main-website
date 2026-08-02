@@ -116,7 +116,11 @@ export function ContactForm() {
 
   if (status === "success") {
     return (
-      <div className="flex flex-col items-center gap-3 rounded-card border border-mint/50 bg-sage/40 p-8 text-center">
+      <div
+        role="status"
+        aria-live="polite"
+        className="flex flex-col items-center gap-3 rounded-card border border-mint/50 bg-sage/40 p-8 text-center"
+      >
         <CheckCircle2 className="h-10 w-10 text-deep-teal" aria-hidden="true" />
         <h3 className="text-xl font-bold text-charcoal">Message sent</h3>
         <p className="text-charcoal/70">

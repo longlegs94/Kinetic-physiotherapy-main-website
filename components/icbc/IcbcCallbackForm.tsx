@@ -137,6 +137,8 @@ export function IcbcCallbackForm({ id = "callback-form" }: { id?: string }) {
     return (
       <div
         id={id}
+        role="status"
+        aria-live="polite"
         className="flex scroll-mt-24 flex-col items-center gap-3 rounded-card border border-mint/50 bg-sage/40 p-8 text-center"
       >
         <CheckCircle2 className="h-10 w-10 text-deep-teal" aria-hidden="true" />
@@ -206,7 +208,7 @@ export function IcbcCallbackForm({ id = "callback-form" }: { id?: string }) {
         </div>
         <div>
           <label htmlFor="icbc-email" className={labelClass}>
-            Email <span className="font-normal text-charcoal/40">(optional)</span>
+            Email <span className="font-normal text-charcoal/60">(optional)</span>
           </label>
           <input
             id="icbc-email"
@@ -221,7 +223,7 @@ export function IcbcCallbackForm({ id = "callback-form" }: { id?: string }) {
       <div className="grid gap-4 sm:grid-cols-2">
         <div>
           <label htmlFor="icbc-claim" className={labelClass}>
-            ICBC claim number <span className="font-normal text-charcoal/40">(optional)</span>
+            ICBC claim number <span className="font-normal text-charcoal/60">(optional)</span>
           </label>
           <input
             id="icbc-claim"
@@ -232,7 +234,7 @@ export function IcbcCallbackForm({ id = "callback-form" }: { id?: string }) {
         </div>
         <div>
           <label htmlFor="icbc-callback-time" className={labelClass}>
-            Best time to call <span className="font-normal text-charcoal/40">(optional)</span>
+            Best time to call <span className="font-normal text-charcoal/60">(optional)</span>
           </label>
           <select id="icbc-callback-time" name="callback_time" defaultValue="" className={fieldClass}>
             <option value="">No preference</option>
@@ -248,7 +250,7 @@ export function IcbcCallbackForm({ id = "callback-form" }: { id?: string }) {
       <div>
         <label htmlFor="icbc-message" className={labelClass}>
           Anything else we should know?{" "}
-          <span className="font-normal text-charcoal/40">(optional)</span>
+          <span className="font-normal text-charcoal/60">(optional)</span>
         </label>
         <textarea
           id="icbc-message"

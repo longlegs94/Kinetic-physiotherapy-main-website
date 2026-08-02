@@ -60,6 +60,7 @@ export function LinkButton({
   ) : null;
 
   if (external) {
+    const suppliedLabel = rest["aria-label"];
     return (
       <a
         href={href}
@@ -68,9 +69,11 @@ export function LinkButton({
         className={classes}
         onClick={onClick}
         {...rest}
+        aria-label={suppliedLabel ? `${suppliedLabel} (opens in a new tab)` : undefined}
       >
         {children}
         {arrow}
+        {!suppliedLabel && <span className="sr-only"> (opens in a new tab)</span>}
       </a>
     );
   }

@@ -30,7 +30,9 @@ export function localBusinessSchema() {
       addressLocality: clinic.city,
       addressRegion: clinic.province,
       postalCode: "V4R 1W1",
-      addressCountry: clinic.country,
+      // Google's structured-data guidance expects the ISO 3166-1 alpha-2
+      // code here, not the display name (clinic.country is "Canada").
+      addressCountry: "CA",
     },
     geo: {
       "@type": "GeoCoordinates",
