@@ -130,6 +130,8 @@ export function Hero() {
             <motion.img
               src="/images/illustrations/hero-kinetic.svg"
               alt="Stylized figure in motion surrounded by flowing mint recovery lines"
+              width={480}
+              height={600}
               className="h-full w-full rounded-[28px] object-cover"
               initial={reduced ? false : { scale: 1.06 }}
               animate={reduced ? {} : { scale: 1 }}

@@ -15,7 +15,7 @@ const CATEGORIES = [
 ];
 
 const fieldClass =
-  "w-full rounded-2xl border border-silver bg-white px-4 py-3 text-charcoal placeholder:text-charcoal/40 focus:border-deep-teal focus:outline-none";
+  "w-full rounded-2xl border border-silver bg-white px-4 py-3 text-charcoal placeholder:text-charcoal/60 focus:border-deep-teal focus:outline-none";
 const labelClass = "mb-1.5 block text-sm font-semibold text-charcoal";
 
 type Fields = {
@@ -245,7 +245,7 @@ export function IntakeForm() {
                 {ai.flags.join(" · ")}
               </div>
             )}
-            <p className="text-xs text-charcoal/50">
+            <p className="text-xs text-charcoal/60">
               Patient-reported information — our practitioner will confirm everything with
               you in person.
             </p>

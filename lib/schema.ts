@@ -61,7 +61,7 @@ export function localBusinessSchema() {
       "Chiropractic",
       "Kinesiology",
       "Acupuncture",
-    ],
+    ].map((name) => ({ "@type": "Service", name })),
     potentialAction: {
       "@type": "ReserveAction",
       target: janeBookingUrl,

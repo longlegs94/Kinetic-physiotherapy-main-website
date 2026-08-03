@@ -61,6 +61,9 @@ export function PractitionerCard({ practitioner }: { practitioner: Practitioner 
             <img
               src={p.image}
               alt={`${p.name}, ${p.title} at Kinetic Therapy Clinic`}
+              width={96}
+              height={96}
+              loading="lazy"
               className="h-full w-full object-cover transition-transform duration-300 ease-premium group-hover:scale-[1.05]"
             />
           ) : (

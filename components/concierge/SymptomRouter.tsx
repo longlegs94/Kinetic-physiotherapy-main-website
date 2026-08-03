@@ -103,7 +103,7 @@ export function SymptomRouter() {
           onChange={(event) => setInput(event.target.value.slice(0, MAX_INPUT_LENGTH))}
           maxLength={MAX_INPUT_LENGTH}
           placeholder="e.g. My shoulder hurts when I reach overhead…"
-          className="flex-1 rounded-pill border border-silver bg-white px-5 py-3 text-charcoal placeholder:text-charcoal/40 outline-none focus:border-deep-teal"
+          className="flex-1 rounded-pill border border-silver bg-white px-5 py-3 text-charcoal placeholder:text-charcoal/60 outline-none focus:border-deep-teal"
         />
         <button
           type="submit"
@@ -178,7 +178,7 @@ export function SymptomRouter() {
               <button
                 type="button"
                 onClick={reset}
-                className="rounded-pill px-3 py-1.5 text-xs font-semibold text-charcoal/50 transition-colors hover:text-charcoal"
+                className="rounded-pill px-3 py-1.5 text-xs font-semibold text-charcoal/60 transition-colors hover:text-charcoal"
               >
                 Ask again
               </button>

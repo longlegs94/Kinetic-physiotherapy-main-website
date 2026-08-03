@@ -55,7 +55,7 @@ export default function AboutPage() {
         title="Modern, connected care for pain, recovery, and movement."
         subtitle={clinic.positioning}
         crumbs={crumbs}
-        actions={<BookButton label="Book an Appointment" size="lg" withIcon source="about_hero" />}
+        actions={<BookButton label="Book Now" size="lg" withIcon source="about_hero" />}
       />
 
       <Section tone="white">

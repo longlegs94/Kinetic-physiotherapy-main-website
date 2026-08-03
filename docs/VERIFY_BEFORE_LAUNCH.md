@@ -80,8 +80,12 @@ put together, or the current site includes team members the package didn't captu
 ## FAQs, blog drafts
 
 - ⚠️ FAQ answers (referral, ICBC, direct billing) — confirm accuracy.
-- ⚠️ All 10 blog drafts remain `draft: true` (noindexed, excluded from sitemap) — review
-  for medical accuracy, then flip to `false` to publish.
+- ⚠️ 3 of the 10 blog posts are already published (`draft: false`, live and indexed):
+  `best-treatment-options-for-lower-back-pain`, `icbc-physiotherapy-what-patients-should-know`,
+  and `physio-vs-massage-which-should-you-book`. **Please confirm these were reviewed for
+  medical accuracy before launch** — that review isn't tracked anywhere else. The remaining
+  7 posts are still `draft: true` (noindexed, excluded from sitemap) — review each for
+  medical accuracy, then flip to `false` to publish.
 
 ## Assets — photos (⚠️ blocked on your side, not mine)
 

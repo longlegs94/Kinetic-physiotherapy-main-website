@@ -72,6 +72,7 @@ export function SiteHeader() {
             onClick={() => setMenuOpen(true)}
             aria-label="Open menu"
             aria-expanded={menuOpen}
+            aria-controls="mobile-nav-sheet"
             className="rounded-pill p-2 text-charcoal hover:bg-sage/60 md:hidden"
           >
             <Menu className="h-6 w-6" />

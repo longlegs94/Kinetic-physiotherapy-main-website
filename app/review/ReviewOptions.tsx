@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 import { Star, ExternalLink, Send, CheckCircle2, AlertCircle } from "lucide-react";
 import { clinic } from "@/lib/site-data";
 import { trackEvent } from "@/lib/analytics";
@@ -14,13 +14,18 @@ const GOOGLE_REVIEW_URL =
 type Status = "idle" | "submitting" | "success" | "error";
 
 const fieldClass =
-  "w-full rounded-2xl border border-silver bg-white px-4 py-3 text-charcoal placeholder:text-charcoal/40 focus:border-deep-teal focus:outline-none";
+  "w-full rounded-2xl border border-silver bg-white px-4 py-3 text-charcoal placeholder:text-charcoal/60 focus:border-deep-teal focus:outline-none";
 const labelClass = "mb-1.5 block text-sm font-semibold text-charcoal";
 
 /** Small "leave private feedback" form. Posts to the shared /api/contact relay. */
 function FeedbackForm() {
   const [status, setStatus] = useState<Status>("idle");
   const [error, setError] = useState<string>("");
+  const successHeadingRef = useRef<HTMLHeadingElement>(null);
+
+  useEffect(() => {
+    if (status === "success") successHeadingRef.current?.focus();
+  }, [status]);
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -100,7 +105,9 @@ function FeedbackForm() {
     return (
       <div className="flex flex-col items-center gap-2 rounded-card border border-mint/50 bg-sage/40 p-6 text-center">
         <CheckCircle2 className="h-8 w-8 text-deep-teal" aria-hidden="true" />
-        <h3 className="text-lg font-bold text-charcoal">Thank you</h3>
+        <h3 ref={successHeadingRef} tabIndex={-1} className="text-lg font-bold text-charcoal outline-none">
+          Thank you
+        </h3>
         <p className="text-sm text-charcoal/70">
           Your feedback goes straight to our clinic team. We appreciate you taking the time.
         </p>
@@ -180,6 +187,8 @@ function FeedbackForm() {
  * regardless of how they answer, per Google's review-gating policy.
  */
 export function ReviewOptions() {
+  const reviewUrlConfigured = !GOOGLE_REVIEW_URL.includes("REPLACE_ME");
+
   return (
     <div className="grid gap-6 sm:grid-cols-2">
       <div className="flex flex-col items-center gap-4 rounded-panel border border-silver/60 bg-warm-white p-6 text-center shadow-card sm:p-8">
@@ -192,16 +201,24 @@ export function ReviewOptions() {
             Takes under a minute, and helps other people in Maple Ridge find us.
           </p>
         </div>
-        <a
-          href={GOOGLE_REVIEW_URL}
-          target="_blank"
-          rel="noopener noreferrer"
-          onClick={() => trackEvent("review_google_click")}
-          className="group mt-auto inline-flex w-full items-center justify-center gap-2 rounded-pill bg-mint px-6 py-3.5 text-[15px] font-semibold text-charcoal transition-all duration-200 ease-premium hover:-translate-y-0.5 hover:shadow-button-hover"
-        >
-          Leave a Google review
-          <ExternalLink className="h-4 w-4 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
-        </a>
+        {reviewUrlConfigured ? (
+          <a
+            href={GOOGLE_REVIEW_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={() => trackEvent("review_google_click")}
+            className="group mt-auto inline-flex w-full items-center justify-center gap-2 rounded-pill bg-mint px-6 py-3.5 text-[15px] font-semibold text-charcoal transition-all duration-200 ease-premium hover:-translate-y-0.5 hover:shadow-button-hover"
+          >
+            Leave a Google review
+            <span className="sr-only"> (opens in a new tab)</span>
+            <ExternalLink className="h-4 w-4 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
+          </a>
+        ) : (
+          <p className="mt-auto w-full rounded-pill border border-silver/60 bg-sage/30 px-6 py-3.5 text-sm text-charcoal/70">
+            Our Google review link isn&apos;t set up yet — please share feedback with us directly, or
+            search for &ldquo;{clinic.name}&rdquo; on Google to leave a review.
+          </p>
+        )}
       </div>
 
       <div className="flex flex-col gap-4 rounded-panel border border-silver/60 bg-warm-white p-6 shadow-card sm:p-8">

@@ -56,14 +56,14 @@ export default function ServicesPage() {
         crumbs={crumbs}
         actions={
           <>
-            <BookButton label="Book an Appointment" size="lg" withIcon source="services_hero" />
+            <BookButton label="Book Now" size="lg" withIcon source="services_hero" />
             <LinkButton href="/contact" variant="secondary" size="lg" withArrow={false}>
               Help Me Choose a Service
             </LinkButton>
           </>
         }
       >
-        <p className="mt-8 text-sm font-semibold uppercase tracking-[0.18em] text-charcoal/50">
+        <p className="mt-8 text-sm font-semibold uppercase tracking-[0.18em] text-charcoal/60">
           Physio • RMT • Chiro • Kinesiology • Acupuncture • ICBC Care
         </p>
       </PageHero>

@@ -35,12 +35,12 @@ export function generateStaticParams() {
 
 const titleMap: Record<string, string> = {
   "physiotherapy-maple-ridge": "Physiotherapy Maple Ridge | Kinetic Therapy Clinic",
-  "massage-therapy-maple-ridge":
-    "Massage Therapy Maple Ridge | RMT & Therapeutic Massage | Kinetic Therapy",
+  "massage-therapy-maple-ridge": "Massage Therapy Maple Ridge | RMT Massage | Kinetic Therapy",
   "chiropractor-maple-ridge":
     "Chiropractor Maple Ridge | Chiropractic Care | Kinetic Therapy",
-  "icbc-physio-maple-ridge":
-    "ICBC Physiotherapy Maple Ridge | Accident Recovery | Kinetic Therapy",
+  "acupuncture-maple-ridge": "Acupuncture Maple Ridge | TCM | Kinetic Therapy Clinic",
+  "orthotics-bracing-maple-ridge": "Orthotics & Bracing Maple Ridge | Kinetic Therapy Clinic",
+  "icbc-physio-maple-ridge": "ICBC Physiotherapy Maple Ridge | Kinetic Therapy Clinic",
 };
 
 export async function generateMetadata({
@@ -53,7 +53,7 @@ export async function generateMetadata({
   if (!service) return {};
   return pageMetadata({
     title: titleMap[slug] ?? `${service.name} Maple Ridge | Kinetic Therapy Clinic`,
-    description: service.heroSubtitle,
+    description: service.metaDescription ?? service.heroSubtitle,
     path: `/${slug}`,
   });
 }

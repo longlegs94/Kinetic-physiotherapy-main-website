@@ -36,6 +36,8 @@ export type Service = {
   description: string;
   heroTitle: string;
   heroSubtitle: string;
+  /** Short (~150 char) SEO meta description. Falls back to heroSubtitle when unset. */
+  metaDescription?: string;
   conditions: string[];
   process: string[];
   relatedServices: string[];

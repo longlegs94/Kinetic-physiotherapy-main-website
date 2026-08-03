@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { PageHero } from "@/components/layout/PageHero";
 import { Section, Container } from "@/components/layout/Section";
@@ -6,12 +7,17 @@ import { JsonLd } from "@/components/ui/JsonLd";
 import { breadcrumbSchema } from "@/lib/schema";
 import { pageMetadata } from "@/lib/seo";
 
-export const metadata = pageMetadata({
-  title: "Pre-Visit Intake | Kinetic Therapy Clinic Maple Ridge",
-  description:
-    "Get a head start on your first visit to Kinetic Therapy in Maple Ridge. Answer a few questions and we'll prepare a pre-visit summary for our team.",
-  path: "/intake",
-});
+// Single-use pre-visit form reached from a booking confirmation, not organic
+// search — same reasoning as /review, so it's excluded from indexing.
+export const metadata: Metadata = {
+  ...pageMetadata({
+    title: "Pre-Visit Intake | Kinetic Therapy Clinic Maple Ridge",
+    description:
+      "Get a head start on your first visit to Kinetic Therapy in Maple Ridge. Answer a few questions and we'll prepare a pre-visit summary for our team.",
+    path: "/intake",
+  }),
+  robots: { index: false, follow: false },
+};
 
 const crumbs = [
   { name: "Home", path: "/" },

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 import { Send, CheckCircle2, AlertCircle, PhoneCall } from "lucide-react";
 import { clinic } from "@/lib/site-data";
 import { trackEvent } from "@/lib/analytics";
@@ -10,7 +10,7 @@ import { CALLBACK_TIMES } from "@/lib/contact";
 type Status = "idle" | "submitting" | "success" | "error";
 
 const fieldClass =
-  "w-full rounded-2xl border border-silver bg-white px-4 py-3 text-charcoal placeholder:text-charcoal/40 focus:border-deep-teal focus:outline-none";
+  "w-full rounded-2xl border border-silver bg-white px-4 py-3 text-charcoal placeholder:text-charcoal/60 focus:border-deep-teal focus:outline-none";
 const labelClass = "mb-1.5 block text-sm font-semibold text-charcoal";
 
 /**
@@ -25,6 +25,11 @@ const labelClass = "mb-1.5 block text-sm font-semibold text-charcoal";
 export function IcbcCallbackForm({ id = "callback-form" }: { id?: string }) {
   const [status, setStatus] = useState<Status>("idle");
   const [error, setError] = useState<string>("");
+  const successHeadingRef = useRef<HTMLHeadingElement>(null);
+
+  useEffect(() => {
+    if (status === "success") successHeadingRef.current?.focus();
+  }, [status]);
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -140,7 +145,9 @@ export function IcbcCallbackForm({ id = "callback-form" }: { id?: string }) {
         className="flex scroll-mt-24 flex-col items-center gap-3 rounded-card border border-mint/50 bg-sage/40 p-8 text-center"
       >
         <CheckCircle2 className="h-10 w-10 text-deep-teal" aria-hidden="true" />
-        <h3 className="text-xl font-bold text-charcoal">Request received</h3>
+        <h3 ref={successHeadingRef} tabIndex={-1} className="text-xl font-bold text-charcoal outline-none">
+          Request received
+        </h3>
         <p className="text-charcoal/70">
           Thanks — our team will reach out to help you understand your next steps. For
           faster help right now, call {clinic.phone}.
@@ -206,7 +213,7 @@ export function IcbcCallbackForm({ id = "callback-form" }: { id?: string }) {
         </div>
         <div>
           <label htmlFor="icbc-email" className={labelClass}>
-            Email <span className="font-normal text-charcoal/40">(optional)</span>
+            Email <span className="font-normal text-charcoal/60">(optional)</span>
           </label>
           <input
             id="icbc-email"
@@ -221,7 +228,7 @@ export function IcbcCallbackForm({ id = "callback-form" }: { id?: string }) {
       <div className="grid gap-4 sm:grid-cols-2">
         <div>
           <label htmlFor="icbc-claim" className={labelClass}>
-            ICBC claim number <span className="font-normal text-charcoal/40">(optional)</span>
+            ICBC claim number <span className="font-normal text-charcoal/60">(optional)</span>
           </label>
           <input
             id="icbc-claim"
@@ -232,7 +239,7 @@ export function IcbcCallbackForm({ id = "callback-form" }: { id?: string }) {
         </div>
         <div>
           <label htmlFor="icbc-callback-time" className={labelClass}>
-            Best time to call <span className="font-normal text-charcoal/40">(optional)</span>
+            Best time to call <span className="font-normal text-charcoal/60">(optional)</span>
           </label>
           <select id="icbc-callback-time" name="callback_time" defaultValue="" className={fieldClass}>
             <option value="">No preference</option>
@@ -248,7 +255,7 @@ export function IcbcCallbackForm({ id = "callback-form" }: { id?: string }) {
       <div>
         <label htmlFor="icbc-message" className={labelClass}>
           Anything else we should know?{" "}
-          <span className="font-normal text-charcoal/40">(optional)</span>
+          <span className="font-normal text-charcoal/60">(optional)</span>
         </label>
         <textarea
           id="icbc-message"
@@ -278,7 +285,7 @@ export function IcbcCallbackForm({ id = "callback-form" }: { id?: string }) {
         />
       </button>
 
-      <p className="flex items-center gap-1.5 text-xs text-charcoal/50">
+      <p className="flex items-center gap-1.5 text-xs text-charcoal/60">
         <PhoneCall className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
         Need help sooner? Call {clinic.phone} directly.
       </p>

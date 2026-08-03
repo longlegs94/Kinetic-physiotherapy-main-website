@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import { MessageCircle, Send, X, Phone } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -9,6 +10,13 @@ import { trackEvent } from "@/lib/analytics";
 import { janeBookingUrl, clinic, phoneHref } from "@/lib/site-data";
 import { useReducedMotionSafe } from "@/components/motion/useReducedMotionSafe";
 import { easePremium } from "@/lib/motion";
+
+const FOCUSABLE_SELECTOR =
+  'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+
+// The ICBC landing page deliberately shows a single, consistent phone-first
+// CTA bar (see IcbcStickyBar) — the concierge launcher would compete with it.
+const SUPPRESSED_PATHS = ["/icbc-claims"];
 
 type ServiceLink = { name: string; slug: string };
 
@@ -47,6 +55,7 @@ const MAX_INPUT_LENGTH = 500;
  * offline message (with phone + contact links) if unconfigured or erroring.
  */
 export function ConciergeWidget() {
+  const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
@@ -57,12 +66,47 @@ export function ConciergeWidget() {
   const inputRef = useRef<HTMLInputElement>(null);
   const endOfMessagesRef = useRef<HTMLDivElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<Element | null>(null);
 
   const reducedMotion = useReducedMotionSafe();
+  const suppressed = SUPPRESSED_PATHS.some(
+    (path) => pathname === path || pathname?.startsWith(`${path}/`)
+  );
 
   useEffect(() => {
     if (!open) return;
+    triggerRef.current = document.activeElement;
     inputRef.current?.focus();
+    return () => {
+      if (triggerRef.current instanceof HTMLElement) {
+        triggerRef.current.focus();
+      }
+    };
+  }, [open]);
+
+  // Trap Tab/Shift+Tab within the chat panel while it's open.
+  useEffect(() => {
+    if (!open) return;
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key !== "Tab" || !panelRef.current) return;
+      const focusable = Array.from(
+        panelRef.current.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR)
+      ).filter((el) => el.offsetParent !== null);
+      if (focusable.length === 0) return;
+
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    };
+    document.addEventListener("keydown", onKeyDown);
+    return () => document.removeEventListener("keydown", onKeyDown);
   }, [open]);
 
   // Allow any part of the site (e.g. the FAQ "Ask our assistant" button)
@@ -213,7 +257,11 @@ export function ConciergeWidget() {
         </button>
       </div>
 
-      <div className="flex-1 space-y-3 overflow-y-auto bg-warm-white/70 px-4 py-4">
+      <div
+        className="flex-1 space-y-3 overflow-y-auto bg-warm-white/70 px-4 py-4"
+        aria-live="polite"
+        aria-atomic="false"
+      >
         {messages.map((message, index) => (
           <div
             key={index}
@@ -257,6 +305,7 @@ export function ConciergeWidget() {
                         className="rounded-pill bg-mint px-4 py-2 text-sm font-semibold text-charcoal shadow-button-hover"
                       >
                         Book Now
+                        <span className="sr-only"> (opens in a new tab)</span>
                       </a>
                     )}
                     {message.showContact && (
@@ -300,14 +349,29 @@ export function ConciergeWidget() {
         {pending && (
           <div className="flex justify-start">
             <div className="flex items-center gap-1.5 rounded-2xl border border-silver/60 bg-white/90 px-4 py-3">
-              <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-charcoal/50" />
+              <span className="sr-only">Assistant is typing…</span>
               <span
-                className="h-1.5 w-1.5 animate-pulse rounded-full bg-charcoal/50"
-                style={{ animationDelay: "150ms" }}
+                className={cn(
+                  "h-1.5 w-1.5 rounded-full bg-charcoal/50",
+                  !reducedMotion && "animate-pulse"
+                )}
+                aria-hidden="true"
               />
               <span
-                className="h-1.5 w-1.5 animate-pulse rounded-full bg-charcoal/50"
-                style={{ animationDelay: "300ms" }}
+                className={cn(
+                  "h-1.5 w-1.5 rounded-full bg-charcoal/50",
+                  !reducedMotion && "animate-pulse"
+                )}
+                style={reducedMotion ? undefined : { animationDelay: "150ms" }}
+                aria-hidden="true"
+              />
+              <span
+                className={cn(
+                  "h-1.5 w-1.5 rounded-full bg-charcoal/50",
+                  !reducedMotion && "animate-pulse"
+                )}
+                style={reducedMotion ? undefined : { animationDelay: "300ms" }}
+                aria-hidden="true"
               />
             </div>
           </div>
@@ -344,6 +408,8 @@ export function ConciergeWidget() {
       </form>
     </>
   );
+
+  if (suppressed) return null;
 
   return (
     <>

@@ -48,7 +48,7 @@ export default function TeamPage() {
         title="Meet the team behind your recovery."
         subtitle="Our practitioners work under one roof so your care can be coordinated across disciplines when it helps — from first assessment to long-term recovery."
         crumbs={crumbs}
-        actions={<BookButton label="Book an Appointment" size="lg" withIcon source="team_hero" />}
+        actions={<BookButton label="Book Now" size="lg" withIcon source="team_hero" />}
       />
 
       {groups.map((group, idx) => (

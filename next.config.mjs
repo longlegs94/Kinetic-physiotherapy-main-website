@@ -99,6 +99,14 @@ const nextConfig = {
           { key: "Content-Security-Policy", value: cspDirectives.join("; ") },
         ],
       },
+      {
+        // Static assets served straight from /public — unlike /_next/static/*,
+        // Next doesn't auto-add long-lived caching to these on its own.
+        source: "/:path*.(svg|png|jpg|jpeg|webp|avif|ico)",
+        headers: [
+          { key: "Cache-Control", value: "public, max-age=31536000, immutable" },
+        ],
+      },
     ];
   },
 };

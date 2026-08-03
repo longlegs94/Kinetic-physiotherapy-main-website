@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 import Link from "next/link";
 import { Send, CheckCircle2, AlertCircle, ArrowRight } from "lucide-react";
 import { clinic } from "@/lib/site-data";
@@ -17,7 +17,7 @@ const categories = CONTACT_CATEGORIES;
 type Status = "idle" | "submitting" | "success" | "error";
 
 const fieldClass =
-  "w-full rounded-2xl border border-silver bg-white px-4 py-3 text-charcoal placeholder:text-charcoal/40 focus:border-deep-teal focus:outline-none";
+  "w-full rounded-2xl border border-silver bg-white px-4 py-3 text-charcoal placeholder:text-charcoal/60 focus:border-deep-teal focus:outline-none";
 const labelClass = "mb-1.5 block text-sm font-semibold text-charcoal";
 
 /**
@@ -31,6 +31,11 @@ export function ContactForm() {
   const [error, setError] = useState<string>("");
   const [category, setCategory] = useState<string>("Booking");
   const wantsCallback = category === "Request a callback" || category === "Booking";
+  const successHeadingRef = useRef<HTMLHeadingElement>(null);
+
+  useEffect(() => {
+    if (status === "success") successHeadingRef.current?.focus();
+  }, [status]);
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -118,7 +123,9 @@ export function ContactForm() {
     return (
       <div className="flex flex-col items-center gap-3 rounded-card border border-mint/50 bg-sage/40 p-8 text-center">
         <CheckCircle2 className="h-10 w-10 text-deep-teal" aria-hidden="true" />
-        <h3 className="text-xl font-bold text-charcoal">Message sent</h3>
+        <h3 ref={successHeadingRef} tabIndex={-1} className="text-xl font-bold text-charcoal outline-none">
+          Message sent
+        </h3>
         <p className="text-charcoal/70">
           Thanks for reaching out — our team will get back to you soon. For urgent needs,
           please call {clinic.phone}.
@@ -128,7 +135,7 @@ export function ContactForm() {
           onClick={() => trackReviewCtaClick("contact_success")}
           className="group mt-1 inline-flex items-center gap-1.5 text-sm font-semibold text-deep-teal hover:text-deep-teal/80"
         >
-          Loved your visit? Leave us a review
+          Already a patient? Leave us a review
           <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
         </Link>
       </div>
@@ -233,7 +240,7 @@ export function ContactForm() {
         </p>
       )}
 
-      <p className="text-xs text-charcoal/50">
+      <p className="text-xs text-charcoal/60">
         Your message goes directly to our clinic inbox. Please don&apos;t include detailed
         health information here — save that for your appointment or the{" "}
         <Link href="/intake" className="font-semibold text-deep-teal underline underline-offset-2 hover:text-deep-teal/80">

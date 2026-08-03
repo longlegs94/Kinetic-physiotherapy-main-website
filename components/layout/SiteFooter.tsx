@@ -10,6 +10,7 @@ import { trackEvent } from "@/lib/analytics";
 
 const clinicLinks = [
   { label: "Services", href: "/services" },
+  { label: "Service Areas", href: "/locations" },
   { label: "Our Team", href: "/team" },
   { label: "About", href: "/about" },
   { label: "Testimonials", href: "/testimonials" },
@@ -34,7 +35,7 @@ export function SiteFooter() {
               {clinic.positioning}
             </p>
             <BookButton
-              label="Book on Jane"
+              label="Book Now"
               variant="primary"
               className="mt-6"
               withIcon
@@ -155,6 +156,9 @@ export function SiteFooter() {
           </div>
         </div>
       </div>
+
+      {/* Clearance so the mobile sticky booking bar never covers footer content */}
+      <div className="h-24 md:hidden" aria-hidden="true" />
     </footer>
   );
 }

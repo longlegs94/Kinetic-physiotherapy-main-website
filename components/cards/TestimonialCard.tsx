@@ -30,7 +30,13 @@ export function TestimonialCard({
             key={i}
             className={cn(
               "h-4 w-4",
-              i < t.rating ? "fill-cta-orange text-cta-orange" : "text-silver"
+              i < t.rating
+                ? tone === "dark"
+                  ? "fill-mint text-mint"
+                  : "fill-deep-teal text-deep-teal"
+                : tone === "dark"
+                  ? "text-silver"
+                  : "text-charcoal/60"
             )}
             aria-hidden="true"
           />

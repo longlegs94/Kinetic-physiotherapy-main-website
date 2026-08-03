@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
 import { X } from "lucide-react";
@@ -10,6 +10,9 @@ import { BookButton } from "@/components/ui/BookButton";
 import { CallButton } from "@/components/ui/CallButton";
 import { easePremium } from "@/lib/motion";
 
+const FOCUSABLE_SELECTOR =
+  'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+
 /** Full-height mobile navigation sheet with Book / Call at the top. */
 export function MobileNavSheet({
   open,
@@ -18,16 +21,51 @@ export function MobileNavSheet({
   open: boolean;
   onClose: () => void;
 }) {
-  // Lock body scroll while open and close on Escape.
+  const panelRef = useRef<HTMLDivElement>(null);
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const triggerRef = useRef<Element | null>(null);
+
+  // Lock body scroll, trap focus, and close on Escape while open.
   useEffect(() => {
     if (!open) return;
+
+    triggerRef.current = document.activeElement;
+    closeButtonRef.current?.focus();
+
     const original = document.body.style.overflow;
     document.body.style.overflow = "hidden";
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
+
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        onClose();
+        return;
+      }
+      if (e.key !== "Tab" || !panelRef.current) return;
+
+      const focusable = Array.from(
+        panelRef.current.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR)
+      ).filter((el) => el.offsetParent !== null);
+      if (focusable.length === 0) return;
+
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    };
     window.addEventListener("keydown", onKey);
+
     return () => {
       document.body.style.overflow = original;
       window.removeEventListener("keydown", onKey);
+      if (triggerRef.current instanceof HTMLElement) {
+        triggerRef.current.focus();
+      }
     };
   }, [open, onClose]);
 
@@ -35,6 +73,7 @@ export function MobileNavSheet({
     <AnimatePresence>
       {open && (
         <motion.div
+          id="mobile-nav-sheet"
           className="fixed inset-0 z-[70] md:hidden"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -46,6 +85,7 @@ export function MobileNavSheet({
         >
           <div className="absolute inset-0 bg-charcoal/40" onClick={onClose} />
           <motion.div
+            ref={panelRef}
             className="absolute inset-y-0 right-0 flex w-full max-w-sm flex-col bg-warm-white shadow-2xl"
             initial={{ x: "100%" }}
             animate={{ x: 0 }}
@@ -56,6 +96,7 @@ export function MobileNavSheet({
               <Logo />
               <button
                 type="button"
+                ref={closeButtonRef}
                 onClick={onClose}
                 aria-label="Close menu"
                 className="rounded-pill p-2 text-charcoal hover:bg-sage/60"

@@ -29,7 +29,7 @@ export default function TestimonialsPage() {
         title="Trusted by patients across Maple Ridge."
         subtitle="Real words from people we've had the privilege to help. We're grateful for every story."
         crumbs={crumbs}
-        actions={<BookButton label="Book an Appointment" size="lg" withIcon source="testimonials_hero" />}
+        actions={<BookButton label="Book Now" size="lg" withIcon source="testimonials_hero" />}
       />
 
       <Section tone="white">
