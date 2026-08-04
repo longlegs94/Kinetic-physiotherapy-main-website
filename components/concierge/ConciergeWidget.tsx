@@ -213,7 +213,11 @@ export function ConciergeWidget() {
         </button>
       </div>
 
-      <div className="flex-1 space-y-3 overflow-y-auto bg-warm-white/70 px-4 py-4">
+      <div
+        className="flex-1 space-y-3 overflow-y-auto bg-warm-white/70 px-4 py-4"
+        aria-live="polite"
+        aria-relevant="additions"
+      >
         {messages.map((message, index) => (
           <div
             key={index}
@@ -300,6 +304,7 @@ export function ConciergeWidget() {
         {pending && (
           <div className="flex justify-start">
             <div className="flex items-center gap-1.5 rounded-2xl border border-silver/60 bg-white/90 px-4 py-3">
+              <span className="sr-only">Assistant is typing</span>
               <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-charcoal/50" />
               <span
                 className="h-1.5 w-1.5 animate-pulse rounded-full bg-charcoal/50"

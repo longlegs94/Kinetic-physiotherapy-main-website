@@ -6,7 +6,7 @@ export default function NotFound() {
   return (
     <section className="flex min-h-[70vh] items-center bg-warm-white pt-28">
       <Container className="text-center">
-        <p className="font-heading text-6xl font-extrabold text-mint">404</p>
+        <p className="font-heading text-6xl font-extrabold text-deep-teal">404</p>
         <h1 className="mt-4 text-section-h2 font-bold text-charcoal">
           We couldn&apos;t find that page.
         </h1>

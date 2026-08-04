@@ -131,6 +131,8 @@ export function Hero() {
               src="/images/illustrations/hero-kinetic.svg"
               alt="Stylized figure in motion surrounded by flowing mint recovery lines"
               className="h-full w-full rounded-[28px] object-cover"
+              fetchPriority="high"
+              decoding="async"
               initial={reduced ? false : { scale: 1.06 }}
               animate={reduced ? {} : { scale: 1 }}
               transition={{ duration: 1.6, ease: easePremium }}
