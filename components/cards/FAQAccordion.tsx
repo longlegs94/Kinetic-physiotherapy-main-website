@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useId, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Plus } from "lucide-react";
 import type { Faq } from "@/lib/site-data";
@@ -12,18 +12,23 @@ import { cn } from "@/lib/utils";
 export function FAQAccordion({ faqs }: { faqs: Faq[] }) {
   const [open, setOpen] = useState<number | null>(0);
   const reduced = useReducedMotionSafe();
+  const baseId = useId();
 
   return (
     <div className="space-y-3">
       {faqs.map((faq, i) => {
         const isOpen = open === i;
+        const panelId = `${baseId}-panel-${i}`;
+        const buttonId = `${baseId}-button-${i}`;
         return (
           <div key={faq.question} className="glass overflow-hidden rounded-card transition-colors hover:border-mint/60">
             <h3>
               <button
                 type="button"
+                id={buttonId}
                 onClick={() => setOpen(isOpen ? null : i)}
                 aria-expanded={isOpen}
+                aria-controls={panelId}
                 className="flex w-full items-center justify-between gap-4 px-5 py-5 text-left sm:px-7"
               >
                 <span className="text-base font-semibold text-charcoal sm:text-lg">
@@ -41,6 +46,9 @@ export function FAQAccordion({ faqs }: { faqs: Faq[] }) {
             <AnimatePresence initial={false}>
               {isOpen && (
                 <motion.div
+                  id={panelId}
+                  role="region"
+                  aria-labelledby={buttonId}
                   initial={reduced ? { opacity: 0 } : { height: 0, opacity: 0 }}
                   animate={reduced ? { opacity: 1 } : { height: "auto", opacity: 1 }}
                   exit={reduced ? { opacity: 0 } : { height: 0, opacity: 0 }}

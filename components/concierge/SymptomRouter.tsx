@@ -178,7 +178,7 @@ export function SymptomRouter() {
               <button
                 type="button"
                 onClick={reset}
-                className="rounded-pill px-3 py-1.5 text-xs font-semibold text-charcoal/50 transition-colors hover:text-charcoal"
+                className="rounded-pill px-3 py-1.5 text-xs font-semibold text-charcoal/65 transition-colors hover:text-charcoal"
               >
                 Ask again
               </button>

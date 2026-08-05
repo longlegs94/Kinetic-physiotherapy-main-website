@@ -58,7 +58,7 @@ export function MobileNavSheet({
                 type="button"
                 onClick={onClose}
                 aria-label="Close menu"
-                className="rounded-pill p-2 text-charcoal hover:bg-sage/60"
+                className="rounded-pill p-2.5 text-charcoal hover:bg-sage/60"
               >
                 <X className="h-6 w-6" />
               </button>

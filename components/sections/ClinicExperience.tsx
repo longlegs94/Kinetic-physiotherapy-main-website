@@ -51,7 +51,7 @@ export function ClinicExperience() {
                     loading="lazy"
                   />
                 </div>
-                <span className="block px-3 py-2 text-center text-xs font-semibold uppercase tracking-[0.14em] text-charcoal/50">
+                <span className="block px-3 py-2 text-center text-xs font-semibold uppercase tracking-[0.14em] text-charcoal/65">
                   {tile.label}
                 </span>
               </div>

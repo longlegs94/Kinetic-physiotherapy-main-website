@@ -213,7 +213,11 @@ export function ConciergeWidget() {
         </button>
       </div>
 
-      <div className="flex-1 space-y-3 overflow-y-auto bg-warm-white/70 px-4 py-4">
+      <div
+        className="flex-1 space-y-3 overflow-y-auto bg-warm-white/70 px-4 py-4"
+        aria-live="polite"
+        aria-atomic="false"
+      >
         {messages.map((message, index) => (
           <div
             key={index}
@@ -363,13 +367,14 @@ export function ConciergeWidget() {
       <AnimatePresence>
         {open &&
           (reducedMotion ? (
-            <div ref={panelRef} role="dialog" aria-label="Booking assistant chat" className={panelClassName}>
+            <div ref={panelRef} role="dialog" aria-modal="true" aria-label="Booking assistant chat" className={panelClassName}>
               {panelBody}
             </div>
           ) : (
             <motion.div
               ref={panelRef}
               role="dialog"
+              aria-modal="true"
               aria-label="Booking assistant chat"
               initial={{ opacity: 0, y: 24 }}
               animate={{ opacity: 1, y: 0 }}
