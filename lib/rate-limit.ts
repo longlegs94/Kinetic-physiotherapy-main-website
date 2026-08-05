@@ -50,16 +50,25 @@ export function checkRateLimit(
 /**
  * Derives the client IP from standard proxy headers. Falls back to
  * "unknown" when neither header is present (e.g. some local/dev requests).
+ *
+ * x-real-ip is set by the platform's own edge (e.g. Vercel) and can't be
+ * spoofed by the client, so it's preferred. x-forwarded-for is a
+ * client-appendable, comma-separated chain ("client, proxy1, proxy2..."):
+ * the FIRST entry is whatever the original request claimed and is trivially
+ * spoofable (an attacker can rotate it per request to dodge the rate
+ * limiter), while the LAST entry is what the nearest hop actually saw, so
+ * it's used only as a fallback when x-real-ip is absent.
  */
 export function getClientIp(request: Request): string {
-  const forwardedFor = request.headers.get("x-forwarded-for");
-  if (forwardedFor) {
-    const first = forwardedFor.split(",")[0]?.trim();
-    if (first) return first;
-  }
-
   const realIp = request.headers.get("x-real-ip");
   if (realIp) return realIp.trim();
+
+  const forwardedFor = request.headers.get("x-forwarded-for");
+  if (forwardedFor) {
+    const parts = forwardedFor.split(",").map((p) => p.trim()).filter(Boolean);
+    const last = parts[parts.length - 1];
+    if (last) return last;
+  }
 
   return "unknown";
 }
