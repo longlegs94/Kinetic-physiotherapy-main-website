@@ -9,6 +9,7 @@ import { trackEvent } from "@/lib/analytics";
 import { janeBookingUrl, clinic, phoneHref } from "@/lib/site-data";
 import { useReducedMotionSafe } from "@/components/motion/useReducedMotionSafe";
 import { easePremium } from "@/lib/motion";
+import { HAS_SERVER_API, apiUrl } from "@/lib/deploy-target";
 
 type ServiceLink = { name: string; slug: string };
 
@@ -43,8 +44,9 @@ const MAX_INPUT_LENGTH = 500;
 
 /**
  * Floating AI booking concierge. Launcher pill + glass chat panel.
- * Lazily checks /api/concierge on first open; falls back to a graceful
- * offline message (with phone + contact links) if unconfigured or erroring.
+ * Lazily checks the concierge API on first open; falls back to a graceful
+ * offline message (with phone + contact links) if unconfigured or erroring —
+ * which is also what a static build without an API origin always shows.
  */
 export function ConciergeWidget() {
   const [open, setOpen] = useState(false);
@@ -98,7 +100,16 @@ export function ConciergeWidget() {
     if (checkedAvailability) return;
     setCheckedAvailability(true);
 
-    fetch("/api/concierge")
+    // A static build with no API origin has nothing to ask — open straight
+    // into the offline state (call / book / contact options) rather than
+    // firing a request that can only 404.
+    if (!HAS_SERVER_API) {
+      setOffline(true);
+      setMessages([OFFLINE_MESSAGE]);
+      return;
+    }
+
+    fetch(apiUrl("/api/concierge"))
       .then((res) => (res.ok ? res.json() : Promise.reject(res)))
       .then((data: { enabled: boolean }) => {
         if (!data.enabled) {
@@ -135,7 +146,7 @@ export function ConciergeWidget() {
       const firstUser = nextMessages.findIndex((m) => m.role === "user");
       const history = nextMessages.slice(firstUser === -1 ? 0 : firstUser);
 
-      const res = await fetch("/api/concierge", {
+      const res = await fetch(apiUrl("/api/concierge"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-import { validateContactPayload } from "@/lib/contact";
+import { WEB3FORMS_ENDPOINT, buildWeb3FormsBody, validateContactPayload } from "@/lib/contact";
 import { checkRateLimit, getClientIp, isAllowedOrigin } from "@/lib/rate-limit";
 
 export const runtime = "nodejs";
@@ -63,38 +63,11 @@ export async function POST(request: Request) {
     );
   }
 
-  const { name, email, phone, category, callbackTime, message, subject, formName } = validation.data;
-  // Readable Web3Forms subject per formName so the clinic inbox shows at a
-  // glance which surface the message came from. Unlisted/future formNames
-  // (relaxed via lib/contact.ts) fall back to "Website enquiry".
-  const subjectPrefixes: Record<string, string> = {
-    contact: "Website enquiry",
-    intake: "Pre-visit intake",
-    feedback: "Website feedback",
-    "icbc-callback": "ICBC callback request",
-  };
-  const subjectPrefix = subjectPrefixes[formName] || "Website enquiry";
-  const finalSubject =
-    subject || (category
-      ? `${subjectPrefix} (${category}) — Kinetic Therapy`
-      : `${subjectPrefix} — Kinetic Therapy`);
-
   try {
-    const res = await fetch("https://api.web3forms.com/submit", {
+    const res = await fetch(WEB3FORMS_ENDPOINT, {
       method: "POST",
       headers: { "Content-Type": "application/json", Accept: "application/json" },
-      body: JSON.stringify({
-        access_key: accessKey,
-        subject: finalSubject,
-        from_name: "Kinetic Therapy Website",
-        name,
-        email,
-        phone: phone || undefined,
-        category: category || undefined,
-        formName,
-        ...(callbackTime ? { callback_time: callbackTime } : {}),
-        message,
-      }),
+      body: JSON.stringify(buildWeb3FormsBody(accessKey, validation.data)),
     });
 
     let json: { success?: boolean; message?: string } = {};

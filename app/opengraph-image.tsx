@@ -5,6 +5,9 @@ import { ImageResponse } from "next/og";
  * Applies to any route that doesn't define its own opengraph-image.
  */
 export const runtime = "nodejs";
+// The image has no per-request input, so it's rendered once at build time.
+// Required explicitly for `output: "export"`, a no-op otherwise.
+export const dynamic = "force-static";
 export const alt = "Kinetic Therapy Clinic — Maple Ridge";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";

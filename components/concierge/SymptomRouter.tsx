@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Sparkles, ArrowRight, Phone } from "lucide-react";
 import { trackEvent } from "@/lib/analytics";
 import { janeBookingUrl, clinic, phoneHref } from "@/lib/site-data";
+import { apiUrl } from "@/lib/deploy-target";
 
 type ServiceLink = { name: string; slug: string };
 
@@ -43,7 +44,7 @@ export function SymptomRouter() {
     setPending(true);
 
     try {
-      const res = await fetch("/api/concierge", {
+      const res = await fetch(apiUrl("/api/concierge"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ messages: [{ role: "user", content: trimmed }] }),

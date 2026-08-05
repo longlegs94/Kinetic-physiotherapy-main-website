@@ -6,6 +6,7 @@ import { clinic } from "@/lib/site-data";
 import { trackEvent } from "@/lib/analytics";
 import { cn } from "@/lib/utils";
 import { CALLBACK_TIMES } from "@/lib/contact";
+import { postContact } from "@/lib/submit-contact";
 
 type Status = "idle" | "submitting" | "success" | "error";
 
@@ -17,7 +18,7 @@ const labelClass = "mb-1.5 block text-sm font-semibold text-charcoal";
  * Self-contained callback request form for the /icbc-claims paid-traffic
  * landing page. Deliberately separate from components/cards/ContactForm.tsx
  * — different field set (ICBC claim number, phone-first) and its own
- * analytics event. Posts JSON to the shared /api/contact relay with
+ * analytics event. Delivers via the shared postContact() with
  * formName "icbc-callback". Mirrors ContactForm's status/error handling
  * (idle/submitting/success/error, 429, 501 mailto fallback) so behaviour
  * stays consistent across the site.
@@ -71,11 +72,7 @@ export function IcbcCallbackForm({ id = "callback-form" }: { id?: string }) {
     setError("");
 
     try {
-      const res = await fetch("/api/contact", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
+      const res = await postContact(payload);
 
       if (res.status === 501) {
         // Relay isn't configured — fall back to a pre-filled email so the

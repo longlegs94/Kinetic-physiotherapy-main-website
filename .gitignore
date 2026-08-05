@@ -25,6 +25,9 @@ yarn-error.log*
 .env
 .env*.local
 
+# SiteGround deploy credentials (scripts/deploy-siteground.sh)
+.env.deploy
+
 # vercel
 .vercel
 

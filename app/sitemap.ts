@@ -4,6 +4,10 @@ import { getIndexablePosts } from "@/lib/blog";
 import { locations } from "@/content/locations";
 import { SITE_URL } from "@/lib/seo";
 
+// The route list comes from local content at build time, so this is always a
+// static file. Required explicitly for `output: "export"`, a no-op otherwise.
+export const dynamic = "force-static";
+
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();
 

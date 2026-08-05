@@ -5,6 +5,8 @@ import { CheckCircle2, Pencil, Send } from "lucide-react";
 import { clinic } from "@/lib/site-data";
 import { trackEvent } from "@/lib/analytics";
 import { cn } from "@/lib/utils";
+import { HAS_SERVER_API, apiUrl } from "@/lib/deploy-target";
+import { postContact } from "@/lib/submit-contact";
 
 const CATEGORIES = [
   "Pain or injury",
@@ -116,9 +118,18 @@ export function IntakeForm() {
     const data = new FormData(event.currentTarget);
     if (data.get("botcheck")) return; // honeypot
 
+    // A static build with no API origin has no AI summariser to call — go
+    // straight to the review step with the visitor's raw answers.
+    if (!HAS_SERVER_API) {
+      setAi(null);
+      setAiUnavailable(true);
+      setPhase("review");
+      return;
+    }
+
     setPending(true);
     try {
-      const res = await fetch("/api/intake", {
+      const res = await fetch(apiUrl("/api/intake"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -158,18 +169,14 @@ export function IntakeForm() {
 
     setPending(true);
     try {
-      const res = await fetch("/api/contact", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name,
-          email,
-          phone: fields.phone,
-          category: fields.category,
-          message,
-          subject,
-          formName: "intake",
-        }),
+      const res = await postContact({
+        name,
+        email,
+        phone: fields.phone,
+        category: fields.category,
+        message,
+        subject,
+        formName: "intake",
       });
 
       if (res.status === 501) {

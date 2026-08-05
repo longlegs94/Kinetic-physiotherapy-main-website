@@ -26,6 +26,8 @@ npm run dev                  # http://localhost:3000
 ```
 
 Scripts: `npm run build`, `npm run start`, `npm run typecheck`, `npm run lint`.
+For SiteGround: `npm run build:static`, `npm run preview:static`,
+`npm run deploy:siteground`.
 
 ## Editing content (no code required)
 
@@ -52,18 +54,39 @@ See `content/blog/README.md`.
 ```
 app/            Routes (home, [slug] service pages, team, about, contact,
                 testimonials, blog, legal, sitemap/robots/OG)
+                api/*/route.node.ts — server-only handlers, excluded from
+                static builds (see config/site-rules.mjs)
 components/     layout · sections · cards · ui · motion · blog · analytics
+config/         site-rules.mjs — redirects + CSP shared by both deploy targets
 content/        site-content.json · design-tokens.json · blog/*.mdx
 lib/            site-data · seo · schema · motion · analytics · blog · utils
+                deploy-target · submit-contact (target-aware form delivery)
+scripts/        build-static · generate-htaccess · deploy-siteground.sh
 public/         static assets (add real images here)
-docs/           DEPLOY.md · VERIFY_BEFORE_LAUNCH.md
+docs/           DEPLOY.md · DEPLOY_SITEGROUND.md · VERIFY_BEFORE_LAUNCH.md
 ```
 
 ## Deployment
 
-See [`docs/DEPLOY.md`](docs/DEPLOY.md). Short version: import the repo into Vercel, set
-`NEXT_PUBLIC_SITE_URL` (and optionally the Web3Forms + GA4 keys), deploy, then point your
-domain's DNS. Your existing WordPress site stays live until you make that DNS change.
+The site builds for two targets from one codebase. Pick the one matching your host:
+
+| Host | Guide | Build |
+|---|---|---|
+| **SiteGround** (or any shared/cPanel host) | [`docs/DEPLOY_SITEGROUND.md`](docs/DEPLOY_SITEGROUND.md) | `npm run build:static` → upload `out/` to `public_html` |
+| **Vercel** (or any Node host) | [`docs/DEPLOY.md`](docs/DEPLOY.md) | `npm run build` → `npm start` |
+
+Short version either way: set `NEXT_PUBLIC_SITE_URL` (and optionally the Web3Forms
++ GA4 keys), build, deploy, then point your domain's DNS. Your existing WordPress
+site stays live until you make that DNS change.
+
+The static build is a plain folder of files — no server to keep running. Everything
+works there except the three AI-backed extras (booking concierge, symptom router,
+AI intake summary), which degrade to call/book options; the forms still deliver.
+`docs/DEPLOY_SITEGROUND.md` has the full comparison and how to keep them if you want.
+
+Routing and security rules shared by both targets live in **`config/site-rules.mjs`**
+— the old-WordPress 301s, the CSP, and the security headers. Edit them there and
+both `next.config.mjs` and the generated `.htaccess` pick them up.
 
 ## Key features
 

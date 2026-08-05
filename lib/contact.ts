@@ -119,3 +119,45 @@ export function validateContactPayload(record: Record<string, unknown>): Contact
 
   return { ok: true, data: { name, email, phone, category, callbackTime, message, subject, formName } };
 }
+
+/** Where Web3Forms submissions go, however they get there. */
+export const WEB3FORMS_ENDPOINT = "https://api.web3forms.com/submit";
+
+// Readable Web3Forms subject per formName so the clinic inbox shows at a
+// glance which surface the message came from. Unlisted/future formNames
+// (relaxed by validateContactPayload above) fall back to "Website enquiry".
+const SUBJECT_PREFIXES: Record<string, string> = {
+  contact: "Website enquiry",
+  intake: "Pre-visit intake",
+  feedback: "Website feedback",
+  "icbc-callback": "ICBC callback request",
+};
+
+/**
+ * Builds the exact JSON body Web3Forms expects. Shared so the two delivery
+ * paths produce identical emails: the server relay
+ * (app/api/contact/route.node.ts) on Node deploys, and the browser posting
+ * straight to Web3Forms (lib/submit-contact.ts) on static SiteGround deploys.
+ */
+export function buildWeb3FormsBody(accessKey: string, data: ContactPayload) {
+  const { name, email, phone, category, callbackTime, message, subject, formName } = data;
+  const prefix = SUBJECT_PREFIXES[formName] || "Website enquiry";
+  const finalSubject =
+    subject ||
+    (category
+      ? `${prefix} (${category}) — Kinetic Therapy`
+      : `${prefix} — Kinetic Therapy`);
+
+  return {
+    access_key: accessKey,
+    subject: finalSubject,
+    from_name: "Kinetic Therapy Website",
+    name,
+    email,
+    phone: phone || undefined,
+    category: category || undefined,
+    formName,
+    ...(callbackTime ? { callback_time: callbackTime } : {}),
+    message,
+  };
+}

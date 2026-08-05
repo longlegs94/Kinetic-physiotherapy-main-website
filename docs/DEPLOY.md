@@ -1,7 +1,12 @@
-# Deploying to Vercel
+# Deploying to Vercel (Node host)
 
 This is a standard Next.js App Router project — Vercel is the easiest host, but any
 Node host that runs `next build` / `next start` works.
+
+> **Deploying to SiteGround instead?** See
+> [`docs/DEPLOY_SITEGROUND.md`](DEPLOY_SITEGROUND.md). SiteGround shared hosting
+> serves files, not a Node process, so it uses `npm run build:static` and a
+> generated `.htaccess`. This page covers the Node target.
 
 ## 1. Push the repo to GitHub
 Already on the branch `claude/website-redesign-migration-dupdzl`. Merge to your default
@@ -19,7 +24,7 @@ Set these in **Vercel → Project → Settings → Environment Variables** (see 
 |---|---|---|
 | `NEXT_PUBLIC_SITE_URL` | Yes | Production URL, no trailing slash (e.g. `https://www.kinetictherapyclinic.ca`). Drives canonical URLs, sitemap, and schema. |
 | `NEXT_PUBLIC_JANE_BOOKING_URL` | No | Overrides the Jane URL in content if set. |
-| `WEB3FORMS_KEY` | No | Free key from <https://web3forms.com>, read server-side by `app/api/contact/route.ts`. Preferred over `NEXT_PUBLIC_WEB3FORMS_KEY` — it's never exposed to the browser. Without either set, the relay returns 501 and the contact/intake forms fall back to opening the visitor's email app. |
+| `WEB3FORMS_KEY` | No | Free key from <https://web3forms.com>, read server-side by `app/api/contact/route.node.ts`. Preferred over `NEXT_PUBLIC_WEB3FORMS_KEY` — it's never exposed to the browser. Without either set, the relay returns 501 and the contact/intake forms fall back to opening the visitor's email app. |
 | `NEXT_PUBLIC_WEB3FORMS_KEY` | No | Legacy client-side fallback for the same key. Only kept so existing deployments that set this continue to work; new setups should use `WEB3FORMS_KEY` instead. |
 | `NEXT_PUBLIC_GA_ID` | No | Google Analytics 4 Measurement ID (`G-XXXXXXXXXX`). Without it, analytics is disabled. |
 | `ANTHROPIC_API_KEY` | No | Enables the AI booking concierge chat. Server-side only. Without it the widget shows contact options instead. |
@@ -50,9 +55,11 @@ Your live WordPress site is untouched until you do this step.
 
 ## URL migration (WordPress → new site) — DONE
 
-301 redirects for the old `www.kineticphysio.ca` pages are already built into
-`next.config.mjs` (`wordpressRedirects`). They were mapped from the URLs Google had
-indexed, so ranking is preserved after cutover. Examples:
+301 redirects for the old `www.kineticphysio.ca` pages live in
+`config/site-rules.mjs` (`wordpressRedirects`), which feeds both `next.config.mjs`
+(Node deploys) and the generated `.htaccess` (static deploys) so the two can't
+drift. They were mapped from the URLs Google had indexed, so ranking is preserved
+after cutover. Examples:
 
 | Old URL | New URL |
 |---|---|
@@ -71,7 +78,7 @@ so they land via a short 308 chain — search engines follow this fine.
 
 **After cutover:** open Google Search Console → Coverage/Pages and watch for any old URL
 reporting 404. If one appears that isn't in the map, add a line to `wordpressRedirects`
-in `next.config.mjs` and redeploy.
+in `config/site-rules.mjs` and redeploy.
 
 ## Local development
 ```bash

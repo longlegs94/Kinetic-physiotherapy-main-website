@@ -5,6 +5,7 @@ import { Star, ExternalLink, Send, CheckCircle2, AlertCircle } from "lucide-reac
 import { clinic } from "@/lib/site-data";
 import { trackEvent } from "@/lib/analytics";
 import { cn } from "@/lib/utils";
+import { postContact } from "@/lib/submit-contact";
 
 // The clinic's Google Business Profile place ID isn't confirmed yet.
 // TODO(verify): set NEXT_PUBLIC_GOOGLE_REVIEW_URL to the clinic's Google review link (find via Google Business Profile).
@@ -17,7 +18,7 @@ const fieldClass =
   "w-full rounded-2xl border border-silver bg-white px-4 py-3 text-charcoal placeholder:text-charcoal/40 focus:border-deep-teal focus:outline-none";
 const labelClass = "mb-1.5 block text-sm font-semibold text-charcoal";
 
-/** Small "leave private feedback" form. Posts to the shared /api/contact relay. */
+/** Small "leave private feedback" form. Delivers via the shared postContact(). */
 function FeedbackForm() {
   const [status, setStatus] = useState<Status>("idle");
   const [error, setError] = useState<string>("");
@@ -47,11 +48,7 @@ function FeedbackForm() {
     setError("");
 
     try {
-      const res = await fetch("/api/contact", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
+      const res = await postContact(payload);
 
       if (res.status === 501) {
         // Relay isn't configured — fall back to a pre-filled email.

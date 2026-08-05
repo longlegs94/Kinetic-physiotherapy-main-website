@@ -7,6 +7,7 @@ import { clinic } from "@/lib/site-data";
 import { trackEvent } from "@/lib/analytics";
 import { cn } from "@/lib/utils";
 import { CONTACT_CATEGORIES, CALLBACK_TIMES } from "@/lib/contact";
+import { postContact } from "@/lib/submit-contact";
 
 function trackReviewCtaClick(source: string) {
   trackEvent("review_cta_click", { source });
@@ -21,10 +22,10 @@ const fieldClass =
 const labelClass = "mb-1.5 block text-sm font-semibold text-charcoal";
 
 /**
- * Contact form. Posts to the server-side /api/contact relay, which forwards
- * to Web3Forms using a server-only key. Falls back to a mailto: link if the
- * relay reports it isn't configured (501), so the form is always functional.
- * Includes a honeypot field for basic spam protection.
+ * Contact form. Delivers via postContact() — the server-side /api/contact
+ * relay on Node deploys, or straight to Web3Forms on static builds. Falls back
+ * to a mailto: link if delivery reports it isn't configured (501), so the form
+ * is always functional. Includes a honeypot field for basic spam protection.
  */
 export function ContactForm() {
   const [status, setStatus] = useState<Status>("idle");
@@ -57,11 +58,7 @@ export function ContactForm() {
     setError("");
 
     try {
-      const res = await fetch("/api/contact", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
+      const res = await postContact(payload);
 
       if (res.status === 501) {
         // Relay isn't configured — fall back to a pre-filled email.

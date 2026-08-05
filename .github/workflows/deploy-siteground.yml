@@ -1,0 +1,91 @@
+# Builds the static site and uploads it to SiteGround's public_html.
+#
+# Two ways to fire it:
+#   - "Run workflow" in the Actions tab  → deploy when you're ready
+#   - a push to `main`                   → deploy every merge
+#
+# If you'd rather only ever deploy by hand, delete the `push:` block below.
+#
+# Required repository secrets (Settings → Secrets and variables → Actions):
+#   SITEGROUND_SSH_HOST     e.g. giowl1234.siteground.biz
+#   SITEGROUND_SSH_USER     e.g. u1234-abcdefgh
+#   SITEGROUND_SSH_PORT     usually 18765
+#   SITEGROUND_SSH_KEY      the PRIVATE key whose public half you added in
+#                           Site Tools → Devs → SSH Keys Manager
+#   SITEGROUND_REMOTE_PATH  e.g. /home/u1234-abcdefgh/www/example.com/public_html
+#   NEXT_PUBLIC_SITE_URL    e.g. https://www.kinetictherapyclinic.ca
+#
+# Optional secrets:
+#   NEXT_PUBLIC_WEB3FORMS_KEY  contact/intake/feedback form delivery
+#   NEXT_PUBLIC_GA_ID          Google Analytics 4 measurement ID
+#   NEXT_PUBLIC_API_BASE_URL   origin hosting the API routes, if you have one
+#   NEXT_PUBLIC_GOOGLE_REVIEW_URL  the clinic's Google review link
+
+name: Deploy to SiteGround
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+# Never let two deploys write to public_html at the same time.
+concurrency:
+  group: siteground-deploy
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Build static export
+        env:
+          NEXT_PUBLIC_SITE_URL: ${{ secrets.NEXT_PUBLIC_SITE_URL }}
+          NEXT_PUBLIC_WEB3FORMS_KEY: ${{ secrets.NEXT_PUBLIC_WEB3FORMS_KEY }}
+          NEXT_PUBLIC_GA_ID: ${{ secrets.NEXT_PUBLIC_GA_ID }}
+          NEXT_PUBLIC_API_BASE_URL: ${{ secrets.NEXT_PUBLIC_API_BASE_URL }}
+          NEXT_PUBLIC_GOOGLE_REVIEW_URL: ${{ secrets.NEXT_PUBLIC_GOOGLE_REVIEW_URL }}
+        run: npm run build:static
+
+      # A build that silently lost its redirects/headers must not ship.
+      - name: Verify the build is complete
+        run: |
+          test -f out/index.html  || { echo "::error::out/index.html missing"; exit 1; }
+          test -f out/.htaccess   || { echo "::error::out/.htaccess missing"; exit 1; }
+          test -f out/sitemap.xml || { echo "::error::out/sitemap.xml missing"; exit 1; }
+          echo "Pages built: $(find out -name '*.html' | wc -l)"
+
+      - name: Add SSH key
+        run: |
+          mkdir -p ~/.ssh
+          printf '%s\n' "${{ secrets.SITEGROUND_SSH_KEY }}" > ~/.ssh/id_deploy
+          chmod 600 ~/.ssh/id_deploy
+          ssh-keyscan -p "${{ secrets.SITEGROUND_SSH_PORT }}" \
+            -H "${{ secrets.SITEGROUND_SSH_HOST }}" >> ~/.ssh/known_hosts 2>/dev/null
+
+      - name: Upload to public_html
+        run: |
+          rsync -az --delete --checksum --itemize-changes \
+            --exclude='.well-known/' \
+            --exclude='cgi-bin/' \
+            --exclude='.htpasswd' \
+            --exclude='sg-cachepress/' \
+            -e "ssh -p ${{ secrets.SITEGROUND_SSH_PORT }} -i ~/.ssh/id_deploy" \
+            out/ \
+            "${{ secrets.SITEGROUND_SSH_USER }}@${{ secrets.SITEGROUND_SSH_HOST }}:${{ secrets.SITEGROUND_REMOTE_PATH }}/"
+
+      - name: Clean up key
+        if: always()
+        run: rm -f ~/.ssh/id_deploy
