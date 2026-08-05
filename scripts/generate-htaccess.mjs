@@ -32,7 +32,8 @@ const projectRoot = join(dirname(fileURLToPath(import.meta.url)), "..");
 // environment (CI) — real env vars win over .env files.
 nextEnv.loadEnvConfig(projectRoot, false);
 
-const OUT_DIR = process.env.STATIC_OUT_DIR || join(projectRoot, "out");
+// Where `output: "export"` writes the site. Next's default, unchanged here.
+const OUT_DIR = join(projectRoot, "out");
 
 const apiBase = process.env.NEXT_PUBLIC_API_BASE_URL?.trim().replace(/\/+$/, "");
 const extraConnectSrc = apiBase ? [apiBase] : [];

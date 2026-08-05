@@ -2,7 +2,7 @@ import { services } from "@/lib/site-data";
 
 /**
  * Server-only module. Builds the system prompt and JSON schema used by the
- * AI pre-visit intake summarizer (see app/api/intake/route.ts). Nothing here
+ * AI pre-visit intake summarizer (see app/api/intake/route.node.ts). Nothing here
  * reads request-scoped data or the current date/time — the system prompt
  * must stay byte-stable across requests so Anthropic's prompt caching can
  * reuse it.

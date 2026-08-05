@@ -31,10 +31,12 @@ Owner gets lawyer review of the drafted pages. Dev applies edits and removes the
 **Accept:** draft disclaimers removed; policy names every live data flow.
 
 ### A4 · Production environment + DNS cutover — `BOTH` · M
-Owner: Vercel account, domain access, env values (`ANTHROPIC_API_KEY`,
-`WEB3FORMS_KEY`, `NEXT_PUBLIC_GA_ID`, `NEXT_PUBLIC_SITE_URL`, Jane URL).
+Owner: hosting account (Vercel **or** SiteGround — see `docs/DEPLOY_SITEGROUND.md`),
+domain access, env values (`ANTHROPIC_API_KEY`, `WEB3FORMS_KEY` /
+`NEXT_PUBLIC_WEB3FORMS_KEY`, `NEXT_PUBLIC_GA_ID`, `NEXT_PUBLIC_SITE_URL`, Jane URL).
 Dev: verify deploy, run the post-cutover checklist — all 301s from old WordPress URLs
-resolve, sitemap live, forms deliver, concierge answers, booking opens Jane.
+resolve, sitemap live, forms deliver, booking opens Jane. *(Concierge answers only on
+a Node deploy; on static it shows call/book options by design.)*
 **Accept:** production domain serves the new site; every row of the old-URL redirect
 map returns 308→200; a test contact + intake submission lands in the clinic inbox.
 

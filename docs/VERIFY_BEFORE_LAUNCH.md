@@ -111,11 +111,24 @@ broken, just placeholder.
 
 ## Pre-launch technical checklist
 
+> **Which deploy target?** These env vars behave differently on a static
+> SiteGround build (`npm run build:static`) than on a Node host. See
+> [`DEPLOY_SITEGROUND.md`](DEPLOY_SITEGROUND.md) for the comparison.
+
 - [ ] `NEXT_PUBLIC_SITE_URL` set to the real production domain (canonical/sitemap/schema).
 - [ ] `NEXT_PUBLIC_WEB3FORMS_KEY` set (or accept the mailto fallback).
+      On a **static build this is required** for forms to deliver, and it must be
+      set at build time — it's baked into the bundle, not read from the server.
 - [ ] `NEXT_PUBLIC_GA_ID` set to enable analytics.
+- [ ] `NEXT_PUBLIC_GOOGLE_REVIEW_URL` set to the clinic's real Google review link.
+      Until it is, the `/review` page's Google button points at a `REPLACE_ME`
+      placeholder and the review flywheel silently does nothing.
 - [ ] `ANTHROPIC_API_KEY` set to enable the AI concierge, symptom router, and intake summarizer.
-- [ ] `npm run build` passes; `npm run typecheck` and `npm run lint` clean. *(Currently all pass.)*
+      **Node deploys only** — a static build has no server to run them on, so they
+      fall back to call/book options unless `NEXT_PUBLIC_API_BASE_URL` points at a
+      host that does.
+- [ ] `npm run build` passes (or `npm run build:static` for SiteGround);
+      `npm run typecheck` and `npm run lint` clean. *(Currently all pass.)*
 - [ ] Test Book Now → Jane opens; click-to-call works on mobile; contact form delivers.
 - [ ] Lighthouse: Performance 90+, Accessibility 95+, SEO 95+, Best Practices 95+.
       *(Currently 94/100/100/100 on mobile homepage — see git history for the audit.)*

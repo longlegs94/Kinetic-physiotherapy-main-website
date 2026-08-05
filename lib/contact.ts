@@ -1,7 +1,7 @@
 /**
  * Shared constants and validation for the contact form, used by both the
  * client component (components/cards/ContactForm.tsx) and the server relay
- * (app/api/contact/route.ts) so the category list and validation rules stay
+ * (app/api/contact/route.node.ts) so the category list and validation rules stay
  * in sync in one place.
  */
 

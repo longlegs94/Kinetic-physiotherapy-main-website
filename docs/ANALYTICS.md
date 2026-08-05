@@ -58,6 +58,23 @@ fires, its params, and the funnel stage / KPI it feeds (see `ROADMAP.md` §3).
 | `review_feedback_submit` | `app/review/ReviewOptions.tsx` — private feedback form, on successful send. | `{ method: "mailto" \| "relay" }` | Retain — private feedback capture (non-public alternative to a Google review). |
 | `review_cta_click` | `components/cards/ContactForm.tsx` — "Loved your visit? Leave us a review" link shown after a successful contact submission. `components/layout/SiteFooter.tsx` — footer "Leave a Review" link *(added this audit)*. | `{ source: "contact_success" \| "footer" }` | Retain — traffic into the `/review` funnel (ties to Epic B4's "GA4 event fires" acceptance criterion for both the contact-form success state and the footer link). |
 
+### 2.0 Events that don't fire on a static build
+
+`npm run build:static` (SiteGround) ships no server, so the AI-backed surfaces
+degrade and their events go quiet. Expect **zero** volume for:
+
+- `symptom_router_submit` — the router is hidden entirely
+  (`components/concierge/SymptomRouterBlock.tsx`); the manual pain-point
+  selector carries that traffic instead.
+- `concierge_book_click` and `concierge_service_click` — the concierge opens in
+  its offline state, so it never returns inline service or booking links.
+
+`concierge_open` still fires: visitors open the widget and get call/book options.
+All non-AI events — `jane_outbound_click`, `book_now_click`, `phone_click`,
+`contact_submit`, `intake_submit`, and the whole `review_*` family — are
+unaffected. Setting `NEXT_PUBLIC_API_BASE_URL` restores the quiet ones; see
+[`DEPLOY_SITEGROUND.md`](DEPLOY_SITEGROUND.md).
+
 ### 2.1 Dead union entries
 
 - **`practitioner_book_click`** is declared in the `ConversionEvent` union but is
@@ -244,11 +261,12 @@ which KPI so the two documents stay consistent.
 
 ## 6. Setup checklist
 
-- [ ] Set `NEXT_PUBLIC_GA_ID` in the production environment (Vercel project env
-      vars) to the GA4 Measurement ID. Until this is set, `components/analytics
-      /Analytics.tsx` renders nothing and every `trackEvent` call is a no-op for
-      GA4 (the `kt:conversion` CustomEvent still fires locally, but nothing
-      external records it).
+- [ ] Set `NEXT_PUBLIC_GA_ID` to the GA4 Measurement ID — in the Vercel project
+      env vars on a Node deploy, or at build time (`.env.local` / CI secret) for
+      a static SiteGround build, where it's baked into the bundle. Until this is
+      set, `components/analytics/Analytics.tsx` renders nothing and every
+      `trackEvent` call is a no-op for GA4 (the `kt:conversion` CustomEvent still
+      fires locally, but nothing external records it).
 - [ ] After deploying with `NEXT_PUBLIC_GA_ID` set, open GA4 DebugView (enable
       the [GA Debugger extension](https://chromewebstore.google.com/) or add
       `?gtm_debug=1`) and click through every surface in the Event Dictionary

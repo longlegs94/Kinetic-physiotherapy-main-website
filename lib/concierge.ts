@@ -2,7 +2,7 @@ import { clinic, faqs, homepage, services } from "@/lib/site-data";
 
 /**
  * Server-only module. Builds the system prompt and JSON schema used by the
- * AI booking concierge (see app/api/concierge/route.ts). Nothing here reads
+ * AI booking concierge (see app/api/concierge/route.node.ts). Nothing here reads
  * request-scoped data or the current date/time — the system prompt must stay
  * byte-stable across requests so Anthropic's prompt caching can reuse it.
  */
