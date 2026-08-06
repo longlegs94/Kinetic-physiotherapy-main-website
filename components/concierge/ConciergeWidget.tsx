@@ -213,7 +213,11 @@ export function ConciergeWidget() {
         </button>
       </div>
 
-      <div className="flex-1 space-y-3 overflow-y-auto bg-warm-white/70 px-4 py-4">
+      <div
+        className="flex-1 space-y-3 overflow-y-auto bg-warm-white/70 px-4 py-4"
+        role="log"
+        aria-live="polite"
+      >
         {messages.map((message, index) => (
           <div
             key={index}

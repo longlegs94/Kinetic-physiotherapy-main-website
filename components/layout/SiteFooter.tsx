@@ -10,6 +10,7 @@ import { trackEvent } from "@/lib/analytics";
 
 const clinicLinks = [
   { label: "Services", href: "/services" },
+  { label: "Service Areas", href: "/locations" },
   { label: "Our Team", href: "/team" },
   { label: "About", href: "/about" },
   { label: "Testimonials", href: "/testimonials" },

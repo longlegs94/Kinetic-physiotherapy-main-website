@@ -726,7 +726,7 @@
       "category": "Physiotherapy",
       "bio": "Shanu is a registered physiotherapist in BC who completed her Master of Physiotherapy at Manipal University in 2010 and is a certified Clinical Exercise Physiologist through the American College of Sports Medicine.",
       "icbcAccepted": true,
-      "needsVerification": true
+      "needsVerification": false
     },
     {
       "name": "Chandni Mistry",
@@ -735,7 +735,7 @@
       "bio": "Chandni is a licensed physiotherapist with experience in both India and Canada, holding a Bachelor of Physiotherapy from Ahmedabad Institute of Medical Sciences, with expertise in manual therapy, exercise prescription, and patient education.",
       "schedule": "Fridays, 9:00am–7:00pm",
       "icbcAccepted": true,
-      "needsVerification": true
+      "needsVerification": false
     },
     {
       "name": "Aishwariya Palsule",
@@ -752,7 +752,7 @@
       "category": "Kinesiology",
       "bio": "Ashwin is a registered kinesiologist in BC who completed his undergraduate degree at Simon Fraser University with a concentration in active rehabilitation.",
       "icbcAccepted": true,
-      "needsVerification": true
+      "needsVerification": false
     },
     {
       "name": "Ziming Zhao",

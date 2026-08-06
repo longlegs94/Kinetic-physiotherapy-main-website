@@ -58,6 +58,13 @@ put together, or the current site includes team members the package didn't captu
   (Acupuncturist), **Stefanie Henderlin** (Naturotherapy/Lactation) — no public bio found
   to confirm or add; generic role-based placeholder bios are in place. Confirm these are
   still current staff.
+- ⚠️ **No chiropractor on the roster** — the site markets a full "Chiropractor Maple Ridge"
+  service page (nav label, homepage discipline graphic, hero service strip), but none of
+  the 9 practitioners in `content/site-content.json` has a `Chiropractic` category, so the
+  "Your team" section on that page currently renders empty. **Please confirm: is there a
+  chiropractor on staff?** If yes, send their name/title/bio and I'll add a full card. If
+  chiropractic is referred out or not currently offered, tell me and I'll adjust the page
+  copy/nav instead of implying in-house chiropractic care.
 - ⚠️ **Names that appeared publicly but are NOT in the current roster** — you may want to
   add them if they're current staff, or this may simply reflect the team at a different
   point in time:
@@ -114,6 +121,10 @@ broken, just placeholder.
 - [ ] `NEXT_PUBLIC_SITE_URL` set to the real production domain (canonical/sitemap/schema).
 - [ ] `NEXT_PUBLIC_WEB3FORMS_KEY` set (or accept the mailto fallback).
 - [ ] `NEXT_PUBLIC_GA_ID` set to enable analytics.
+- [ ] `NEXT_PUBLIC_GOOGLE_REVIEW_URL` set to the clinic's real Google review deep link
+      (find via Google Business Profile → "Ask for reviews" → copy link). Until this is
+      set, the `/review` page's Google-review button shows a "coming soon" placeholder
+      instead of a link — confirm it's live before driving traffic to `/review`.
 - [ ] `ANTHROPIC_API_KEY` set to enable the AI concierge, symptom router, and intake summarizer.
 - [ ] `npm run build` passes; `npm run typecheck` and `npm run lint` clean. *(Currently all pass.)*
 - [ ] Test Book Now → Jane opens; click-to-call works on mobile; contact form delivers.

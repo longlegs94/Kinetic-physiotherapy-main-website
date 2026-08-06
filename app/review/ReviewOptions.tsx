@@ -8,8 +8,10 @@ import { cn } from "@/lib/utils";
 
 // The clinic's Google Business Profile place ID isn't confirmed yet.
 // TODO(verify): set NEXT_PUBLIC_GOOGLE_REVIEW_URL to the clinic's Google review link (find via Google Business Profile).
-const GOOGLE_REVIEW_URL =
-  process.env.NEXT_PUBLIC_GOOGLE_REVIEW_URL || "https://search.google.com/local/writereview?placeid=REPLACE_ME";
+// Deliberately no placeholder fallback here — a fabricated placeid=REPLACE_ME
+// URL would silently ship as a dead link on this page's core conversion CTA.
+// See docs/VERIFY_BEFORE_LAUNCH.md pre-launch checklist.
+const GOOGLE_REVIEW_URL = process.env.NEXT_PUBLIC_GOOGLE_REVIEW_URL;
 
 type Status = "idle" | "submitting" | "success" | "error";
 
@@ -192,16 +194,22 @@ export function ReviewOptions() {
             Takes under a minute, and helps other people in Maple Ridge find us.
           </p>
         </div>
-        <a
-          href={GOOGLE_REVIEW_URL}
-          target="_blank"
-          rel="noopener noreferrer"
-          onClick={() => trackEvent("review_google_click")}
-          className="group mt-auto inline-flex w-full items-center justify-center gap-2 rounded-pill bg-mint px-6 py-3.5 text-[15px] font-semibold text-charcoal transition-all duration-200 ease-premium hover:-translate-y-0.5 hover:shadow-button-hover"
-        >
-          Leave a Google review
-          <ExternalLink className="h-4 w-4 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
-        </a>
+        {GOOGLE_REVIEW_URL ? (
+          <a
+            href={GOOGLE_REVIEW_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={() => trackEvent("review_google_click")}
+            className="group mt-auto inline-flex w-full items-center justify-center gap-2 rounded-pill bg-mint px-6 py-3.5 text-[15px] font-semibold text-charcoal transition-all duration-200 ease-premium hover:-translate-y-0.5 hover:shadow-button-hover"
+          >
+            Leave a Google review
+            <ExternalLink className="h-4 w-4 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
+          </a>
+        ) : (
+          <p className="mt-auto w-full rounded-pill border border-silver/60 bg-warm-white px-6 py-3.5 text-center text-sm text-charcoal/60">
+            Google review link coming soon — please use the form for now.
+          </p>
+        )}
       </div>
 
       <div className="flex flex-col gap-4 rounded-panel border border-silver/60 bg-warm-white p-6 shadow-card sm:p-8">

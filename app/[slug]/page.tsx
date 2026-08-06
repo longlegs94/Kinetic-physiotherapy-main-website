@@ -6,7 +6,7 @@ import {
   services,
   getService,
   resolveRelated,
-  practitioners,
+  getPractitionersForService,
   faqs as globalFaqs,
 } from "@/lib/site-data";
 import { pageMetadata } from "@/lib/seo";
@@ -69,11 +69,7 @@ export default async function ServicePage({
 
   const related = resolveRelated(service.relatedServices);
   const relatedPosts = getRelatedPostsForService(slug);
-  const relevantPractitioners = practitioners.filter(
-    (p) =>
-      p.category.toLowerCase().includes(service.shortName.toLowerCase()) ||
-      service.name.toLowerCase().includes(p.category.toLowerCase())
-  );
+  const relevantPractitioners = getPractitionersForService(service);
 
   const crumbs = [
     { name: "Home", path: "/" },

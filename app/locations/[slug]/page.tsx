@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { MapPin, ParkingCircle, ShieldCheck, ArrowRight } from "lucide-react";
-import { clinic, practitioners } from "@/lib/site-data";
+import { clinic, getPractitionersForService } from "@/lib/site-data";
 import { pageMetadata } from "@/lib/seo";
 import { Section, Container } from "@/components/layout/Section";
 import { PageHero } from "@/components/layout/PageHero";
@@ -49,12 +49,12 @@ export default async function LocationPage({
   if (!location) notFound();
 
   const commonServices = resolveLocationServices(location.commonlyBooked);
-  const relevantPractitioners = practitioners.filter((p) =>
-    commonServices.some(
-      (s) =>
-        p.category.toLowerCase().includes(s.shortName.toLowerCase()) ||
-        s.name.toLowerCase().includes(p.category.toLowerCase())
-    )
+  const relevantPractitioners = Array.from(
+    new Map(
+      commonServices
+        .flatMap((s) => getPractitionersForService(s))
+        .map((p) => [p.name, p])
+    ).values()
   );
 
   const crumbs = [

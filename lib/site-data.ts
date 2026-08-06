@@ -128,3 +128,35 @@ export function resolveRelated(slugs: string[]): Service[] {
     .map((slug) => getService(slug))
     .filter((s): s is Service => Boolean(s));
 }
+
+/**
+ * Practitioners relevant to a given service, for the "Your team" preview on
+ * service and location pages.
+ *
+ * Most services match by a simple substring check against practitioner
+ * category (e.g. "Physio" / "Physiotherapy"). Two services need an explicit
+ * rule instead, because no category substring connects them to staff who
+ * genuinely provide them:
+ * - ICBC treatment support isn't its own discipline — it's delivered by
+ *   whichever practitioners accept ICBC patients, which the data already
+ *   tracks via `icbcAccepted`.
+ * - "Pregnancy Massage" doesn't substring-match the "Massage Therapy"
+ *   category in either direction, even though RMTs are the staff who
+ *   provide it.
+ * Services with no data-backed match (e.g. chiropractic, shockwave,
+ * orthotics — no practitioner category currently covers them) correctly
+ * return an empty list rather than guessing.
+ */
+export function getPractitionersForService(service: Service): Practitioner[] {
+  if (service.slug === "icbc-physio-maple-ridge") {
+    return practitioners.filter((p) => p.icbcAccepted);
+  }
+  if (service.slug === "pregnancy-massage-maple-ridge") {
+    return practitioners.filter((p) => p.category === "Massage Therapy");
+  }
+  return practitioners.filter(
+    (p) =>
+      p.category.toLowerCase().includes(service.shortName.toLowerCase()) ||
+      service.name.toLowerCase().includes(p.category.toLowerCase())
+  );
+}
