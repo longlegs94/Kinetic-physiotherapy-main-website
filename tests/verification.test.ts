@@ -14,8 +14,10 @@ describe("isVerified", () => {
 });
 
 describe("filterVerified", () => {
+  type Item = { id: string; needsVerification?: boolean };
+
   it("drops flagged entries and preserves order", () => {
-    const items = [
+    const items: Item[] = [
       { id: "a" },
       { id: "b", needsVerification: true },
       { id: "c", needsVerification: false },
@@ -24,7 +26,7 @@ describe("filterVerified", () => {
   });
 
   it("returns a copy rather than the original array", () => {
-    const items = [{ id: "a" }];
+    const items: Item[] = [{ id: "a" }];
     expect(filterVerified(items)).not.toBe(items);
   });
 

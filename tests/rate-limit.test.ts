@@ -77,8 +77,11 @@ describe("Upstash backend", () => {
   });
 
   function stubPipeline(count: number) {
-    const fetchMock = vi.fn(async () =>
-      new Response(JSON.stringify([{ result: count }, { result: 1 }]), { status: 200 })
+    // Params are declared so the assertion on the request body below stays
+    // typed rather than indexing into an empty tuple.
+    const fetchMock = vi.fn(
+      async (_url: string | URL | Request, _init?: RequestInit) =>
+        new Response(JSON.stringify([{ result: count }, { result: 1 }]), { status: 200 })
     );
     vi.stubGlobal("fetch", fetchMock);
     return fetchMock;
