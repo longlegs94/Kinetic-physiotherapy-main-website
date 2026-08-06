@@ -4,13 +4,36 @@ This is a standard Next.js App Router project — Vercel is the easiest host, bu
 Node host that runs `next build` / `next start` works.
 
 ## 1. Push the repo to GitHub
-Already on the branch `claude/website-redesign-migration-dupdzl`. Merge to your default
-branch when ready.
+Push any branch. Merge to your default branch when ready to go live.
 
-## 2. Import into Vercel
-1. Go to <https://vercel.com/new> and import the GitHub repo.
-2. Framework preset: **Next.js** (auto-detected). No build settings changes needed.
-3. Add the environment variables below, then **Deploy**.
+## 2. Vercel is already connected — no manual import needed
+The repo is linked to the Vercel project **`kinetic-physiotherapy-main-website`**
+(team: `longlegs94's projects`), framework preset **Next.js**, Node 24.x. The Git
+integration builds *every pushed branch* automatically:
+
+- **Any branch push** → a preview deployment at a generated `*.vercel.app` URL.
+- **Default branch push** → the production deployment.
+
+So the deploy step is just `git push`. Only add environment variables (below) when
+you need the features they gate — the build succeeds without them.
+
+### Known build failure: static-export branches
+A Vercel build that ends with
+
+```
+Error: ENOENT ... .next/server/app/api/<name>/route_client-reference-manifest.js
+```
+
+is *not* an infrastructure problem. It comes from branches that convert the app to
+a static export and rename the App Router handlers (`route.ts` → `route.node.ts`),
+which is what the `claude/siteground-production-readiness-*` branch did. Next.js
+then never emits the per-route client-reference manifest that Vercel's builder
+expects when it collects the output, and the build dies *after* "Collecting build
+traces" — long after `✓ Compiled successfully`, which is why the log looks healthy
+until the last line.
+
+Keep the API handlers named `route.ts` for any branch you intend to deploy to
+Vercel. Static-export branches are for SiteGround only; don't deploy them here.
 
 ## 3. Environment variables
 Set these in **Vercel → Project → Settings → Environment Variables** (see `.env.example`):
