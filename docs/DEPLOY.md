@@ -17,23 +17,23 @@ integration builds *every pushed branch* automatically:
 So the deploy step is just `git push`. Only add environment variables (below) when
 you need the features they gate — the build succeeds without them.
 
-### Known build failure: static-export branches
-A Vercel build that ends with
+### Don't convert this app to a static export
+Vercel is the deploy target, and this app is deliberately a **Node** app: the
+contact, intake, and concierge endpoints are real App Router handlers under
+`app/api/*/route.ts`. Keep them named `route.ts`.
+
+Renaming them (e.g. `route.ts` → `route.node.ts`) to force a static export breaks
+the Vercel build. Next.js stops emitting the per-route client-reference manifest
+that Vercel's builder expects when collecting output, and the build fails with:
 
 ```
 Error: ENOENT ... .next/server/app/api/<name>/route_client-reference-manifest.js
 ```
 
-is *not* an infrastructure problem. It comes from branches that convert the app to
-a static export and rename the App Router handlers (`route.ts` → `route.node.ts`),
-which is what the `claude/siteground-production-readiness-*` branch did. Next.js
-then never emits the per-route client-reference manifest that Vercel's builder
-expects when it collects the output, and the build dies *after* "Collecting build
-traces" — long after `✓ Compiled successfully`, which is why the log looks healthy
-until the last line.
-
-Keep the API handlers named `route.ts` for any branch you intend to deploy to
-Vercel. Static-export branches are for SiteGround only; don't deploy them here.
+The failure lands *after* "Collecting build traces" — long past
+`✓ Compiled successfully` — so the log reads healthy right up to the last line.
+If you ever see that error, the cause is a renamed route handler, not the Vercel
+project.
 
 ## 3. Environment variables
 Set these in **Vercel → Project → Settings → Environment Variables** (see `.env.example`):
