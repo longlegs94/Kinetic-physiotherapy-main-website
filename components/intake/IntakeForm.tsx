@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
-import { CheckCircle2, Pencil, Send } from "lucide-react";
+import { AlertCircle, CheckCircle2, Pencil, Send } from "lucide-react";
 import { clinic } from "@/lib/site-data";
 import { trackEvent } from "@/lib/analytics";
 import { cn } from "@/lib/utils";
@@ -53,7 +53,9 @@ type AiSummary = {
   flags: string[];
 };
 
-type Phase = "form" | "review" | "sent";
+// "handoff" is deliberately distinct from "sent": opening the visitor's mail
+// client is not delivery. Only a confirmed relay response reaches "sent".
+type Phase = "form" | "review" | "sent" | "handoff";
 
 /** Raw answers as label/value pairs, skipping empties. */
 function answerPairs(f: Fields): [string, string][] {
@@ -106,6 +108,9 @@ export function IntakeForm() {
   const [aiUnavailable, setAiUnavailable] = useState(false);
   const [pending, setPending] = useState(false);
   const [sendError, setSendError] = useState("");
+  // Retained so the "handoff" screen can show the exact text to copy when the
+  // visitor's mail client never opened.
+  const [handoffText, setHandoffText] = useState("");
 
   function set<K extends keyof Fields>(key: K, value: string) {
     setFields((prev) => ({ ...prev, [key]: value }));
@@ -173,12 +178,18 @@ export function IntakeForm() {
       });
 
       if (res.status === 501) {
-        // Relay isn't configured — fall back to a pre-filled email.
+        // Relay isn't configured — hand off to the visitor's mail client with
+        // the message pre-filled. This only *opens* a draft: it can silently
+        // do nothing when no mail client is registered, and the visitor still
+        // has to press send. Claiming delivery here would tell a patient their
+        // intake reached the clinic when it may never have left the browser,
+        // so the UI reports a handoff and keeps the text recoverable.
+        setHandoffText(message);
         window.location.href = `mailto:${clinic.email}?subject=${encodeURIComponent(
           subject
         )}&body=${encodeURIComponent(message)}`;
-        trackEvent("intake_submit", { method: "mailto" });
-        setPhase("sent");
+        trackEvent("intake_submit", { method: "mailto_opened" });
+        setPhase("handoff");
         return;
       }
 
@@ -211,6 +222,40 @@ export function IntakeForm() {
           Your pre-visit summary was sent. If anything changes before your appointment,
           just call us at {clinic.phone}.
         </p>
+      </div>
+    );
+  }
+
+  if (phase === "handoff") {
+    return (
+      <div
+        className="flex flex-col gap-3 rounded-card border border-amber-300 bg-amber-50 p-8"
+        role="status"
+      >
+        <div className="flex items-center gap-2">
+          <AlertCircle className="h-6 w-6 shrink-0 text-amber-700" aria-hidden="true" />
+          <h3 className="text-xl font-bold text-charcoal">One more step — please send the email</h3>
+        </div>
+        <p className="text-charcoal/75">
+          We opened your email app with your answers already filled in.{" "}
+          <strong>Your intake isn&apos;t with us until you press send there.</strong> If nothing
+          opened, copy the summary below and email it to{" "}
+          <a className="font-semibold underline" href={`mailto:${clinic.email}`}>
+            {clinic.email}
+          </a>
+          , or just call us at {clinic.phone}.
+        </p>
+        <label htmlFor="intake-handoff-text" className="mt-2 text-sm font-semibold text-charcoal">
+          Your pre-visit summary
+        </label>
+        <textarea
+          id="intake-handoff-text"
+          readOnly
+          rows={10}
+          value={handoffText}
+          onFocus={(e) => e.currentTarget.select()}
+          className="w-full resize-y rounded-2xl border border-silver bg-white p-4 font-mono text-xs text-charcoal"
+        />
       </div>
     );
   }

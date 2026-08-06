@@ -8,15 +8,18 @@ import {
   type IntakeInput,
   type IntakeSummary,
 } from "@/lib/intake";
-import { checkRateLimit, getClientIp, isAllowedOrigin } from "@/lib/rate-limit";
-import { services } from "@/lib/site-data";
+import { checkRateLimit } from "@/lib/rate-limit";
+import { detectRedFlagsIn, emergencyMessage } from "@/lib/red-flags";
+import { getClientIp, isAllowedOrigin, readJsonObject } from "@/lib/request";
+import { clinic, services } from "@/lib/site-data";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 // Module scope: constructed once per server instance, and reused across
-// requests. Reads ANTHROPIC_API_KEY from the environment.
-const client = new Anthropic();
+// requests. Reads ANTHROPIC_API_KEY from the environment. The explicit timeout
+// bounds how long a hung upstream can pin a serverless invocation open.
+const client = new Anthropic({ timeout: 20_000, maxRetries: 1 });
 
 // Module scope so the system prompt text is byte-stable across requests,
 // which lets Anthropic's prompt caching reuse the cached prefix.
@@ -122,8 +125,10 @@ export async function POST(request: Request) {
   }
 
   const ip = getClientIp(request);
-  const perMinute = checkRateLimit(`intake:min:${ip}`, { limit: 5, windowMs: 60_000 });
-  const perHour = checkRateLimit(`intake:hr:${ip}`, { limit: 20, windowMs: 3_600_000 });
+  const [perMinute, perHour] = await Promise.all([
+    checkRateLimit(`intake:min:${ip}`, { limit: 5, windowMs: 60_000 }),
+    checkRateLimit(`intake:hr:${ip}`, { limit: 20, windowMs: 3_600_000 }),
+  ]);
   const limited = !perMinute.allowed || !perHour.allowed;
   if (limited) {
     const retryAfterSeconds = Math.max(perMinute.retryAfterSeconds, perHour.retryAfterSeconds);
@@ -137,20 +142,31 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "not_configured" }, { status: 503 });
   }
 
-  let body: unknown;
-  try {
-    body = await request.json();
-  } catch {
-    return NextResponse.json({ error: "invalid_request" }, { status: 400 });
+  const body = await readJsonObject(request);
+  if (!body.ok) {
+    const status = body.reason === "too_large" ? 413 : 400;
+    return NextResponse.json({ error: "invalid_request" }, { status });
   }
 
-  const intake =
-    typeof body === "object" && body !== null
-      ? (body as Record<string, unknown>).intake
-      : undefined;
+  const intake = body.value.intake;
 
   if (!isValidIntake(intake)) {
     return NextResponse.json({ error: "invalid_request" }, { status: 400 });
+  }
+
+  // Emergency screening runs before the model and its verdict is final. The
+  // summary is replaced wholesale rather than annotated, so no booking
+  // suggestion can appear alongside "go to emergency". Nothing about the
+  // matched text is logged — see lib/red-flags.ts.
+  const redFlags = detectRedFlagsIn(INTAKE_FIELDS.map((field) => intake[field]));
+  if (redFlags.triggered) {
+    return NextResponse.json({
+      summary: emergencyMessage(redFlags.categories, clinic.phone),
+      key_points: [],
+      suggested_services: [],
+      flags: redFlags.categories,
+      emergency: true,
+    });
   }
 
   const userMessage = buildUserMessage(intake);
@@ -183,15 +199,18 @@ export async function POST(request: Request) {
       return NextResponse.json(safeSummary());
     }
   } catch (error) {
+    // Generic client-facing errors, and logs that carry the error type only.
+    // An upstream error body can quote the request that caused it, which for
+    // this route is the patient's intake answers — never log it.
     if (error instanceof Anthropic.RateLimitError) {
-      console.error("Intake rate limited:", error);
+      console.error("Intake upstream rate limited");
       return NextResponse.json({ error: "rate_limited" }, { status: 429 });
     }
     if (error instanceof Anthropic.APIError) {
-      console.error("Intake upstream error:", error);
+      console.error("Intake upstream error, status:", error.status);
       return NextResponse.json({ error: "upstream" }, { status: 502 });
     }
-    console.error("Intake server error:", error);
+    console.error("Intake server error:", error instanceof Error ? error.name : "unknown");
     return NextResponse.json({ error: "server" }, { status: 500 });
   }
 }

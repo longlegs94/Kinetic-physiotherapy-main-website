@@ -1,4 +1,5 @@
 import content from "@/content/site-content.json";
+import { filterVerified } from "@/lib/verification";
 
 /**
  * Typed access layer over content/site-content.json.
@@ -89,13 +90,30 @@ type SiteContent = {
 
 const data = content as SiteContent;
 
-export const clinic = data.clinic;
+/**
+ * Content flagged `needsVerification` is withheld from production builds —
+ * see lib/verification.ts for why, and for the NEXT_PUBLIC_SHOW_UNVERIFIED
+ * escape hatch used on preview deploys. Filtering happens here, at the single
+ * point every component reads through, so no page can accidentally render an
+ * unconfirmed testimonial or practitioner credential.
+ *
+ * Services keep their pages even when flagged (removing one would 404 a URL
+ * that navigation and the sitemap point at); only their FAQs are filtered.
+ */
+export const clinic: Clinic = {
+  ...data.clinic,
+  trustBadges: filterVerified(data.clinic.trustBadges),
+  hours: filterVerified(data.clinic.hours),
+};
 export const navigation = data.navigation;
 export const homepage = data.homepage;
-export const services = data.services;
-export const practitioners = data.practitioners;
-export const testimonials = data.testimonials;
-export const faqs = data.faqs;
+export const services: Service[] = data.services.map((service) => ({
+  ...service,
+  faqs: service.faqs ? filterVerified(service.faqs) : undefined,
+}));
+export const practitioners = filterVerified(data.practitioners);
+export const testimonials = filterVerified(data.testimonials);
+export const faqs = filterVerified(data.faqs);
 
 /** Jane booking URL — env override wins, then clinic JSON. */
 export const janeBookingUrl =

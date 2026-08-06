@@ -18,6 +18,14 @@ type Message = {
   services?: ServiceLink[];
   showBooking?: boolean;
   showContact?: boolean;
+  /**
+   * Server-issued HMAC proving this assistant turn came from us. Replayed on
+   * the next request so the server can tell its own prior output apart from
+   * text the browser made up — see lib/message-auth.ts. Locally generated
+   * messages (the greeting, offline notices) have none and are dropped from
+   * the model's view server-side, which costs context but never trust.
+   */
+  signature?: string;
 };
 
 const GREETING: Message = {
@@ -139,7 +147,11 @@ export function ConciergeWidget() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          messages: history.map((m) => ({ role: m.role, content: m.content })),
+          messages: history.map((m) => ({
+            role: m.role,
+            content: m.content,
+            ...(m.signature ? { signature: m.signature } : {}),
+          })),
         }),
       });
 
@@ -159,6 +171,7 @@ export function ConciergeWidget() {
         services: ServiceLink[];
         show_booking: boolean;
         show_contact: boolean;
+        signature?: string;
       } = await res.json();
 
       setMessages((prev) => [
@@ -169,6 +182,7 @@ export function ConciergeWidget() {
           services: data.services,
           showBooking: data.show_booking,
           showContact: data.show_contact,
+          signature: data.signature,
         },
       ]);
     } catch {
