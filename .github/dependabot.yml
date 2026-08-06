@@ -1,0 +1,27 @@
+version: 2
+
+updates:
+  - package-ecosystem: npm
+    directory: "/"
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    # Patch and minor bumps for the app's many small deps arrive as single
+    # grouped PRs; majors stay separate because they need the same scrutiny
+    # the Next 15 to 16 upgrade did.
+    groups:
+      production-minor-patch:
+        dependency-type: production
+        update-types: ["minor", "patch"]
+      development-minor-patch:
+        dependency-type: development
+        update-types: ["minor", "patch"]
+    labels:
+      - dependencies
+
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: monthly
+    labels:
+      - dependencies
