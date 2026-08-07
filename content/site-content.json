@@ -126,7 +126,6 @@
         "label": "Massage therapy",
         "recommended": [
           "Massage Therapy",
-          "Bodywork",
           "Hot Stone",
           "Lymphatic Drainage"
         ]
@@ -259,8 +258,7 @@
       "relatedServices": [
         "pregnancy-massage-maple-ridge",
         "lymphatic-drainage-massage-maple-ridge",
-        "hot-stone-massage-maple-ridge",
-        "bodywork-maple-ridge"
+        "hot-stone-massage-maple-ridge"
       ],
       "ctaLabel": "Book Massage Therapy",
       "faqs": [
@@ -703,31 +701,21 @@
       "title": "Registered Massage Therapist",
       "category": "Massage Therapy",
       "bio": "Dilpreet is a Registered Massage Therapist at Kinetic Therapy, providing therapeutic massage to help ease muscle tension, support recovery, and improve how you move and feel.",
-      "icbcAccepted": true,
-      "needsVerification": true
+      "icbcAccepted": true
     },
     {
       "name": "Jason Shi",
       "title": "Registered Massage Therapist",
       "category": "Massage Therapy",
       "bio": "Jason is a Registered Massage Therapist at Kinetic Therapy, offering hands-on massage care for muscle tension, soreness, stress, and injury recovery.",
-      "icbcAccepted": true,
-      "needsVerification": true
-    },
-    {
-      "name": "Mike Slade",
-      "title": "Body Worker",
-      "category": "Bodywork",
-      "bio": "Mike is a body worker at Kinetic Therapy, using hands-on techniques to help relieve tension and support your recovery and comfort.",
-      "needsVerification": true
+      "icbcAccepted": true
     },
     {
       "name": "Shanu Jadhwani",
       "title": "Physiotherapist",
       "category": "Physiotherapy",
       "bio": "Shanu is a registered physiotherapist in BC who completed her Master of Physiotherapy at Manipal University in 2010 and is a certified Clinical Exercise Physiologist through the American College of Sports Medicine.",
-      "icbcAccepted": true,
-      "needsVerification": true
+      "icbcAccepted": true
     },
     {
       "name": "Chandni Mistry",
@@ -735,8 +723,7 @@
       "category": "Physiotherapy",
       "bio": "Chandni is a licensed physiotherapist with experience in both India and Canada, holding a Bachelor of Physiotherapy from Ahmedabad Institute of Medical Sciences, with expertise in manual therapy, exercise prescription, and patient education.",
       "schedule": "Fridays, 9:00am–7:00pm",
-      "icbcAccepted": true,
-      "needsVerification": true
+      "icbcAccepted": true
     },
     {
       "name": "Aishwariya Palsule",
@@ -744,31 +731,27 @@
       "category": "Physiotherapy",
       "bio": "Aishwariya (also known as Ash) is a physiotherapist with a Bachelor's in Physiotherapy from Mumbai, India, and experience in musculoskeletal and injury rehabilitation, focusing on spinal health, movement-based recovery, and combining manual therapy with personalized rehab exercises.",
       "schedule": "Saturday, 8:00am–12:00pm",
-      "icbcAccepted": true,
-      "needsVerification": true
+      "icbcAccepted": true
     },
     {
       "name": "Ashwin Singh",
       "title": "Kinesiologist",
       "category": "Kinesiology",
       "bio": "Ashwin is a registered kinesiologist in BC who completed his undergraduate degree at Simon Fraser University with a concentration in active rehabilitation.",
-      "icbcAccepted": true,
-      "needsVerification": true
+      "icbcAccepted": true
     },
     {
       "name": "Ziming Zhao",
       "title": "Acupuncturist",
       "category": "Acupuncture & TCM",
       "bio": "Ziming is an acupuncturist at Kinetic Therapy, providing acupuncture and traditional Chinese medicine to support pain relief, tension, stress, and whole-body wellness.",
-      "icbcAccepted": true,
-      "needsVerification": true
+      "icbcAccepted": true
     },
     {
       "name": "Stefanie Henderlin",
       "title": "Registered Naturotherapy Practitioner / Certified Breastfeeding Specialist",
       "category": "Naturotherapy and Lactation",
-      "bio": "Stefanie is a registered naturotherapy practitioner and certified breastfeeding specialist at Kinetic Therapy, offering natural wellness support and lactation care.",
-      "needsVerification": true
+      "bio": "Stefanie is a registered naturotherapy practitioner and certified breastfeeding specialist at Kinetic Therapy, offering natural wellness support and lactation care."
     }
   ],
   "testimonials": [

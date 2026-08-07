@@ -29,7 +29,6 @@ const disciplineOrder = [
   "Massage Therapy",
   "Kinesiology",
   "Acupuncture & TCM",
-  "Bodywork",
   "Naturotherapy and Lactation",
 ];
 
