@@ -68,9 +68,19 @@ export function ConciergeWidget() {
 
   const reducedMotion = useReducedMotionSafe();
 
+  // The element focus came from, so closing the panel returns focus there
+  // instead of dropping it to <body> — which would send a keyboard or screen
+  // reader user back to the top of the page.
+  const previouslyFocusedRef = useRef<HTMLElement | null>(null);
+
   useEffect(() => {
-    if (!open) return;
-    inputRef.current?.focus();
+    if (open) {
+      previouslyFocusedRef.current = document.activeElement as HTMLElement | null;
+      inputRef.current?.focus();
+      return;
+    }
+    previouslyFocusedRef.current?.focus?.();
+    previouslyFocusedRef.current = null;
   }, [open]);
 
   // Allow any part of the site (e.g. the FAQ "Ask our assistant" button)
@@ -86,9 +96,47 @@ export function ConciergeWidget() {
 
   useEffect(() => {
     if (!open) return;
+
+    const FOCUSABLE =
+      'a[href], button:not([disabled]), textarea:not([disabled]), input:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])';
+
     const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setOpen(false);
+      if (event.key === "Escape") {
+        setOpen(false);
+        return;
+      }
+
+      // Focus trap. A dialog that lets Tab escape into the page behind it
+      // leaves keyboard users navigating content they can't see, with no way
+      // back — aria-modal tells assistive tech the rest is inert, so the
+      // focus order has to actually match that claim.
+      if (event.key !== "Tab") return;
+
+      const panel = panelRef.current;
+      if (!panel) return;
+
+      const focusable = Array.from(panel.querySelectorAll<HTMLElement>(FOCUSABLE)).filter(
+        (el) => el.offsetParent !== null || el === document.activeElement
+      );
+      if (focusable.length === 0) return;
+
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      const active = document.activeElement;
+
+      if (event.shiftKey && active === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && active === last) {
+        event.preventDefault();
+        first.focus();
+      } else if (!panel.contains(active)) {
+        // Focus drifted outside (e.g. after a re-render) — pull it back.
+        event.preventDefault();
+        first.focus();
+      }
     };
+
     document.addEventListener("keydown", onKeyDown);
     return () => document.removeEventListener("keydown", onKeyDown);
   }, [open]);
@@ -377,13 +425,20 @@ export function ConciergeWidget() {
       <AnimatePresence>
         {open &&
           (reducedMotion ? (
-            <div ref={panelRef} role="dialog" aria-label="Booking assistant chat" className={panelClassName}>
+            <div
+              ref={panelRef}
+              role="dialog"
+              aria-modal="true"
+              aria-label="Booking assistant chat"
+              className={panelClassName}
+            >
               {panelBody}
             </div>
           ) : (
             <motion.div
               ref={panelRef}
               role="dialog"
+              aria-modal="true"
               aria-label="Booking assistant chat"
               initial={{ opacity: 0, y: 24 }}
               animate={{ opacity: 1, y: 0 }}

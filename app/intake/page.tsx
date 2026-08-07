@@ -11,6 +11,11 @@ export const metadata = pageMetadata({
   description:
     "Get a head start on your first visit to Kinetic Therapy in Maple Ridge. Answer a few questions and we'll prepare a pre-visit summary for our team.",
   path: "/intake",
+  // Kept out of search results: this page exists for patients who already
+  // have an appointment, reached from the booking confirmation rather than
+  // from Google. Indexing it invites strangers into a health-information form
+  // and puts a patient-data surface in Search Console's reporting.
+  noIndex: true,
 });
 
 const crumbs = [
