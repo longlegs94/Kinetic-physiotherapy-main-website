@@ -9,6 +9,7 @@ import { Analytics } from "@/components/analytics/Analytics";
 import { JsonLd } from "@/components/ui/JsonLd";
 import { localBusinessSchema } from "@/lib/schema";
 import { SITE_URL, SITE_NAME } from "@/lib/seo";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 const sora = Sora({
   subsets: ["latin"],
@@ -72,6 +73,7 @@ export default function RootLayout({
         <StickyMobileBookingBar />
         <ConciergeWidget />
         <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );
