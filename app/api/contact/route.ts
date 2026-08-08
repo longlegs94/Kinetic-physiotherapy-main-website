@@ -16,7 +16,7 @@ export const dynamic = "force-dynamic";
  * forwarding.
  */
 export async function POST(request: Request) {
-  if (!isAllowedOrigin(request.headers.get("origin"))) {
+  if (!isAllowedOrigin(request)) {
     return NextResponse.json({ error: "forbidden" }, { status: 403 });
   }
 

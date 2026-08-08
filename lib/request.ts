@@ -57,17 +57,21 @@ export function allowedOriginHosts(env: RequestEnv = process.env): string[] {
 }
 
 /**
- * Same-origin check for state-changing API routes.
+ * Same-origin check for state-changing API routes, given the raw header
+ * values. Prefer `isAllowedOrigin(request)` in route code; this variant exists
+ * so the rules can be tested without constructing a Request.
  *
- * Production: the Origin header is required and must be one of the allowed
- * hosts. A preview deploy additionally accepts its own *.vercel.app hostname,
- * because Vercel mints a fresh one per deployment that can't be enumerated in
- * advance. Anything else — including localhost — is denied.
+ * Production: the Origin header is required, and is accepted when it is
+ * same-origin with the request, or matches a configured allowed host. A
+ * preview deploy additionally accepts its own *.vercel.app hostname, because
+ * Vercel mints a fresh one per deployment that can't be enumerated in advance.
+ * Anything else — including localhost — is denied.
  *
  * Development: permissive, so `curl` and local tooling keep working.
  */
-export function isAllowedOrigin(
+export function isAllowedOriginValue(
   originHeader: string | null,
+  hostHeader: string | null,
   env: RequestEnv = process.env
 ): boolean {
   if (!isProductionRuntime(env)) return true;
@@ -79,12 +83,35 @@ export function isAllowedOrigin(
   const originHost = hostOf(originHeader);
   if (!originHost) return false;
 
+  // Same-origin: the page issuing this request was served from the very host
+  // it is calling. This is the case the check exists to permit, and comparing
+  // the two headers establishes it directly rather than by matching a
+  // configured list — so the site keeps working on every hostname it answers
+  // on, not only the one named in NEXT_PUBLIC_SITE_URL. A Vercel project
+  // routinely serves several (the project alias, the team-scoped alias, the
+  // per-branch alias), and previously anything but the configured one had its
+  // form and AI requests rejected as cross-origin.
+  //
+  // This does not weaken CSRF protection: a page on evil.com fetching this
+  // site sends Origin: evil.com against Host: <this site>, which still fails.
+  const requestHost = hostHeader?.trim().toLowerCase();
+  if (requestHost && originHost === requestHost) return true;
+
   const allowed = allowedOriginHosts(env);
   if (allowed.includes(originHost)) return true;
 
   if (env.VERCEL_ENV === "preview" && originHost.endsWith(".vercel.app")) return true;
 
   return false;
+}
+
+/** Same-origin check for a Request. See `isAllowedOriginValue` for the rules. */
+export function isAllowedOrigin(request: Request, env: RequestEnv = process.env): boolean {
+  return isAllowedOriginValue(
+    request.headers.get("origin"),
+    request.headers.get("host"),
+    env
+  );
 }
 
 /**

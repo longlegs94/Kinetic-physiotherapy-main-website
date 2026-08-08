@@ -5,6 +5,7 @@ import {
   allowedOriginHosts,
   getClientIp,
   isAllowedOrigin,
+  isAllowedOriginValue,
   isProductionRuntime,
   readJsonObject,
 } from "@/lib/request";
@@ -33,41 +34,41 @@ describe("isProductionRuntime", () => {
 
 describe("isAllowedOrigin in production", () => {
   it("allows the canonical site origin", () => {
-    expect(isAllowedOrigin("https://www.kinetictherapyclinic.ca", PROD)).toBe(true);
+    expect(isAllowedOriginValue("https://www.kinetictherapyclinic.ca", null, PROD)).toBe(true);
   });
 
   it("denies a missing Origin header", () => {
     // Browsers always send Origin on POST, so its absence is not a form post.
-    expect(isAllowedOrigin(null, PROD)).toBe(false);
+    expect(isAllowedOriginValue(null, null, PROD)).toBe(false);
   });
 
   it("denies localhost", () => {
     // The regression this guards: localhost used to be unconditionally
     // allowed, and Origin is trivially settable by a non-browser client.
-    expect(isAllowedOrigin("http://localhost:3000", PROD)).toBe(false);
-    expect(isAllowedOrigin("http://127.0.0.1", PROD)).toBe(false);
+    expect(isAllowedOriginValue("http://localhost:3000", null, PROD)).toBe(false);
+    expect(isAllowedOriginValue("http://127.0.0.1", null, PROD)).toBe(false);
   });
 
   it("denies an unrelated origin", () => {
-    expect(isAllowedOrigin("https://evil.example.com", PROD)).toBe(false);
+    expect(isAllowedOriginValue("https://evil.example.com", null, PROD)).toBe(false);
   });
 
   it("denies a lookalike subdomain", () => {
-    expect(isAllowedOrigin("https://www.kinetictherapyclinic.ca.evil.com", PROD)).toBe(false);
+    expect(isAllowedOriginValue("https://www.kinetictherapyclinic.ca.evil.com", null, PROD)).toBe(false);
   });
 
   it("denies a malformed Origin", () => {
-    expect(isAllowedOrigin("not a url", PROD)).toBe(false);
+    expect(isAllowedOriginValue("not a url", null, PROD)).toBe(false);
   });
 
   it("denies everything when NEXT_PUBLIC_SITE_URL is unset", () => {
     // Previously an unset site URL disabled the check entirely.
-    expect(isAllowedOrigin("https://evil.example.com", { VERCEL_ENV: "production" })).toBe(false);
+    expect(isAllowedOriginValue("https://evil.example.com", null, { VERCEL_ENV: "production" })).toBe(false);
   });
 
   it("allows the deploy's own Vercel hostname", () => {
     expect(
-      isAllowedOrigin("https://kinetic-abc123.vercel.app", {
+      isAllowedOriginValue("https://kinetic-abc123.vercel.app", null, {
         ...PROD,
         VERCEL_URL: "kinetic-abc123.vercel.app",
       })
@@ -78,13 +79,66 @@ describe("isAllowedOrigin in production", () => {
 describe("isAllowedOrigin outside production", () => {
   it("stays permissive in development", () => {
     const dev = { NODE_ENV: "development" };
-    expect(isAllowedOrigin(null, dev)).toBe(true);
-    expect(isAllowedOrigin("http://localhost:3000", dev)).toBe(true);
+    expect(isAllowedOriginValue(null, null, dev)).toBe(true);
+    expect(isAllowedOriginValue("http://localhost:3000", null, dev)).toBe(true);
   });
 
   it("allows any preview deployment hostname", () => {
     const preview = { VERCEL_ENV: "preview", NEXT_PUBLIC_SITE_URL: PROD.NEXT_PUBLIC_SITE_URL };
-    expect(isAllowedOrigin("https://kinetic-git-branch.vercel.app", preview)).toBe(true);
+    expect(isAllowedOriginValue("https://kinetic-git-branch.vercel.app", null, preview)).toBe(true);
+  });
+});
+
+describe("same-origin requests in production", () => {
+  // The regression this guards, seen in production: a Vercel project answers
+  // on several hostnames (project alias, team-scoped alias, per-branch alias)
+  // but NEXT_PUBLIC_SITE_URL can only name one. Visiting any of the others
+  // meant the browser's own same-origin POST was rejected as cross-origin, so
+  // the contact form and AI assistant silently failed on those addresses.
+  const otherAlias = "kinetic-physiotherapy-main-website-tau.vercel.app";
+
+  it("allows a same-origin POST on a hostname the site answers on", () => {
+    expect(isAllowedOriginValue(`https://${otherAlias}`, otherAlias, PROD)).toBe(true);
+  });
+
+  it("still allows the configured canonical host", () => {
+    expect(
+      isAllowedOriginValue("https://www.kinetictherapyclinic.ca", otherAlias, PROD)
+    ).toBe(true);
+  });
+
+  it("still blocks a cross-origin POST, which is what the check is for", () => {
+    // evil.com fetching this site: Origin is evil.com, Host is the real site.
+    expect(isAllowedOriginValue("https://evil.example.com", otherAlias, PROD)).toBe(false);
+  });
+
+  it("is case-insensitive about the Host header", () => {
+    expect(isAllowedOriginValue(`https://${otherAlias}`, otherAlias.toUpperCase(), PROD)).toBe(
+      true
+    );
+  });
+
+  it("does not treat an empty Host as a match for a malformed Origin", () => {
+    expect(isAllowedOriginValue("not a url", "", PROD)).toBe(false);
+  });
+});
+
+describe("isAllowedOrigin(request)", () => {
+  const req = (headers: Record<string, string>) =>
+    new Request("https://example.com", { method: "POST", headers });
+
+  it("reads Origin and Host off the request", () => {
+    const host = "kinetic-physiotherapy-main-website-tau.vercel.app";
+    expect(isAllowedOrigin(req({ origin: `https://${host}`, host }), PROD)).toBe(true);
+  });
+
+  it("rejects a cross-origin request", () => {
+    expect(
+      isAllowedOrigin(
+        req({ origin: "https://evil.example.com", host: "kinetic-tau.vercel.app" }),
+        PROD
+      )
+    ).toBe(false);
   });
 });
 
