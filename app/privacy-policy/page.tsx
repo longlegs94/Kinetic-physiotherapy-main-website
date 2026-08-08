@@ -115,11 +115,13 @@ export default function PrivacyPolicyPage() {
               purposes.
             </li>
             <li>
-              <strong>Anthropic</strong> — the provider of the AI models behind our AI
-              assistant and pre-visit summary tool. Messages you send to the assistant, and
-              the answers you enter in the intake form, are sent to Anthropic&apos;s API to
-              generate a reply or summary. Under Anthropic&apos;s commercial API terms, data
-              submitted through the API is not used to train Anthropic&apos;s models.
+              <strong>OpenAI</strong> — the provider of the AI model behind our AI assistant
+              and pre-visit summary tool. Messages you send to the assistant, and the
+              answers you enter in the intake form, are sent to OpenAI&apos;s API to
+              generate a reply or summary. Under OpenAI&apos;s API terms, this data is not
+              used to train OpenAI&apos;s models, and is retained for a limited period
+              (OpenAI&apos;s stated default is up to 30 days) for abuse monitoring before
+              being deleted.
             </li>
             <li>
               <strong>Google Analytics 4</strong> — used for aggregated website usage

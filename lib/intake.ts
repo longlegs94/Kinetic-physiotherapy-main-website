@@ -4,11 +4,17 @@ import { services } from "@/lib/site-data";
  * Server-only module. Builds the system prompt and JSON schema used by the
  * AI pre-visit intake summarizer (see app/api/intake/route.ts). Nothing here
  * reads request-scoped data or the current date/time — the system prompt
- * must stay byte-stable across requests so Anthropic's prompt caching can
- * reuse it.
+ * must stay byte-stable across requests so OpenAI's automatic prompt caching
+ * can reuse the cached prefix.
+ *
+ * Shares CONCIERGE_MODEL/env var with the concierge rather than having its
+ * own — one clinic-configured "which model" knob is simpler than two, and
+ * both features carry the same cost-versus-guardrail-reliability tradeoff.
  */
+export const INTAKE_MODEL = process.env.CONCIERGE_MODEL || "gpt-5.4-mini";
 
-export const INTAKE_MODEL = process.env.CONCIERGE_MODEL || "claude-opus-4-8";
+/** Name OpenAI's Structured Outputs requires for the schema below. */
+export const INTAKE_SCHEMA_NAME = "intake_summary";
 
 export type IntakeInput = {
   category: string;
@@ -58,7 +64,11 @@ OUTPUT FORMAT
 - Always respond using the required structured JSON format.`;
 }
 
-/** JSON schema for structured intake summaries (Anthropic output_config). */
+/**
+ * JSON schema for structured intake summaries, passed as OpenAI's
+ * response_format.json_schema.schema with strict:true — already compatible
+ * as-is (every property required, additionalProperties false throughout).
+ */
 export const INTAKE_SCHEMA = {
   type: "object",
   properties: {

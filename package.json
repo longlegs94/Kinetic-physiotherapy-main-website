@@ -5,18 +5,21 @@
   "description": "Premium multidisciplinary clinic website for Kinetic Therapy Clinic, Maple Ridge BC.",
   "scripts": {
     "dev": "next dev",
+    "prebuild": "tsx scripts/check-env.ts",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
-    "typecheck": "tsc --noEmit"
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "dependencies": {
-    "@anthropic-ai/sdk": "^0.110.0",
     "framer-motion": "^11.15.0",
     "gray-matter": "^4.0.3",
     "lucide-react": "^0.469.0",
-    "next": "^15.5.20",
+    "next": "^16.3.0",
     "next-mdx-remote": "^6.0.0",
+    "openai": "^7.4.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },
@@ -29,6 +32,8 @@
     "eslint-config-next": "^15.5.20",
     "postcss": "^8.4.49",
     "tailwindcss": "^3.4.17",
-    "typescript": "^5.7.3"
+    "tsx": "^4.23.9",
+    "typescript": "^5.7.3",
+    "vitest": "^3.2.7"
   }
 }

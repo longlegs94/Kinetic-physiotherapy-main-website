@@ -4,12 +4,8 @@ import { useState, type FormEvent } from "react";
 import { Star, ExternalLink, Send, CheckCircle2, AlertCircle } from "lucide-react";
 import { clinic } from "@/lib/site-data";
 import { trackEvent } from "@/lib/analytics";
+import { googleReviewUrl } from "@/lib/env";
 import { cn } from "@/lib/utils";
-
-// The clinic's Google Business Profile place ID isn't confirmed yet.
-// TODO(verify): set NEXT_PUBLIC_GOOGLE_REVIEW_URL to the clinic's Google review link (find via Google Business Profile).
-const GOOGLE_REVIEW_URL =
-  process.env.NEXT_PUBLIC_GOOGLE_REVIEW_URL || "https://search.google.com/local/writereview?placeid=REPLACE_ME";
 
 type Status = "idle" | "submitting" | "success" | "error";
 
@@ -180,29 +176,39 @@ function FeedbackForm() {
  * regardless of how they answer, per Google's review-gating policy.
  */
 export function ReviewOptions() {
+  // When NEXT_PUBLIC_GOOGLE_REVIEW_URL isn't configured (or is still a
+  // placeholder) the Google card is omitted entirely rather than rendered
+  // with a dead link — a button that lands on a Google error page is worse
+  // than no button, and the private-feedback path still works. The production
+  // build additionally refuses to ship a malformed value; see lib/env.ts.
+  // Bound to a local so TypeScript narrows the null away inside the branch.
+  const reviewUrl = googleReviewUrl;
+
   return (
-    <div className="grid gap-6 sm:grid-cols-2">
-      <div className="flex flex-col items-center gap-4 rounded-panel border border-silver/60 bg-warm-white p-6 text-center shadow-card sm:p-8">
-        <span className="flex h-12 w-12 items-center justify-center rounded-full bg-mint/30 text-deep-teal">
-          <Star className="h-6 w-6" aria-hidden="true" />
-        </span>
-        <div>
-          <h2 className="text-lg font-bold text-charcoal">Leave a Google review</h2>
-          <p className="mt-1.5 text-sm text-charcoal/65">
-            Takes under a minute, and helps other people in Maple Ridge find us.
-          </p>
+    <div className={cn("grid gap-6", reviewUrl && "sm:grid-cols-2")}>
+      {reviewUrl && (
+        <div className="flex flex-col items-center gap-4 rounded-panel border border-silver/60 bg-warm-white p-6 text-center shadow-card sm:p-8">
+          <span className="flex h-12 w-12 items-center justify-center rounded-full bg-mint/30 text-deep-teal">
+            <Star className="h-6 w-6" aria-hidden="true" />
+          </span>
+          <div>
+            <h2 className="text-lg font-bold text-charcoal">Leave a Google review</h2>
+            <p className="mt-1.5 text-sm text-charcoal/65">
+              Takes under a minute, and helps other people in Maple Ridge find us.
+            </p>
+          </div>
+          <a
+            href={reviewUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={() => trackEvent("review_google_click")}
+            className="group mt-auto inline-flex w-full items-center justify-center gap-2 rounded-pill bg-mint px-6 py-3.5 text-[15px] font-semibold text-charcoal transition-all duration-200 ease-premium hover:-translate-y-0.5 hover:shadow-button-hover"
+          >
+            Leave a Google review
+            <ExternalLink className="h-4 w-4 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
+          </a>
         </div>
-        <a
-          href={GOOGLE_REVIEW_URL}
-          target="_blank"
-          rel="noopener noreferrer"
-          onClick={() => trackEvent("review_google_click")}
-          className="group mt-auto inline-flex w-full items-center justify-center gap-2 rounded-pill bg-mint px-6 py-3.5 text-[15px] font-semibold text-charcoal transition-all duration-200 ease-premium hover:-translate-y-0.5 hover:shadow-button-hover"
-        >
-          Leave a Google review
-          <ExternalLink className="h-4 w-4 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
-        </a>
-      </div>
+      )}
 
       <div className="flex flex-col gap-4 rounded-panel border border-silver/60 bg-warm-white p-6 shadow-card sm:p-8">
         <div className="text-center">

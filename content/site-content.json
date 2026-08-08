@@ -1,4 +1,5 @@
 {
+  "contentUpdated": "2026-08-07",
   "clinic": {
     "name": "Kinetic Therapy Clinic",
     "positioning": "Modern multidisciplinary care for pain, recovery, movement, and long-term health.",
@@ -33,16 +34,13 @@
     ],
     "trustBadges": [
       {
-        "label": "ICBC Accepted",
-        "needsVerification": true
+        "label": "ICBC Accepted"
       },
       {
-        "label": "WSBC Support",
-        "needsVerification": true
+        "label": "WSBC Support"
       },
       {
-        "label": "Direct Billing",
-        "needsVerification": true
+        "label": "Direct Billing"
       },
       {
         "label": "Open Evenings",
@@ -125,7 +123,6 @@
         "label": "Massage therapy",
         "recommended": [
           "Massage Therapy",
-          "Bodywork",
           "Hot Stone",
           "Lymphatic Drainage"
         ]
@@ -258,8 +255,7 @@
       "relatedServices": [
         "pregnancy-massage-maple-ridge",
         "lymphatic-drainage-massage-maple-ridge",
-        "hot-stone-massage-maple-ridge",
-        "bodywork-maple-ridge"
+        "hot-stone-massage-maple-ridge"
       ],
       "ctaLabel": "Book Massage Therapy",
       "faqs": [
@@ -277,8 +273,7 @@
         },
         {
           "question": "Will I receive a receipt for insurance?",
-          "answer": "Yes, you will receive a receipt after your appointment that you can submit to your extended health provider. Coverage and eligibility can vary, so confirm your plan details with your insurer.",
-          "needsVerification": true
+          "answer": "Yes, you will receive a receipt after your appointment that you can submit to your extended health provider. Coverage and eligibility can vary, so confirm your plan details with your insurer."
         },
         {
           "question": "How often should I book massage therapy?",
@@ -384,8 +379,7 @@
         },
         {
           "question": "Is kinesiology covered under my ICBC claim?",
-          "answer": "Kinesiology can be one of the active rehab options available through an ICBC claim, up to the treatment limits and conditions that apply. Our team can help you understand your options.",
-          "needsVerification": true
+          "answer": "Kinesiology can be one of the active rehab options available through an ICBC claim, up to the treatment limits and conditions that apply. Our team can help you understand your options."
         },
         {
           "question": "Do I need to already be fit to start active rehab?",
@@ -491,8 +485,7 @@
       "faqs": [
         {
           "question": "How many treatment sessions does ICBC cover?",
-          "answer": "If you have an active ICBC claim, you may be able to access up to 12 weeks of treatment — such as physiotherapy, massage, kinesiology, chiropractic, and acupuncture — though conditions and eligibility apply. Our team can help you understand what applies to your specific claim.",
-          "needsVerification": true
+          "answer": "If you have an active ICBC claim, you may be able to access up to 12 weeks of treatment — such as physiotherapy, massage, kinesiology, chiropractic, and acupuncture — though conditions and eligibility apply. Our team can help you understand what applies to your specific claim."
         },
         {
           "question": "What do I need to bring to my first ICBC appointment?",
@@ -504,8 +497,7 @@
         },
         {
           "question": "Do I need a doctor's referral to start ICBC treatment?",
-          "answer": "Requirements can vary depending on your specific claim. Contact the clinic and our team can help clarify what is needed before you book.",
-          "needsVerification": true
+          "answer": "Requirements can vary depending on your specific claim. Contact the clinic and our team can help clarify what is needed before you book."
         },
         {
           "question": "What if my symptoms started a few weeks after the accident?",
@@ -513,8 +505,7 @@
         },
         {
           "question": "What happens if I need care beyond my initial treatment allowance?",
-          "answer": "Your practitioner will monitor your progress throughout your treatment and can discuss next steps with you if further care may be needed, subject to your claim's conditions and eligibility.",
-          "needsVerification": true
+          "answer": "Your practitioner will monitor your progress throughout your treatment and can discuss next steps with you if further care may be needed, subject to your claim's conditions and eligibility."
         }
       ],
       "needsVerification": true
@@ -603,33 +594,23 @@
       "faqs": [
         {
           "question": "Is shockwave therapy right for my condition?",
-          "answer": "Shockwave therapy may be used as part of a treatment plan for certain tendon, muscle, and soft tissue concerns, but it is not appropriate for everyone. Your practitioner will determine if this is appropriate for you after an assessment.",
-          "needsVerification": true
-        },
-        {
-          "question": "Is shockwave therapy painful?",
-          "answer": "Some people experience mild discomfort during treatment, and this can vary depending on the area treated and your sensitivity. Your practitioner will discuss what to expect and adjust the session to your comfort.",
-          "needsVerification": true
+          "answer": "Shockwave therapy may be used as part of a treatment plan for certain tendon, muscle, and soft tissue concerns, but it is not appropriate for everyone. Your practitioner will determine if this is appropriate for you after an assessment."
         },
         {
           "question": "How many shockwave sessions will I need?",
-          "answer": "This depends on your condition and how you respond to treatment. Your practitioner will discuss an estimated plan and review your progress along the way.",
-          "needsVerification": true
+          "answer": "This depends on your condition and how you respond to treatment. Your practitioner will discuss an estimated plan and review your progress along the way."
         },
         {
           "question": "Are there reasons I might not be a candidate for shockwave therapy?",
-          "answer": "Certain conditions and health factors may mean shockwave therapy is not suitable. Your practitioner will complete a suitability check as part of your assessment before recommending this treatment.",
-          "needsVerification": true
+          "answer": "Certain conditions and health factors may mean shockwave therapy is not suitable. Your practitioner will complete a suitability check as part of your assessment before recommending this treatment."
         },
         {
           "question": "Can shockwave therapy help with plantar fasciitis?",
-          "answer": "Shockwave therapy is sometimes used as part of a treatment plan for plantar fasciitis and other tendon-related concerns. Your practitioner will assess whether this may be appropriate for your specific case.",
-          "needsVerification": true
+          "answer": "Shockwave therapy is sometimes used as part of a treatment plan for plantar fasciitis and other tendon-related concerns. Your practitioner will assess whether this may be appropriate for your specific case."
         },
         {
           "question": "Is shockwave therapy covered by insurance?",
-          "answer": "Coverage and eligibility can vary by provider and plan. Please confirm with your insurer and our team before booking.",
-          "needsVerification": true
+          "answer": "Coverage and eligibility can vary by provider and plan. Please confirm with your insurer and our team before booking."
         }
       ],
       "needsVerification": true
@@ -664,33 +645,23 @@
       "faqs": [
         {
           "question": "Do I need custom orthotics, or will over-the-counter options work?",
-          "answer": "This depends on your specific foot mechanics and concern. Your practitioner will determine if this is appropriate for you after an assessment, and may recommend custom or off-the-shelf options.",
-          "needsVerification": true
-        },
-        {
-          "question": "How long does it take to get fitted for orthotics or a brace?",
-          "answer": "Timelines can vary depending on whether a custom fitting or referral process is needed. Our team can give you a better estimate once your assessment and recommendation are complete.",
-          "needsVerification": true
+          "answer": "This depends on your specific foot mechanics and concern. Your practitioner will determine if this is appropriate for you after an assessment, and may recommend custom or off-the-shelf options."
         },
         {
           "question": "Will a brace or orthotic be covered by my insurance?",
-          "answer": "Coverage and eligibility can vary by provider and plan. Please confirm your specific coverage with your insurer before booking.",
-          "needsVerification": true
+          "answer": "Coverage and eligibility can vary by provider and plan. Please confirm your specific coverage with your insurer before booking."
         },
         {
           "question": "Can orthotics or bracing help with knee pain, not just foot pain?",
-          "answer": "Certain orthotic and bracing options may offer support for knee and other joint concerns in addition to foot pain. Your practitioner will assess your needs to determine if this may help.",
-          "needsVerification": true
+          "answer": "Certain orthotic and bracing options may offer support for knee and other joint concerns in addition to foot pain. Your practitioner will assess your needs to determine if this may help."
         },
         {
           "question": "Do I need a referral for an orthotics or bracing assessment?",
-          "answer": "In many cases you can book an assessment directly, but this can depend on your insurance or claim requirements. Contact the clinic if you are unsure.",
-          "needsVerification": true
+          "answer": "In many cases you can book an assessment directly, but this can depend on your insurance or claim requirements. Contact the clinic if you are unsure."
         },
         {
           "question": "What happens after I receive my orthotics or brace?",
-          "answer": "Your practitioner will provide follow-up guidance to check fit and function, and can make adjustments or recommend further care if needed.",
-          "needsVerification": true
+          "answer": "Your practitioner will provide follow-up guidance to check fit and function, and can make adjustments or recommend further care if needed."
         }
       ],
       "needsVerification": true
@@ -702,31 +673,21 @@
       "title": "Registered Massage Therapist",
       "category": "Massage Therapy",
       "bio": "Dilpreet is a Registered Massage Therapist at Kinetic Therapy, providing therapeutic massage to help ease muscle tension, support recovery, and improve how you move and feel.",
-      "icbcAccepted": true,
-      "needsVerification": true
+      "icbcAccepted": true
     },
     {
       "name": "Jason Shi",
       "title": "Registered Massage Therapist",
       "category": "Massage Therapy",
       "bio": "Jason is a Registered Massage Therapist at Kinetic Therapy, offering hands-on massage care for muscle tension, soreness, stress, and injury recovery.",
-      "icbcAccepted": true,
-      "needsVerification": true
-    },
-    {
-      "name": "Mike Slade",
-      "title": "Body Worker",
-      "category": "Bodywork",
-      "bio": "Mike is a body worker at Kinetic Therapy, using hands-on techniques to help relieve tension and support your recovery and comfort.",
-      "needsVerification": true
+      "icbcAccepted": true
     },
     {
       "name": "Shanu Jadhwani",
       "title": "Physiotherapist",
       "category": "Physiotherapy",
       "bio": "Shanu is a registered physiotherapist in BC who completed her Master of Physiotherapy at Manipal University in 2010 and is a certified Clinical Exercise Physiologist through the American College of Sports Medicine.",
-      "icbcAccepted": true,
-      "needsVerification": true
+      "icbcAccepted": true
     },
     {
       "name": "Chandni Mistry",
@@ -734,40 +695,27 @@
       "category": "Physiotherapy",
       "bio": "Chandni is a licensed physiotherapist with experience in both India and Canada, holding a Bachelor of Physiotherapy from Ahmedabad Institute of Medical Sciences, with expertise in manual therapy, exercise prescription, and patient education.",
       "schedule": "Fridays, 9:00am–7:00pm",
-      "icbcAccepted": true,
-      "needsVerification": true
-    },
-    {
-      "name": "Aishwariya Palsule",
-      "title": "Physiotherapist",
-      "category": "Physiotherapy",
-      "bio": "Aishwariya (also known as Ash) is a physiotherapist with a Bachelor's in Physiotherapy from Mumbai, India, and experience in musculoskeletal and injury rehabilitation, focusing on spinal health, movement-based recovery, and combining manual therapy with personalized rehab exercises.",
-      "schedule": "Saturday, 8:00am–12:00pm",
-      "icbcAccepted": true,
-      "needsVerification": true
+      "icbcAccepted": true
     },
     {
       "name": "Ashwin Singh",
       "title": "Kinesiologist",
       "category": "Kinesiology",
       "bio": "Ashwin is a registered kinesiologist in BC who completed his undergraduate degree at Simon Fraser University with a concentration in active rehabilitation.",
-      "icbcAccepted": true,
-      "needsVerification": true
+      "icbcAccepted": true
     },
     {
       "name": "Ziming Zhao",
       "title": "Acupuncturist",
       "category": "Acupuncture & TCM",
       "bio": "Ziming is an acupuncturist at Kinetic Therapy, providing acupuncture and traditional Chinese medicine to support pain relief, tension, stress, and whole-body wellness.",
-      "icbcAccepted": true,
-      "needsVerification": true
+      "icbcAccepted": true
     },
     {
       "name": "Stefanie Henderlin",
       "title": "Registered Naturotherapy Practitioner / Certified Breastfeeding Specialist",
       "category": "Naturotherapy and Lactation",
-      "bio": "Stefanie is a registered naturotherapy practitioner and certified breastfeeding specialist at Kinetic Therapy, offering natural wellness support and lactation care.",
-      "needsVerification": true
+      "bio": "Stefanie is a registered naturotherapy practitioner and certified breastfeeding specialist at Kinetic Therapy, offering natural wellness support and lactation care."
     }
   ],
   "testimonials": [
@@ -793,13 +741,11 @@
   "faqs": [
     {
       "question": "Do I need a doctor's referral?",
-      "answer": "In many cases you can book directly, but requirements can vary depending on your insurance or claim. Contact the clinic if you are unsure.",
-      "needsVerification": true
+      "answer": "In many cases you can book directly, but requirements can vary depending on your insurance or claim. Contact the clinic if you are unsure."
     },
     {
       "question": "Do you accept ICBC claims?",
-      "answer": "Yes. If you have an active ICBC claim from a motor vehicle accident, you may be able to access up to 12 weeks of treatment with us — conditions and eligibility apply. Bring your claim number and our team will help you get started.",
-      "needsVerification": true
+      "answer": "Yes. If you have an active ICBC claim from a motor vehicle accident, you may be able to access up to 12 weeks of treatment with us — conditions and eligibility apply. Bring your claim number and our team will help you get started."
     },
     {
       "question": "Can I book online?",
@@ -813,8 +759,7 @@
     },
     {
       "question": "Do you offer direct billing?",
-      "answer": "Direct billing options may be available. Please confirm your provider and coverage with the clinic before booking.",
-      "needsVerification": true
+      "answer": "Direct billing options may be available. Please confirm your provider and coverage with the clinic before booking."
     }
   ]
 }

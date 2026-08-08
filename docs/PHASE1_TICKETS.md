@@ -31,7 +31,7 @@ Owner gets lawyer review of the drafted pages. Dev applies edits and removes the
 **Accept:** draft disclaimers removed; policy names every live data flow.
 
 ### A4 · Production environment + DNS cutover — `BOTH` · M
-Owner: Vercel account, domain access, env values (`ANTHROPIC_API_KEY`,
+Owner: Vercel account, domain access, env values (`OPENAI_API_KEY`,
 `WEB3FORMS_KEY`, `NEXT_PUBLIC_GA_ID`, `NEXT_PUBLIC_SITE_URL`, Jane URL).
 Dev: verify deploy, run the post-cutover checklist — all 301s from old WordPress URLs
 resolve, sitemap live, forms deliver, concierge answers, booking opens Jane.

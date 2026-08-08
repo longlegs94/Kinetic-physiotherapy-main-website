@@ -5,7 +5,7 @@ import { Send, CheckCircle2, AlertCircle, PhoneCall } from "lucide-react";
 import { clinic } from "@/lib/site-data";
 import { trackEvent } from "@/lib/analytics";
 import { cn } from "@/lib/utils";
-import { CALLBACK_TIMES } from "@/lib/contact";
+import { CALLBACK_TIMES, isCallablePhone } from "@/lib/contact";
 
 type Status = "idle" | "submitting" | "success" | "error";
 
@@ -40,6 +40,21 @@ export function IcbcCallbackForm({ id = "callback-form" }: { id?: string }) {
     const claimNumber = String(data.get("claim_number") ?? "").trim();
     const callbackTime = String(data.get("callback_time") ?? "").trim();
     const note = String(data.get("message") ?? "").trim();
+
+    // A callback request without a name and a dialable number is useless to
+    // the clinic. The <input required> attributes cover the normal path, but
+    // they're skipped on programmatic submits, so mirror the server rule here
+    // for a fast, specific error instead of a round-trip 400.
+    if (!name) {
+      setStatus("error");
+      setError("Please enter your name so we know who to ask for.");
+      return;
+    }
+    if (!isCallablePhone(phone)) {
+      setStatus("error");
+      setError("Please enter a phone number we can reach you at.");
+      return;
+    }
 
     // Message is required by the shared relay's validation, so always send
     // something useful even if the optional note field is left blank.

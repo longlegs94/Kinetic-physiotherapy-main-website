@@ -20,8 +20,8 @@ exact path when you're ready.
 
 | Option | What it is | Effort | Notes |
 |---|---|---|---|
-| **Voice-agent platform** (Vapi, Retell AI, Bland) | Hosted voice AI: you write the prompt, they handle telephony + speech | Low | Fastest path. Claude-compatible model options. Per-minute pricing. Point your phone system's no-answer forwarding at the number they give you. |
-| **Twilio + Claude** | Build it yourself: Twilio Voice streams audio, your server runs speech-to-text → Claude → text-to-speech | High | Full control, more maintenance. Only worth it if you want deep custom behavior. |
+| **Voice-agent platform** (Vapi, Retell AI, Bland) | Hosted voice AI: you write the prompt, they handle telephony + speech | Low | Fastest path. Works with OpenAI or Anthropic model options. Per-minute pricing. Point your phone system's no-answer forwarding at the number they give you. |
+| **Twilio + an LLM** | Build it yourself: Twilio Voice streams audio, your server runs speech-to-text → an LLM (the website uses OpenAI — see `lib/concierge.ts`) → text-to-speech | High | Full control, more maintenance. Only worth it if you want deep custom behavior. |
 | **Simple voicemail-to-summary** | Keep voicemail; a small job transcribes new voicemails and emails an AI summary + callback priority to the front desk | Low | No live conversation, but captures every missed call with zero caller-experience risk. |
 
 ## Guardrails to configure (non-negotiable)

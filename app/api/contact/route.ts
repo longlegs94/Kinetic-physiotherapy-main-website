@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
 
-import { validateContactPayload } from "@/lib/contact";
-import { checkRateLimit, getClientIp, isAllowedOrigin } from "@/lib/rate-limit";
+import { validateContactPayload, type FormName } from "@/lib/contact";
+import { checkRateLimit } from "@/lib/rate-limit";
+import { getClientIp, isAllowedOrigin, readJsonObject } from "@/lib/request";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -20,8 +21,10 @@ export async function POST(request: Request) {
   }
 
   const ip = getClientIp(request);
-  const perMinute = checkRateLimit(`contact:min:${ip}`, { limit: 5, windowMs: 60_000 });
-  const perHour = checkRateLimit(`contact:hr:${ip}`, { limit: 20, windowMs: 3_600_000 });
+  const [perMinute, perHour] = await Promise.all([
+    checkRateLimit(`contact:min:${ip}`, { limit: 5, windowMs: 60_000 }),
+    checkRateLimit(`contact:hr:${ip}`, { limit: 20, windowMs: 3_600_000 }),
+  ]);
   const limited = !perMinute.allowed || !perHour.allowed;
   if (limited) {
     const retryAfterSeconds = Math.max(perMinute.retryAfterSeconds, perHour.retryAfterSeconds);
@@ -31,17 +34,12 @@ export async function POST(request: Request) {
     );
   }
 
-  let body: unknown;
-  try {
-    body = await request.json();
-  } catch {
-    return NextResponse.json({ error: "invalid_request" }, { status: 400 });
+  const body = await readJsonObject(request);
+  if (!body.ok) {
+    const status = body.reason === "too_large" ? 413 : 400;
+    return NextResponse.json({ error: "invalid_request" }, { status });
   }
-
-  if (typeof body !== "object" || body === null) {
-    return NextResponse.json({ error: "invalid_request" }, { status: 400 });
-  }
-  const record = body as Record<string, unknown>;
+  const record = body.value;
 
   // Honeypot: bots fill hidden fields. Pretend success without forwarding.
   if (record.botcheck) {
@@ -63,17 +61,18 @@ export async function POST(request: Request) {
     );
   }
 
-  const { name, email, phone, category, callbackTime, message, subject, formName } = validation.data;
+  const { name, email, phone, category, callbackTime, claimNumber, message, subject, formName } =
+    validation.data;
   // Readable Web3Forms subject per formName so the clinic inbox shows at a
-  // glance which surface the message came from. Unlisted/future formNames
-  // (relaxed via lib/contact.ts) fall back to "Website enquiry".
-  const subjectPrefixes: Record<string, string> = {
+  // glance which surface the message came from. Exhaustive over FormName —
+  // unknown values never reach here, they're rejected during validation.
+  const subjectPrefixes: Record<FormName, string> = {
     contact: "Website enquiry",
     intake: "Pre-visit intake",
     feedback: "Website feedback",
     "icbc-callback": "ICBC callback request",
   };
-  const subjectPrefix = subjectPrefixes[formName] || "Website enquiry";
+  const subjectPrefix = subjectPrefixes[formName];
   const finalSubject =
     subject || (category
       ? `${subjectPrefix} (${category}) — Kinetic Therapy`
@@ -82,6 +81,9 @@ export async function POST(request: Request) {
   try {
     const res = await fetch("https://api.web3forms.com/submit", {
       method: "POST",
+      // Bound the wait so a hung upstream can't hold the function open for the
+      // platform's full invocation timeout.
+      signal: AbortSignal.timeout(10_000),
       headers: { "Content-Type": "application/json", Accept: "application/json" },
       body: JSON.stringify({
         access_key: accessKey,
@@ -93,6 +95,7 @@ export async function POST(request: Request) {
         category: category || undefined,
         formName,
         ...(callbackTime ? { callback_time: callbackTime } : {}),
+        ...(claimNumber ? { claim_number: claimNumber } : {}),
         message,
       }),
     });
@@ -108,13 +111,19 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: true });
     }
 
-    console.error("Contact relay upstream error:", json.message || res.status);
+    // Generic message to the browser: the upstream body can quote the
+    // submission that caused the failure, which for this relay is the
+    // visitor's own name, email and message. Log the status only.
+    console.error("Contact relay upstream error, status:", res.status);
     return NextResponse.json(
-      { error: json.message || "Something went wrong. Please call the clinic." },
+      { error: "Something went wrong. Please call the clinic." },
       { status: 502 }
     );
   } catch (error) {
-    console.error("Contact relay network error:", error);
+    console.error(
+      "Contact relay network error:",
+      error instanceof Error ? error.name : "unknown"
+    );
     return NextResponse.json(
       { error: "Network error. Please try again or call the clinic." },
       { status: 502 }

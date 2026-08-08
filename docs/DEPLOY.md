@@ -4,13 +4,36 @@ This is a standard Next.js App Router project — Vercel is the easiest host, bu
 Node host that runs `next build` / `next start` works.
 
 ## 1. Push the repo to GitHub
-Already on the branch `claude/website-redesign-migration-dupdzl`. Merge to your default
-branch when ready.
+Push any branch. Merge to your default branch when ready to go live.
 
-## 2. Import into Vercel
-1. Go to <https://vercel.com/new> and import the GitHub repo.
-2. Framework preset: **Next.js** (auto-detected). No build settings changes needed.
-3. Add the environment variables below, then **Deploy**.
+## 2. Vercel is already connected — no manual import needed
+The repo is linked to the Vercel project **`kinetic-physiotherapy-main-website`**
+(team: `longlegs94's projects`), framework preset **Next.js**, Node 24.x. The Git
+integration builds *every pushed branch* automatically:
+
+- **Any branch push** → a preview deployment at a generated `*.vercel.app` URL.
+- **Default branch push** → the production deployment.
+
+So the deploy step is just `git push`. Only add environment variables (below) when
+you need the features they gate — the build succeeds without them.
+
+### Don't convert this app to a static export
+Vercel is the deploy target, and this app is deliberately a **Node** app: the
+contact, intake, and concierge endpoints are real App Router handlers under
+`app/api/*/route.ts`. Keep them named `route.ts`.
+
+Renaming them (e.g. `route.ts` → `route.node.ts`) to force a static export breaks
+the Vercel build. Next.js stops emitting the per-route client-reference manifest
+that Vercel's builder expects when collecting output, and the build fails with:
+
+```
+Error: ENOENT ... .next/server/app/api/<name>/route_client-reference-manifest.js
+```
+
+The failure lands *after* "Collecting build traces" — long past
+`✓ Compiled successfully` — so the log reads healthy right up to the last line.
+If you ever see that error, the cause is a renamed route handler, not the Vercel
+project.
 
 ## 3. Environment variables
 Set these in **Vercel → Project → Settings → Environment Variables** (see `.env.example`):
@@ -22,8 +45,8 @@ Set these in **Vercel → Project → Settings → Environment Variables** (see 
 | `WEB3FORMS_KEY` | No | Free key from <https://web3forms.com>, read server-side by `app/api/contact/route.ts`. Preferred over `NEXT_PUBLIC_WEB3FORMS_KEY` — it's never exposed to the browser. Without either set, the relay returns 501 and the contact/intake forms fall back to opening the visitor's email app. |
 | `NEXT_PUBLIC_WEB3FORMS_KEY` | No | Legacy client-side fallback for the same key. Only kept so existing deployments that set this continue to work; new setups should use `WEB3FORMS_KEY` instead. |
 | `NEXT_PUBLIC_GA_ID` | No | Google Analytics 4 Measurement ID (`G-XXXXXXXXXX`). Without it, analytics is disabled. |
-| `ANTHROPIC_API_KEY` | No | Enables the AI booking concierge chat. Server-side only. Without it the widget shows contact options instead. |
-| `CONCIERGE_MODEL` | No | Model for the concierge; defaults to claude-opus-4-8. Set claude-haiku-4-5 for lower cost. |
+| `OPENAI_API_KEY` | No | Enables the AI booking concierge, the symptom router, and the intake summarizer. Server-side only. Without it, all three show contact options instead. |
+| `CONCIERGE_MODEL` | No | Model shared by the concierge and the intake summarizer; defaults to gpt-5.4-mini. Set gpt-5.4-nano for lower cost — see the tradeoff noted in `.env.example`. |
 
 After changing env vars, redeploy so they take effect.
 
