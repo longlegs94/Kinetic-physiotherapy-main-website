@@ -34,16 +34,13 @@
     ],
     "trustBadges": [
       {
-        "label": "ICBC Accepted",
-        "needsVerification": true
+        "label": "ICBC Accepted"
       },
       {
-        "label": "WSBC Support",
-        "needsVerification": true
+        "label": "WSBC Support"
       },
       {
-        "label": "Direct Billing",
-        "needsVerification": true
+        "label": "Direct Billing"
       },
       {
         "label": "Open Evenings",
