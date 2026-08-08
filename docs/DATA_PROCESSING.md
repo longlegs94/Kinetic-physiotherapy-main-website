@@ -3,6 +3,10 @@
 **Prepared for:** legal counsel advising Kinetic Therapy Clinic (Maple Ridge, BC)
 **Subject:** personal information collected and transmitted by the clinic's public website
 **Status:** factual technical description, prepared by the website developer
+**Revised:** the AI provider named in §4.2 changed from Anthropic to OpenAI after this
+brief was first drafted. If counsel already has an earlier copy, this version supersedes
+it — the only substantive change is the vendor name and the now-verified retention/training
+facts in that section; nothing else in the brief was affected.
 
 > **This is not legal advice and makes no compliance determinations.** It is a description
 > of what the website actually does, written so counsel can decide what is required and
@@ -122,30 +126,38 @@ the complete raw answers as submitted.
 period, sub-processors, and whether a data processing agreement is available or has been
 executed. We have not reviewed their terms.
 
-### 4.2 Anthropic — AI processing (intake form and chat assistant)
+### 4.2 OpenAI — AI processing (intake form and chat assistant)
 
-Two features send text to Anthropic's API:
+Two features send text to OpenAI's API. (This was Anthropic in an earlier version of this
+brief; the clinic switched providers before launch. The shape of what is sent is unchanged
+— only the vendor is different.)
 
 **Intake summarization.** When a patient completes the intake form, the *health fields only*
-are sent to Anthropic to generate a plain-language summary for clinic staff. Specifically
+are sent to OpenAI to generate a plain-language summary for clinic staff. Specifically
 sent: reason for visit, main concern, onset, aggravating/easing factors, pain level, goals,
 and ICBC claim number.
 
-**Name, email and phone are deliberately not sent to Anthropic.** This was a data
+**Name, email and phone are deliberately not sent to OpenAI.** This was a data
 minimization decision in the code. Note two caveats counsel should weigh:
 - The free-text fields could contain identifying details if a patient types them.
 - The ICBC claim number *is* currently sent. This is an identifier and arguably should not
   be. It is a one-line change to exclude it — please advise.
 
-**Chat assistant.** The visitor's typed messages are sent to Anthropic to generate replies.
+**Chat assistant.** The visitor's typed messages are sent to OpenAI to generate replies.
 Whatever the visitor types is transmitted.
 
-Anthropic is a US company and processing occurs outside Canada.
+OpenAI is a US company and processing occurs outside Canada.
 
-*Unverified and requires review:* Anthropic's retention period for API inputs, whether
-inputs are used for model training, availability of a zero-retention or business-tier
-agreement, and their standard commercial terms. These should be confirmed from Anthropic's
-own documentation rather than from this brief.
+**Verified from OpenAI's own published policy** (platform.openai.com and openai.com, checked
+at the time of writing): by default, data submitted through the API is not used to train
+OpenAI's models — this is opt-in only, and the clinic has not opted in. API inputs and
+outputs are retained for up to 30 days by default for abuse-monitoring purposes, then
+deleted, unless a longer period is required by law.
+
+*Unverified and requires review:* whether a zero-retention or enterprise/business-tier
+agreement is available or worth pursuing for this volume of traffic, and OpenAI's standard
+commercial terms in full. Policy pages shift over time — confirm the above against OpenAI's
+current documentation rather than relying solely on this brief.
 
 ### 4.3 Google Analytics 4 — usage measurement (optional, currently configurable)
 
@@ -257,7 +269,7 @@ Ordered roughly by how much they affect the build.
 
 **Cross-border transfer**
 
-5. Health information is transmitted to US-based processors (Anthropic, and Web3Forms
+5. Health information is transmitted to US-based processors (OpenAI, and Web3Forms
    subject to confirmation of its location). What notice or consent does this require, and
    does it change the analysis that the data is health information?
 6. Is a data processing agreement with any of these vendors necessary, and should the clinic
@@ -265,7 +277,7 @@ Ordered roughly by how much they affect the build.
 
 **Data minimization**
 
-7. Should the ICBC claim number be excluded from what is sent to Anthropic? Our
+7. Should the ICBC claim number be excluded from what is sent to OpenAI? Our
    recommendation is yes; it is a small code change and we will make it on your advice.
 8. Is there information currently collected that should not be collected at all?
 

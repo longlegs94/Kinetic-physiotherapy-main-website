@@ -1,9 +1,10 @@
-import Anthropic from "@anthropic-ai/sdk";
+import OpenAI, { APIError, RateLimitError } from "openai";
 import { NextResponse } from "next/server";
 
 import {
   CONCIERGE_MODEL,
   CONCIERGE_SCHEMA,
+  CONCIERGE_SCHEMA_NAME,
   buildSystemPrompt,
   type ConciergeReply,
 } from "@/lib/concierge";
@@ -17,12 +18,25 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 // Module scope: constructed once per server instance, and reused across
-// requests. Reads ANTHROPIC_API_KEY from the environment. The explicit timeout
-// bounds how long a hung upstream can pin a serverless invocation open.
-const client = new Anthropic({ timeout: 20_000, maxRetries: 1 });
+// requests. The explicit timeout bounds how long a hung upstream can pin a
+// serverless invocation open.
+//
+// Unlike the Anthropic SDK this replaced, OpenAI's client throws
+// synchronously at construction if it finds no API key anywhere — which
+// would fail the build itself (Next.js evaluates this module while
+// collecting route config) on a deploy that hasn't set OPENAI_API_KEY yet,
+// something this site is explicitly designed to tolerate everywhere else
+// (see the not_configured check in POST below, and GET's `enabled` flag).
+// The placeholder keeps construction from throwing; it is never used to make
+// a real request, since POST returns 503 before reaching client.chat.
+const client = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY || "sk-not-configured",
+  timeout: 20_000,
+  maxRetries: 1,
+});
 
 // Module scope so the system prompt text is byte-stable across requests,
-// which lets Anthropic's prompt caching reuse the cached prefix.
+// which lets OpenAI's automatic prompt caching reuse the cached prefix.
 const SYSTEM_PROMPT = buildSystemPrompt();
 
 const VALID_SLUGS = new Set(services.map((s) => s.slug));
@@ -101,7 +115,7 @@ function keepAuthenticTurns(messages: IncomingMessage[]): {
 }
 
 export async function GET() {
-  return NextResponse.json({ enabled: Boolean(process.env.ANTHROPIC_API_KEY) });
+  return NextResponse.json({ enabled: Boolean(process.env.OPENAI_API_KEY) });
 }
 
 export async function POST(request: Request) {
@@ -122,7 +136,7 @@ export async function POST(request: Request) {
     );
   }
 
-  if (!process.env.ANTHROPIC_API_KEY) {
+  if (!process.env.OPENAI_API_KEY) {
     return NextResponse.json({ error: "not_configured" }, { status: 503 });
   }
 
@@ -156,8 +170,10 @@ export async function POST(request: Request) {
 
   const { history } = keepAuthenticTurns(messages);
 
-  // The Anthropic API requires the first message to be role "user"; dropping
-  // unverified assistant turns can leave a leading assistant message behind.
+  // Dropping unverified assistant turns (see keepAuthenticTurns above) can
+  // leave a leading assistant message behind; trim back to the first real
+  // user turn so the conversation sent upstream always opens with the
+  // visitor's own words.
   const firstUserIndex = history.findIndex((m) => m.role === "user");
   const conversation = firstUserIndex === -1 ? [] : history.slice(firstUserIndex);
 
@@ -166,12 +182,14 @@ export async function POST(request: Request) {
   }
 
   try {
-    const response = await client.messages.create({
+    const response = await client.chat.completions.create({
       model: CONCIERGE_MODEL,
-      max_tokens: 1024,
-      system: [{ type: "text", text: SYSTEM_PROMPT, cache_control: { type: "ephemeral" } }],
-      messages: conversation,
-      output_config: { format: { type: "json_schema", schema: CONCIERGE_SCHEMA } },
+      max_completion_tokens: 1024,
+      messages: [{ role: "system", content: SYSTEM_PROMPT }, ...conversation],
+      response_format: {
+        type: "json_schema",
+        json_schema: { name: CONCIERGE_SCHEMA_NAME, schema: CONCIERGE_SCHEMA, strict: true },
+      },
     });
 
     const fallback = (text: string) =>
@@ -183,15 +201,16 @@ export async function POST(request: Request) {
         show_contact: true,
       });
 
-    if (response.stop_reason === "refusal") {
+    const message = response.choices[0]?.message;
+
+    // Structured Outputs' refusal path: the model declines and explains why
+    // in `refusal` instead of filling the schema. Equivalent to Anthropic's
+    // stop_reason === "refusal" in the previous version of this route.
+    if (message?.refusal) {
       return fallback(`I can't help with that here — please call the clinic at ${clinic.phone}.`);
     }
 
-    const textBlock = response.content.find(
-      (block): block is Extract<(typeof response.content)[number], { type: "text" }> =>
-        block.type === "text"
-    );
-    const text = textBlock?.text ?? "";
+    const text = message?.content ?? "";
 
     let parsed: ConciergeReply;
     try {
@@ -212,11 +231,11 @@ export async function POST(request: Request) {
     // Generic client-facing errors: upstream messages can echo prompt content
     // or provider internals, neither of which belongs in a browser response.
     // Logs carry the error type only — never the conversation.
-    if (error instanceof Anthropic.RateLimitError) {
+    if (error instanceof RateLimitError) {
       console.error("Concierge upstream rate limited");
       return NextResponse.json({ error: "rate_limited" }, { status: 429 });
     }
-    if (error instanceof Anthropic.APIError) {
+    if (error instanceof APIError) {
       console.error("Concierge upstream error, status:", error.status);
       return NextResponse.json({ error: "upstream" }, { status: 502 });
     }

@@ -187,7 +187,7 @@ export function ConciergeWidget() {
 
     try {
       // Drop the client-side greeting (and any other leading assistant
-      // messages) — the Anthropic API requires the first message to be "user".
+      // messages) so the transcript sent to the server opens on a real user turn.
       const firstUser = nextMessages.findIndex((m) => m.role === "user");
       const history = nextMessages.slice(firstUser === -1 ? 0 : firstUser);
 

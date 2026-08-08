@@ -4,10 +4,21 @@ import { clinic, faqs, homepage, services } from "@/lib/site-data";
  * Server-only module. Builds the system prompt and JSON schema used by the
  * AI booking concierge (see app/api/concierge/route.ts). Nothing here reads
  * request-scoped data or the current date/time — the system prompt must stay
- * byte-stable across requests so Anthropic's prompt caching can reuse it.
+ * byte-stable across requests so OpenAI's automatic prompt caching (kicks in
+ * for prompts over ~1024 tokens, no explicit cache markers needed) can reuse
+ * the cached prefix.
+ *
+ * gpt-5.4-mini is the default: cheap, and reliable enough at following the
+ * hard guardrails below to be worth the small premium over gpt-5.4-nano.
+ * Nano is a real option for a clinic watching cost closely — set
+ * CONCIERGE_MODEL=gpt-5.4-nano — but the deterministic red-flag scan in
+ * lib/red-flags.ts is the safety net regardless of which model is behind it,
+ * since a smaller model is more likely to drift off a long system prompt.
  */
+export const CONCIERGE_MODEL = process.env.CONCIERGE_MODEL || "gpt-5.4-mini";
 
-export const CONCIERGE_MODEL = process.env.CONCIERGE_MODEL || "claude-opus-4-8";
+/** Name OpenAI's Structured Outputs requires for the schema below. */
+export const CONCIERGE_SCHEMA_NAME = "concierge_reply";
 
 export type ConciergeReply = {
   reply: string;
@@ -68,7 +79,13 @@ BEHAVIOR
 - Always respond using the required structured JSON format.`;
 }
 
-/** JSON schema for structured concierge responses (Anthropic output_config). */
+/**
+ * JSON schema for structured concierge responses, passed as OpenAI's
+ * response_format.json_schema.schema with strict:true. Every property is
+ * already listed in `required` and every object sets additionalProperties
+ * false, which is what OpenAI's strict mode requires — there is no separate
+ * "loose" version of this schema to maintain.
+ */
 export const CONCIERGE_SCHEMA = {
   type: "object",
   properties: {

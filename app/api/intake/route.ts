@@ -1,9 +1,10 @@
-import Anthropic from "@anthropic-ai/sdk";
+import OpenAI, { APIError, RateLimitError } from "openai";
 import { NextResponse } from "next/server";
 
 import {
   INTAKE_MODEL,
   INTAKE_SCHEMA,
+  INTAKE_SCHEMA_NAME,
   buildIntakeSystemPrompt,
   type IntakeInput,
   type IntakeSummary,
@@ -17,12 +18,25 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 // Module scope: constructed once per server instance, and reused across
-// requests. Reads ANTHROPIC_API_KEY from the environment. The explicit timeout
-// bounds how long a hung upstream can pin a serverless invocation open.
-const client = new Anthropic({ timeout: 20_000, maxRetries: 1 });
+// requests. The explicit timeout bounds how long a hung upstream can pin a
+// serverless invocation open.
+//
+// Unlike the Anthropic SDK this replaced, OpenAI's client throws
+// synchronously at construction if it finds no API key anywhere — which
+// would fail the build itself (Next.js evaluates this module while
+// collecting route config) on a deploy that hasn't set OPENAI_API_KEY yet,
+// something this site is explicitly designed to tolerate everywhere else
+// (see the not_configured check in POST below, and GET's `enabled` flag).
+// The placeholder keeps construction from throwing; it is never used to make
+// a real request, since POST returns 503 before reaching client.chat.
+const client = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY || "sk-not-configured",
+  timeout: 20_000,
+  maxRetries: 1,
+});
 
 // Module scope so the system prompt text is byte-stable across requests,
-// which lets Anthropic's prompt caching reuse the cached prefix.
+// which lets OpenAI's automatic prompt caching reuse the cached prefix.
 const SYSTEM_PROMPT = buildIntakeSystemPrompt();
 
 const VALID_SLUGS = new Set(services.map((s) => s.slug));
@@ -116,7 +130,7 @@ function sanitizeSummary(parsed: IntakeSummary): IntakeSummary {
 }
 
 export async function GET() {
-  return NextResponse.json({ enabled: Boolean(process.env.ANTHROPIC_API_KEY) });
+  return NextResponse.json({ enabled: Boolean(process.env.OPENAI_API_KEY) });
 }
 
 export async function POST(request: Request) {
@@ -138,7 +152,7 @@ export async function POST(request: Request) {
     );
   }
 
-  if (!process.env.ANTHROPIC_API_KEY) {
+  if (!process.env.OPENAI_API_KEY) {
     return NextResponse.json({ error: "not_configured" }, { status: 503 });
   }
 
@@ -172,25 +186,29 @@ export async function POST(request: Request) {
   const userMessage = buildUserMessage(intake);
 
   try {
-    const response = await client.messages.create({
+    const response = await client.chat.completions.create({
       model: INTAKE_MODEL,
-      max_tokens: 1024,
-      system: [
-        { type: "text", text: SYSTEM_PROMPT, cache_control: { type: "ephemeral" } },
+      max_completion_tokens: 1024,
+      messages: [
+        { role: "system", content: SYSTEM_PROMPT },
+        { role: "user", content: userMessage },
       ],
-      messages: [{ role: "user", content: userMessage }],
-      output_config: { format: { type: "json_schema", schema: INTAKE_SCHEMA } },
+      response_format: {
+        type: "json_schema",
+        json_schema: { name: INTAKE_SCHEMA_NAME, schema: INTAKE_SCHEMA, strict: true },
+      },
     });
 
-    if (response.stop_reason === "refusal") {
+    const message = response.choices[0]?.message;
+
+    // Structured Outputs' refusal path: the model declines and explains why
+    // in `refusal` instead of filling the schema. Equivalent to Anthropic's
+    // stop_reason === "refusal" in the previous version of this route.
+    if (message?.refusal) {
       return NextResponse.json(safeSummary());
     }
 
-    const textBlock = response.content.find(
-      (block): block is Extract<(typeof response.content)[number], { type: "text" }> =>
-        block.type === "text"
-    );
-    const text = textBlock?.text ?? "";
+    const text = message?.content ?? "";
 
     try {
       const parsed = JSON.parse(text) as IntakeSummary;
@@ -202,11 +220,11 @@ export async function POST(request: Request) {
     // Generic client-facing errors, and logs that carry the error type only.
     // An upstream error body can quote the request that caused it, which for
     // this route is the patient's intake answers — never log it.
-    if (error instanceof Anthropic.RateLimitError) {
+    if (error instanceof RateLimitError) {
       console.error("Intake upstream rate limited");
       return NextResponse.json({ error: "rate_limited" }, { status: 429 });
     }
-    if (error instanceof Anthropic.APIError) {
+    if (error instanceof APIError) {
       console.error("Intake upstream error, status:", error.status);
       return NextResponse.json({ error: "upstream" }, { status: 502 });
     }

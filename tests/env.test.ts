@@ -87,6 +87,6 @@ describe("collectEnvProblems", () => {
   it("does not fail the build over optional integrations", () => {
     // Analytics and the concierge degrade cleanly; blocking a deploy over
     // them would be wrong.
-    expect(collectEnvProblems({ ...ok, NEXT_PUBLIC_GA_ID: "", ANTHROPIC_API_KEY: "" })).toEqual([]);
+    expect(collectEnvProblems({ ...ok, NEXT_PUBLIC_GA_ID: "", OPENAI_API_KEY: "" })).toEqual([]);
   });
 });

@@ -114,7 +114,7 @@ broken, just placeholder.
 - [ ] `NEXT_PUBLIC_SITE_URL` set to the real production domain (canonical/sitemap/schema).
 - [ ] `NEXT_PUBLIC_WEB3FORMS_KEY` set (or accept the mailto fallback).
 - [ ] `NEXT_PUBLIC_GA_ID` set to enable analytics.
-- [ ] `ANTHROPIC_API_KEY` set to enable the AI concierge, symptom router, and intake summarizer.
+- [ ] `OPENAI_API_KEY` set to enable the AI concierge, symptom router, and intake summarizer.
 - [ ] `npm run build` passes; `npm run typecheck` and `npm run lint` clean. *(Currently all pass.)*
 - [ ] Test Book Now → Jane opens; click-to-call works on mobile; contact form delivers.
 - [ ] Lighthouse: Performance 90+, Accessibility 95+, SEO 95+, Best Practices 95+.
