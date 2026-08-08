@@ -221,11 +221,19 @@ export async function POST(request: Request) {
     // An upstream error body can quote the request that caused it, which for
     // this route is the patient's intake answers — never log it.
     if (error instanceof RateLimitError) {
-      console.error("Intake upstream rate limited");
+      // See the concierge route: OpenAI's 429 covers both real rate limiting
+      // and `insufficient_quota` (no credit on the account). The code tells
+      // them apart and carries no patient data.
+      console.error("Intake upstream 429, code:", error.code ?? "unknown");
       return NextResponse.json({ error: "rate_limited" }, { status: 429 });
     }
     if (error instanceof APIError) {
-      console.error("Intake upstream error, status:", error.status);
+      console.error(
+        "Intake upstream error, status:",
+        error.status,
+        "code:",
+        error.code ?? "unknown"
+      );
       return NextResponse.json({ error: "upstream" }, { status: 502 });
     }
     console.error("Intake server error:", error instanceof Error ? error.name : "unknown");

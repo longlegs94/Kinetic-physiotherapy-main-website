@@ -232,11 +232,21 @@ export async function POST(request: Request) {
     // or provider internals, neither of which belongs in a browser response.
     // Logs carry the error type only — never the conversation.
     if (error instanceof RateLimitError) {
-      console.error("Concierge upstream rate limited");
+      // OpenAI returns 429 for two unrelated conditions: genuine
+      // rate limiting, and `insufficient_quota` — an account with no credit
+      // or billing configured. They need completely different fixes (wait
+      // vs. top up the account), so log the code that distinguishes them.
+      // It is an OpenAI error classification, never request content.
+      console.error("Concierge upstream 429, code:", error.code ?? "unknown");
       return NextResponse.json({ error: "rate_limited" }, { status: 429 });
     }
     if (error instanceof APIError) {
-      console.error("Concierge upstream error, status:", error.status);
+      console.error(
+        "Concierge upstream error, status:",
+        error.status,
+        "code:",
+        error.code ?? "unknown"
+      );
       return NextResponse.json({ error: "upstream" }, { status: 502 });
     }
     console.error("Concierge server error:", error instanceof Error ? error.name : "unknown");
