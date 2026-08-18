@@ -46,6 +46,7 @@ Set these in **Vercel → Project → Settings → Environment Variables** (see 
 | `NEXT_PUBLIC_WEB3FORMS_KEY` | No | Legacy client-side fallback for the same key. Only kept so existing deployments that set this continue to work; new setups should use `WEB3FORMS_KEY` instead. |
 | `NEXT_PUBLIC_GA_ID` | No | Google Analytics 4 Measurement ID (`G-XXXXXXXXXX`). Without it, analytics is disabled. |
 | `OPENAI_API_KEY` | No | Enables the AI booking concierge, the symptom router, and the intake summarizer. Server-side only. Without it, all three show contact options instead. |
+| `NEXT_PUBLIC_AI_ASSISTANT_ENABLED` | No | Master on/off switch for every AI surface. Blank or `1`/`true`/`on` keeps it running; `0`/`false`/`off` hides all AI UI and makes the API refuse requests, so no spend is possible while off. Takes effect on the next deploy. |
 | `CONCIERGE_MODEL` | No | Model shared by the concierge and the intake summarizer; defaults to gpt-5.4-mini. Set gpt-5.4-nano for lower cost — see the tradeoff noted in `.env.example`. |
 
 After changing env vars, redeploy so they take effect.

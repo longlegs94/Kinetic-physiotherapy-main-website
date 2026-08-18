@@ -5,6 +5,7 @@ import { ServiceCard } from "@/components/cards/ServiceCard";
 import { PainPointSelector } from "@/components/cards/PainPointSelector";
 import { NotSureCTA } from "@/components/ui/NotSureCTA";
 import { SymptomRouter } from "@/components/concierge/SymptomRouter";
+import { aiAssistantEnabled } from "@/lib/ai-config";
 import { FinalCTA } from "@/components/sections/FinalCTA";
 import { ICBCSection } from "@/components/sections/ICBCSection";
 import { StaggeredGrid, ScrollItem } from "@/components/motion/StaggeredGrid";
@@ -78,12 +79,17 @@ export default function ServicesPage() {
             Pick what you&apos;re dealing with and we&apos;ll point you to the right care
             options.
           </SectionHeading>
-          <div className="mt-10">
-            <SymptomRouter />
-          </div>
-          <p className="mt-10 text-center text-sm font-semibold uppercase tracking-[0.14em] text-charcoal/70">
-            or pick what fits
-          </p>
+          {/* Router and divider hide together — see PainPointSection. */}
+          {aiAssistantEnabled && (
+            <>
+              <div className="mt-10">
+                <SymptomRouter />
+              </div>
+              <p className="mt-10 text-center text-sm font-semibold uppercase tracking-[0.14em] text-charcoal/70">
+                or pick what fits
+              </p>
+            </>
+          )}
           <div className="mt-12">
             <PainPointSelector />
           </div>

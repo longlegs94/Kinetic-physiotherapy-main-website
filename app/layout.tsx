@@ -5,6 +5,7 @@ import { SiteHeader } from "@/components/layout/SiteHeader";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { StickyMobileBookingBar } from "@/components/layout/StickyMobileBookingBar";
 import { ConciergeWidget } from "@/components/concierge/ConciergeWidget";
+import { aiAssistantEnabled } from "@/lib/ai-config";
 import { Analytics } from "@/components/analytics/Analytics";
 import { JsonLd } from "@/components/ui/JsonLd";
 import { localBusinessSchema } from "@/lib/schema";
@@ -70,7 +71,9 @@ export default function RootLayout({
         <main id="main">{children}</main>
         <SiteFooter />
         <StickyMobileBookingBar />
-        <ConciergeWidget />
+        {/* Omitted entirely when the assistant is off, so the floating bubble
+            never appears only to report itself unavailable. */}
+        {aiAssistantEnabled && <ConciergeWidget />}
         <Analytics />
       </body>
     </html>

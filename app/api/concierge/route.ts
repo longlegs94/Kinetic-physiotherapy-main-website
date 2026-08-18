@@ -9,6 +9,7 @@ import {
   type ConciergeReply,
 } from "@/lib/concierge";
 import { signReply, signingConfigured, verifyReply } from "@/lib/message-auth";
+import { isAiAssistantAvailable } from "@/lib/ai-config";
 import { checkRateLimit } from "@/lib/rate-limit";
 import { detectRedFlags, emergencyMessage } from "@/lib/red-flags";
 import { getClientIp, isAllowedOrigin, readJsonObject } from "@/lib/request";
@@ -115,7 +116,7 @@ function keepAuthenticTurns(messages: IncomingMessage[]): {
 }
 
 export async function GET() {
-  return NextResponse.json({ enabled: Boolean(process.env.OPENAI_API_KEY) });
+  return NextResponse.json({ enabled: isAiAssistantAvailable() });
 }
 
 export async function POST(request: Request) {
@@ -136,7 +137,10 @@ export async function POST(request: Request) {
     );
   }
 
-  if (!process.env.OPENAI_API_KEY) {
+  // Covers both "no key" and "clinic switched the assistant off". The UI
+  // already hides itself in that case; this is the enforcing layer, so a
+  // cached page or a direct request cannot keep the feature running.
+  if (!isAiAssistantAvailable()) {
     return NextResponse.json({ error: "not_configured" }, { status: 503 });
   }
 
