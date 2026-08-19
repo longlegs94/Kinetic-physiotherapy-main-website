@@ -11,7 +11,8 @@
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "admin:hash": "tsx scripts/hash-admin-password.ts"
   },
   "dependencies": {
     "framer-motion": "^11.15.0",

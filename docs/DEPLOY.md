@@ -48,8 +48,53 @@ Set these in **Vercel → Project → Settings → Environment Variables** (see 
 | `OPENAI_API_KEY` | No | Enables the AI booking concierge, the symptom router, and the intake summarizer. Server-side only. Without it, all three show contact options instead. |
 | `NEXT_PUBLIC_AI_ASSISTANT_ENABLED` | No | Master on/off switch for every AI surface. Blank or `1`/`true`/`on` keeps it running; `0`/`false`/`off` hides all AI UI and makes the API refuse requests, so no spend is possible while off. Takes effect on the next deploy. |
 | `CONCIERGE_MODEL` | No | Model shared by the concierge and the intake summarizer; defaults to gpt-5.4-mini. Set gpt-5.4-nano for lower cost — see the tradeoff noted in `.env.example`. |
+| `ADMIN_USERS` | No | Staff portal accounts as `email:hash` entries. Blank keeps `/admin` switched off. See [The staff portal](#the-staff-portal) below. |
+| `ADMIN_SESSION_SECRET` | No | Signs the admin session cookie; at least 32 characters. Required whenever `ADMIN_USERS` is set. |
 
 After changing env vars, redeploy so they take effect.
+
+## The staff portal
+
+`/admin` is a small password-protected area for clinic staff. It ships switched
+off: with `ADMIN_USERS` blank there is no account that can sign in, and nothing
+on the public site depends on it.
+
+To turn it on:
+
+1. **Generate a signing secret** and set it as `ADMIN_SESSION_SECRET`:
+   ```bash
+   openssl rand -base64 48
+   ```
+2. **Generate an entry per person.** The script prompts for the password (it is
+   never passed as an argument, so it stays out of shell history) and prints the
+   line to paste:
+   ```bash
+   npm run admin:hash -- someone@kinetictherapyclinic.ca
+   ```
+3. **Set `ADMIN_USERS`** to those lines, separated by newlines, commas or
+   semicolons. Only hashes go in here — never a plaintext password, since a
+   Vercel environment variable is readable by everyone with project access.
+4. **Redeploy.** Both variables are read at request time, but Vercel only
+   applies environment changes to new deployments.
+
+Setting one variable without the other **fails the production build** on
+purpose (`scripts/check-env.ts`): accounts with no secret reject every correct
+password, and a secret with no accounts leaves nobody able to sign in — both
+look like a forgotten password rather than a missing setting.
+
+**Revoking access.** Sessions last 8 hours and are stateless, so there is no
+session table to clear. Instead:
+
+| To sign out… | Do this |
+|---|---|
+| One person | Remove their entry from `ADMIN_USERS`, or re-run `admin:hash` to replace their hash |
+| Everyone, immediately | Rotate `ADMIN_SESSION_SECRET` |
+
+Both take effect on the next request after the redeploy — a cookie issued
+against a removed account or a changed password stops verifying.
+
+`/admin` is `Disallow`ed in `robots.ts` and served `noindex`, and `proxy.ts`
+redirects signed-out visitors to `/admin/login` before any portal page renders.
 
 ## 4. Point your domain (DNS cutover)
 Your live WordPress site is untouched until you do this step.

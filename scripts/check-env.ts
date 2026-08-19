@@ -7,13 +7,14 @@
  * a full environment; those surface the same problems as warnings instead.
  */
 import { collectEnvProblems } from "../lib/env";
+import { collectAdminEnvProblems } from "../lib/admin/session";
 import { collectUnverifiedContent } from "../lib/verification";
 
 const isProduction =
   process.env.VERCEL_ENV === "production" ||
   (process.env.NODE_ENV === "production" && process.env.VERCEL_ENV === undefined);
 
-const problems = collectEnvProblems(process.env);
+const problems = [...collectEnvProblems(process.env), ...collectAdminEnvProblems(process.env)];
 const unverified = collectUnverifiedContent();
 
 // Content still flagged needsVerification is only fatal when the owner has

@@ -1,15 +1,21 @@
 import type { Metadata, Viewport } from "next";
 import { Sora, Inter } from "next/font/google";
 import "./globals.css";
-import { SiteHeader } from "@/components/layout/SiteHeader";
-import { SiteFooter } from "@/components/layout/SiteFooter";
-import { StickyMobileBookingBar } from "@/components/layout/StickyMobileBookingBar";
-import { ConciergeWidget } from "@/components/concierge/ConciergeWidget";
-import { aiAssistantEnabled } from "@/lib/ai-config";
-import { Analytics } from "@/components/analytics/Analytics";
-import { JsonLd } from "@/components/ui/JsonLd";
-import { localBusinessSchema } from "@/lib/schema";
 import { SITE_URL, SITE_NAME } from "@/lib/seo";
+
+/**
+ * Root layout — deliberately just the document shell.
+ *
+ * The site has two surfaces that share nothing but fonts and CSS: the public
+ * marketing pages under `(site)`, and the staff admin portal under `admin`.
+ * The marketing chrome (header, footer, sticky booking bar, AI concierge
+ * bubble) lives in `app/(site)/layout.tsx` rather than here, because a "Book
+ * Now" header above a staff login screen is wrong — and a layout cannot
+ * subtract what a parent already rendered.
+ *
+ * Keep this file free of anything visitor-facing. Whatever is added here is
+ * added to the admin portal too.
+ */
 
 const sora = Sora({
   subsets: ["latin"],
@@ -62,20 +68,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en-CA" className={`${sora.variable} ${inter.variable}`}>
-      <body>
-        <a href="#main" className="skip-link">
-          Skip to content
-        </a>
-        <JsonLd data={localBusinessSchema()} />
-        <SiteHeader />
-        <main id="main">{children}</main>
-        <SiteFooter />
-        <StickyMobileBookingBar />
-        {/* Omitted entirely when the assistant is off, so the floating bubble
-            never appears only to report itself unavailable. */}
-        {aiAssistantEnabled && <ConciergeWidget />}
-        <Analytics />
-      </body>
+      <body>{children}</body>
     </html>
   );
 }
