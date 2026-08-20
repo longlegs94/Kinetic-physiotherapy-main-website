@@ -8,13 +8,18 @@
  */
 import { collectEnvProblems } from "../lib/env";
 import { collectAdminEnvProblems } from "../lib/admin/session";
+import { collectContentEnvProblems } from "../lib/admin/content-repo";
 import { collectUnverifiedContent } from "../lib/verification";
 
 const isProduction =
   process.env.VERCEL_ENV === "production" ||
   (process.env.NODE_ENV === "production" && process.env.VERCEL_ENV === undefined);
 
-const problems = [...collectEnvProblems(process.env), ...collectAdminEnvProblems(process.env)];
+const problems = [
+  ...collectEnvProblems(process.env),
+  ...collectAdminEnvProblems(process.env),
+  ...collectContentEnvProblems(process.env),
+];
 const unverified = collectUnverifiedContent();
 
 // Content still flagged needsVerification is only fatal when the owner has

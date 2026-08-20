@@ -50,6 +50,9 @@ Set these in **Vercel → Project → Settings → Environment Variables** (see 
 | `CONCIERGE_MODEL` | No | Model shared by the concierge and the intake summarizer; defaults to gpt-5.4-mini. Set gpt-5.4-nano for lower cost — see the tradeoff noted in `.env.example`. |
 | `ADMIN_USERS` | No | Staff portal accounts as `email:hash` entries. Blank keeps `/admin` switched off. See [The staff portal](#the-staff-portal) below. |
 | `ADMIN_SESSION_SECRET` | No | Signs the admin session cookie; at least 32 characters. Required whenever `ADMIN_USERS` is set. |
+| `CONTENT_GITHUB_TOKEN` | No | Lets the portal save therapist and clinic edits by committing to the repo. Without it the portal is view-only. See [Editing content from the portal](#editing-content-from-the-portal). |
+| `CONTENT_GITHUB_REPO` | No | `owner/repo` the portal commits to. Required whenever `CONTENT_GITHUB_TOKEN` is set. |
+| `CONTENT_GITHUB_BRANCH` | No | Branch to read and commit (default `main`). |
 
 After changing env vars, redeploy so they take effect.
 
@@ -95,6 +98,48 @@ against a removed account or a changed password stops verifying.
 
 `/admin` is `Disallow`ed in `robots.ts` and served `noindex`, and `proxy.ts`
 redirects signed-out visitors to `/admin/login` before any portal page renders.
+
+## Editing content from the portal
+
+The portal can edit the **therapist list** (`/admin/team`) and the **clinic
+contact information** (`/admin/clinic`). Services, blog posts, testimonials and
+page copy are still edited in the repository.
+
+There is no database, so saving means committing `content/site-content.json`
+back to the repo, which triggers a Vercel rebuild. An edit is live in about a
+minute, every change lands in git history as an audit trail, and the
+`needsVerification` build gate keeps working because it still runs over the
+real content file.
+
+**Setup.** Create a **fine-grained** personal access token at
+<https://github.com/settings/personal-access-tokens> :
+
+1. **Repository access** → *Only select repositories* → this repo alone.
+2. **Repository permissions** → **Contents: Read and write**. Nothing else.
+3. Set `CONTENT_GITHUB_TOKEN` to the token and `CONTENT_GITHUB_REPO` to
+   `owner/repo`, then redeploy.
+
+Without both, the portal degrades to a viewer — the screens still show what the
+site currently says, with a "view only" notice in place of the Save buttons.
+Setting one without the other **fails the production build** on purpose, since
+a portal with working-looking Save buttons that fail on click reads as broken
+rather than unconfigured.
+
+**Security note.** The token is exactly as powerful as the admin password that
+reaches it: anyone who can sign in to the portal can change what
+`content/site-content.json` contains. The scoping above is what bounds the
+damage — contents-only, one repo, no ability to touch workflows, secrets or
+settings. The portal itself never writes JSON a user supplied: it applies
+narrowly-typed field-by-field mutations to the parsed file
+(`lib/admin/content-schema.ts`), so a crafted form post cannot introduce new
+keys or overwrite unrelated sections.
+
+**Concurrency.** Each save is committed against the file SHA the edit was based
+on, so two people editing at once produce a visible "someone else changed this,
+reload" message rather than one silently overwriting the other.
+
+**If a save seems not to appear:** check the Vercel deployment. A rebuild that
+fails leaves the commit in place but the site on the previous version.
 
 ## 4. Point your domain (DNS cutover)
 Your live WordPress site is untouched until you do this step.
