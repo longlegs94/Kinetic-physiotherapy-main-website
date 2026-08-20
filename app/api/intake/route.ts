@@ -13,7 +13,8 @@ import { isAiAssistantAvailable } from "@/lib/ai-config";
 import { checkRateLimit } from "@/lib/rate-limit";
 import { detectRedFlagsIn, emergencyMessage } from "@/lib/red-flags";
 import { getClientIp, isAllowedOrigin, readJsonObject } from "@/lib/request";
-import { clinic, services } from "@/lib/site-data";
+import { services } from "@/lib/site-data";
+import { getClinic } from "@/lib/content/store";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -135,6 +136,7 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
+  const clinic = await getClinic();
   if (!isAllowedOrigin(request)) {
     return NextResponse.json({ error: "forbidden" }, { status: 403 });
   }

@@ -2,7 +2,7 @@
 
 import { useState, type FormEvent } from "react";
 import { Star, ExternalLink, Send, CheckCircle2, AlertCircle } from "lucide-react";
-import { clinic } from "@/lib/site-data";
+import { useSiteData } from "@/components/providers/SiteDataProvider";
 import { trackEvent } from "@/lib/analytics";
 import { googleReviewUrl } from "@/lib/env";
 import { cn } from "@/lib/utils";
@@ -15,6 +15,7 @@ const labelClass = "mb-1.5 block text-sm font-semibold text-charcoal";
 
 /** Small "leave private feedback" form. Posts to the shared /api/contact relay. */
 function FeedbackForm() {
+  const { clinic } = useSiteData();
   const [status, setStatus] = useState<Status>("idle");
   const [error, setError] = useState<string>("");
 

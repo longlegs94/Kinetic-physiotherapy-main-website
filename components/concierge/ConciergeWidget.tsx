@@ -6,7 +6,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { MessageCircle, Send, X, Phone } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { trackEvent } from "@/lib/analytics";
-import { janeBookingUrl, clinic, phoneHref } from "@/lib/site-data";
+import { useSiteData } from "@/components/providers/SiteDataProvider";
 import { useReducedMotionSafe } from "@/components/motion/useReducedMotionSafe";
 import { easePremium } from "@/lib/motion";
 
@@ -34,11 +34,15 @@ const GREETING: Message = {
     "Hi! Tell me what's going on — an injury, pain, ICBC claim, or anything else — and I'll point you to the right care.",
 };
 
-const OFFLINE_MESSAGE: Message = {
-  role: "assistant",
-  content: `I'm offline right now — but our team isn't! Call ${clinic.phone} or use the contact page and we'll guide you.`,
-  showContact: true,
-};
+/** Built per render rather than as a constant, so the number it tells people
+ *  to call is the one currently saved, not the one present at build time. */
+function offlineMessage(phone: string): Message {
+  return {
+    role: "assistant",
+    content: `I'm offline right now — but our team isn't! Call ${phone} or use the contact page and we'll guide you.`,
+    showContact: true,
+  };
+}
 
 const QUICK_REPLIES = [
   "I was in a car accident",
@@ -55,6 +59,8 @@ const MAX_INPUT_LENGTH = 500;
  * offline message (with phone + contact links) if unconfigured or erroring.
  */
 export function ConciergeWidget() {
+  const { clinic, phoneHref, janeBookingUrl } = useSiteData();
+  const OFFLINE_MESSAGE = offlineMessage(clinic.phone);
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");

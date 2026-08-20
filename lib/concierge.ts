@@ -1,4 +1,4 @@
-import { clinic, faqs, homepage, services } from "@/lib/site-data";
+import { faqs, homepage, services, type Clinic } from "@/lib/site-data";
 
 /**
  * Server-only module. Builds the system prompt and JSON schema used by the
@@ -28,7 +28,7 @@ export type ConciergeReply = {
 };
 
 /** Composes the concierge system prompt from the site's data layer. */
-export function buildSystemPrompt(): string {
+export function buildSystemPrompt(clinic: Clinic): string {
   const catalog = services
     .map((s) => {
       const topConditions = s.conditions.slice(0, 5).join(", ");

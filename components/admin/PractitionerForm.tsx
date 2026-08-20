@@ -22,17 +22,16 @@ export type PractitionerDefaults = {
 /**
  * Add / edit form for one therapist.
  *
- * `index` is the position in the practitioners array, or "new". The array has
- * no stable ids and names are not guaranteed unique, so position is what
- * identifies a row — which is also why the action re-reads the file and
- * commits against its SHA rather than trusting that the list hasn't moved.
+ * `id` is the database row's id, or "new". Identifying rows by id rather than
+ * by position means two people editing the list at once cannot end up writing
+ * over each other because the ordering shifted underneath them.
  */
 export function PractitionerForm({
-  index,
+  id,
   defaults,
   categories,
 }: {
-  index: number | "new";
+  id: string;
   defaults: PractitionerDefaults;
   categories: string[];
 }) {
@@ -40,7 +39,7 @@ export function PractitionerForm({
 
   return (
     <form action={formAction} className="space-y-6" noValidate>
-      <input type="hidden" name="index" value={String(index)} />
+      <input type="hidden" name="id" value={id} />
 
       <FormMessage message={state.message} />
 
@@ -135,7 +134,7 @@ export function PractitionerForm({
 
       <div className="flex flex-wrap items-center gap-3 border-t border-silver/70 pt-6">
         <SubmitButton pendingLabel="Saving…">
-          {index === "new" ? "Add therapist" : "Save changes"}
+          {id === "new" ? "Add therapist" : "Save changes"}
         </SubmitButton>
         <Link
           href="/admin/team"
@@ -143,9 +142,9 @@ export function PractitionerForm({
         >
           Cancel
         </Link>
-        {index !== "new" && (
+        {id !== "new" && (
           <Link
-            href={`/admin/team/${index}/remove`}
+            href={`/admin/team/${id}/remove`}
             className="ml-auto text-sm font-semibold text-red-700 underline-offset-4 hover:underline"
           >
             Remove this therapist

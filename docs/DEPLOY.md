@@ -50,9 +50,9 @@ Set these in **Vercel → Project → Settings → Environment Variables** (see 
 | `CONCIERGE_MODEL` | No | Model shared by the concierge and the intake summarizer; defaults to gpt-5.4-mini. Set gpt-5.4-nano for lower cost — see the tradeoff noted in `.env.example`. |
 | `ADMIN_USERS` | No | Staff portal accounts as `email:hash` entries. Blank keeps `/admin` switched off. See [The staff portal](#the-staff-portal) below. |
 | `ADMIN_SESSION_SECRET` | No | Signs the admin session cookie; at least 32 characters. Required whenever `ADMIN_USERS` is set. |
-| `CONTENT_GITHUB_TOKEN` | No | Lets the portal save therapist and clinic edits by committing to the repo. Without it the portal is view-only. See [Editing content from the portal](#editing-content-from-the-portal). |
-| `CONTENT_GITHUB_REPO` | No | `owner/repo` the portal commits to. Required whenever `CONTENT_GITHUB_TOKEN` is set. |
-| `CONTENT_GITHUB_BRANCH` | No | Branch to read and commit (default `main`). |
+| `SUPABASE_URL` | No | The database holding the therapist list and clinic contact details. Without it the site serves the content bundled at build time. See [Editing content from the portal](#editing-content-from-the-portal). |
+| `SUPABASE_ANON_KEY` | No | Read-only key the website uses. Required whenever `SUPABASE_URL` is set. |
+| `SUPABASE_SERVICE_ROLE_KEY` | No | Write key the staff portal saves with. Without it the portal is view-only. Never expose to the browser. |
 
 After changing env vars, redeploy so they take effect.
 
@@ -101,96 +101,87 @@ redirects signed-out visitors to `/admin/login` before any portal page renders.
 
 ## Editing content from the portal
 
-The portal can edit the **therapist list** (`/admin/team`) and the **clinic
-contact information** (`/admin/clinic`). Services, blog posts, testimonials and
-page copy are still edited in the repository.
+The portal edits the **therapist list** (`/admin/team`) and the **clinic contact
+information** (`/admin/clinic`). Services, blog posts, testimonials and page copy
+are still edited in the repository.
 
-There is no database, so saving means committing `content/site-content.json`
-back to the repo, which triggers a Vercel rebuild. An edit is live in about a
-minute, every change lands in git history as an audit trail, and the
-`needsVerification` build gate keeps working because it still runs over the
-real content file.
+**Changes appear on the website immediately.** There is no publish step and no
+rebuild to wait for.
 
-**Setup.** Create a **fine-grained** personal access token at
-<https://github.com/settings/personal-access-tokens> :
+### How it works
 
-1. **Repository access** → *Only select repositories* → this repo alone.
-2. **Repository permissions** → **Contents: Read and write**. Nothing else.
-3. Set `CONTENT_GITHUB_TOKEN` to the token and `CONTENT_GITHUB_REPO` to
-   `owner/repo`, then redeploy.
+Those two things live in a Supabase (Postgres) database rather than in the repo.
+The public pages are still statically generated for speed, and they read the
+database through a cache tagged `site-content`. When the portal saves, it
+invalidates that tag and the affected pages regenerate on the next request —
+seconds, not minutes.
 
-Without both, the portal degrades to a viewer — the screens still show what the
-site currently says, with a "view only" notice in place of the Save buttons.
-Setting one without the other **fails the production build** on purpose, since
-a portal with working-looking Save buttons that fail on click reads as broken
-rather than unconfigured.
+Everything else about the site is unchanged: services and blog posts still come
+from `content/site-content.json` and `content/blog`, and every page still
+prerenders.
 
-**Security note.** The token is exactly as powerful as the admin password that
-reaches it: anyone who can sign in to the portal can change what
-`content/site-content.json` contains. The scoping above is what bounds the
-damage — contents-only, one repo, no ability to touch workflows, secrets or
-settings. The portal itself never writes JSON a user supplied: it applies
-narrowly-typed field-by-field mutations to the parsed file
-(`lib/admin/content-schema.ts`), so a crafted form post cannot introduce new
-keys or overwrite unrelated sections.
+### Setup
 
-**Concurrency.** Each save is committed against the file SHA the edit was based
-on, so two people editing at once produce a visible "someone else changed this,
-reload" message rather than one silently overwriting the other.
+From the Supabase dashboard, **Project Settings → API**, copy three values into
+Vercel:
 
-**If a save seems not to appear:** check the Vercel deployment. A rebuild that
-fails leaves the commit in place but the site on the previous version.
-
-## 4. Point your domain (DNS cutover)
-Your live WordPress site is untouched until you do this step.
-1. In Vercel → Project → **Domains**, add your domain (e.g. `kinetictherapyclinic.ca`).
-2. Update DNS at your registrar to the records Vercel shows (usually an `A` record to
-   Vercel's IP and/or a `CNAME` for `www`).
-3. Vercel provisions SSL automatically. Verify HTTPS works, then you're live.
-
-## 5. Post-launch
-- Submit `https://<your-domain>/sitemap.xml` in Google Search Console.
-- If migrating from WordPress, set up 301 redirects from old URLs to the new
-  Maple-Ridge-focused URLs to preserve SEO (see `docs/URL-MIGRATION` note below).
-- Confirm the contact form delivers to the clinic inbox.
-
-## Monitoring
-- Enable Vercel's built-in **Error/Runtime Monitoring** and **Web Analytics**
-  from the project dashboard (Vercel → Project → Analytics / Observability) —
-  no code changes needed, just a toggle per project.
-- GA4 conversion events already fire from the app (see `lib/analytics.ts`)
-  for booking clicks, phone clicks, and contact/intake form submissions —
-  they'll show up automatically in GA4 once `NEXT_PUBLIC_GA_ID` is set.
-
-## URL migration (WordPress → new site) — DONE
-
-301 redirects for the old `www.kineticphysio.ca` pages are already built into
-`next.config.mjs` (`wordpressRedirects`). They were mapped from the URLs Google had
-indexed, so ranking is preserved after cutover. Examples:
-
-| Old URL | New URL |
+| Vercel variable | Supabase field |
 |---|---|
-| `/therapists/` | `/team` |
-| `/maple-ridge-physio-massage-chiro-kinesiology/` | `/services` |
-| `/maple-ridge-physio-contact/` | `/contact` |
-| `/maple-ridge-physio-testimonials/` | `/testimonials` |
-| `/gallery/` | `/about` |
-| `/shop/` | `/orthotics-bracing-maple-ridge` |
-| Massage blog posts | `/massage-therapy-maple-ridge` |
-| Chiropractic blog post | `/chiropractor-maple-ridge` |
-| Other old blog posts | `/blog` |
+| `SUPABASE_URL` | Project URL |
+| `SUPABASE_ANON_KEY` | `anon` / publishable key |
+| `SUPABASE_SERVICE_ROLE_KEY` | `service_role` / secret key |
 
-All verified to resolve to a live page (200). Old trailing-slash URLs normalize first,
-so they land via a short 308 chain — search engines follow this fine.
+Set all three for **Production** *and* **Preview**, then redeploy — Vercel only
+applies environment changes to new deployments.
 
-**After cutover:** open Google Search Console → Coverage/Pages and watch for any old URL
-reporting 404. If one appears that isn't in the map, add a line to `wordpressRedirects`
-in `next.config.mjs` and redeploy.
+The `service_role` key bypasses every access rule in the database. It is
+server-side only and must never be given a `NEXT_PUBLIC_` name.
 
-## Local development
-```bash
-npm install
-cp .env.example .env.local   # fill in values (all optional for local dev)
-npm run dev                  # http://localhost:3000
-npm run build && npm run start   # production preview
-```
+### What happens when the database is unavailable
+
+Nothing on the public site breaks. Every read falls back to the copy of
+`content/site-content.json` bundled at build time, so visitors see the last
+known-good content rather than an error. The portal reports the problem and
+disables saving until it recovers.
+
+This matters because **Supabase pauses free-tier projects after about a week of
+inactivity**. Two things guard against it:
+
+- `/api/keepalive` runs daily via `vercel.json` and queries the database, which
+  counts as activity. Its response also records whether the database answered,
+  so an outage shows up in the Vercel cron log.
+- The fallback above means a pause degrades the portal, never the website.
+
+If the portal ever reports the database asleep, open the Supabase dashboard to
+wake it. Upgrading to Supabase Pro removes the pausing behaviour entirely.
+
+### Database schema
+
+Three tables, created by migration:
+
+| Table | Holds |
+|---|---|
+| `practitioners` | One row per therapist, ordered by `sort_order` |
+| `clinic_info` | A single row of contact details, hours and trust badges |
+| `content_change_log` | Every portal edit: who, what, when, and the before/after |
+
+Row level security allows the `anon` key to **read** the two content tables and
+nothing else. The change log is not readable through the public API at all — it
+carries staff email addresses. All writes go through the `service_role` key from
+the portal's server actions.
+
+### Audit trail
+
+Every save records who made it, what changed, and the values before and after.
+The most recent entries appear on the portal dashboard; the full history is in
+the `content_change_log` table.
+
+### Safety properties
+
+- The portal never writes raw form input. Validators return a fixed set of typed
+  fields and the store maps exactly those onto columns, so a crafted post cannot
+  reach a column the form doesn't expose — `needs_verification` in particular,
+  which decides whether an unconfirmed credential is published.
+- Removing a therapist, or editing one, preserves fields the forms don't show.
+- Concurrent editors work on rows identified by database id, so a list that
+  shifts underneath someone cannot cause them to overwrite the wrong record.

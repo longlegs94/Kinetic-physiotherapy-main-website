@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import { MapPin, Phone, Mail, Clock, Facebook, Instagram } from "lucide-react";
-import { clinic, services, phoneHref, emailHref } from "@/lib/site-data";
+import { services } from "@/lib/site-data";
+import { useSiteData } from "@/components/providers/SiteDataProvider";
 import { Logo } from "./Logo";
 import { BookButton } from "@/components/ui/BookButton";
 import { KineticMotionLine } from "@/components/motion/KineticMotionLine";
@@ -20,6 +21,7 @@ const clinicLinks = [
 
 /** Dark charcoal footer with mint accent line and four columns. */
 export function SiteFooter() {
+  const { clinic, phoneHref, emailHref } = useSiteData();
   const featuredServices = services.slice(0, 6);
 
   return (

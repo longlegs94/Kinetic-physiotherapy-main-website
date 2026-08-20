@@ -3,16 +3,15 @@
 import { redirect } from "next/navigation";
 
 import { requireAdmin } from "@/lib/admin/auth";
-import { ContentRepoError, loadContent, repoConfig, saveContent } from "@/lib/admin/content-repo";
+import { validateClinic, validatePractitioner, type FieldError } from "@/lib/admin/content-schema";
 import { emptySaveState, type SaveState } from "@/lib/admin/save-state";
 import {
-  applyClinic,
-  removePractitioner,
-  upsertPractitioner,
-  validateClinic,
-  validatePractitioner,
-  type FieldError,
-} from "@/lib/admin/content-schema";
+  ContentStoreError,
+  createPractitioner,
+  deletePractitioner as removePractitioner,
+  updateClinic,
+  updatePractitioner,
+} from "@/lib/content/admin-store";
 
 /**
  * Saving content changes.
@@ -20,13 +19,13 @@ import {
  * Every action re-establishes the session through `requireAdmin()` before it
  * touches anything. Rendering a form on a page behind the login is not a
  * security boundary — a Server Action has a callable endpoint of its own, and
- * these ones can commit to the repository, so the check belongs here rather
- * than only on the page that drew the form.
+ * these ones write to the database, so the check belongs here rather than only
+ * on the page that drew the form.
  *
- * The shape of each action is the same: load the current file from GitHub,
- * validate the form, apply a narrow mutation from content-schema, and commit
- * with the SHA the edit was based on. Nothing here writes user-supplied JSON;
- * see lib/admin/content-schema.ts for why that matters.
+ * Each action validates first, writes second, and lets the store record the
+ * change and refresh the public site. Nothing here builds SQL or object shapes
+ * from raw form input: the validators return a fixed set of typed fields, and
+ * the store maps exactly those onto columns.
  */
 
 function fail(message: string): SaveState {
@@ -39,49 +38,18 @@ function fieldErrors(errors: FieldError[]): SaveState {
 
 /** Turns a thrown error into something a receptionist can act on. */
 function describe(error: unknown): string {
-  if (error instanceof ContentRepoError) return error.message;
+  if (error instanceof ContentStoreError) return error.message;
   if (error instanceof Error) return error.message;
   return "Something went wrong saving the change.";
 }
 
-type Committed = { ok: true } | { ok: false; state: SaveState };
+/** Rows are identified by their database id. Anything that isn't a UUID is a
+ *  stale link or a hand-edited URL, not something to go looking for. */
+const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
-/**
- * Load, mutate, commit. `mutate` receives the parsed file and returns the new
- * one; it throws with a readable message when the edit no longer applies.
- */
-async function commit(
-  summary: string,
-  authorEmail: string,
-  mutate: (content: unknown) => unknown
-): Promise<Committed> {
-  const config = repoConfig();
-  if (!config) {
-    return {
-      ok: false,
-      state: fail(
-        "Saving isn't set up on this deployment — CONTENT_GITHUB_TOKEN and CONTENT_GITHUB_REPO need to be configured."
-      ),
-    };
-  }
-
-  try {
-    const { json, sha } = await loadContent(config);
-    const next = mutate(json);
-    await saveContent(config, next, sha, summary, authorEmail);
-    return { ok: true };
-  } catch (error) {
-    return { ok: false, state: fail(describe(error)) };
-  }
-}
-
-/** Parses the `index` field: "new" means add, a number means edit that row. */
-function parseIndex(raw: unknown): number | null | "invalid" {
+function practitionerId(raw: unknown): string | null {
   const value = String(raw ?? "").trim();
-  if (value === "" || value === "new") return null;
-  const parsed = Number(value);
-  if (!Number.isInteger(parsed) || parsed < 0) return "invalid";
-  return parsed;
+  return UUID.test(value) ? value : null;
 }
 
 export async function savePractitioner(
@@ -90,41 +58,42 @@ export async function savePractitioner(
 ): Promise<SaveState> {
   const session = await requireAdmin();
 
-  const index = parseIndex(formData.get("index"));
-  if (index === "invalid") return fail("That therapist couldn't be identified. Reload and try again.");
+  const raw = String(formData.get("id") ?? "").trim();
+  const isNew = raw === "" || raw === "new";
+  const id = isNew ? null : practitionerId(raw);
+  if (!isNew && !id) {
+    return fail("That therapist couldn't be identified. Reload the list and try again.");
+  }
 
   const validated = validatePractitioner(formData);
   if (!validated.ok) return fieldErrors(validated.errors);
 
-  const summary =
-    index === null
-      ? `Add ${validated.value.name} to the team`
-      : `Update ${validated.value.name}'s profile`;
+  try {
+    if (id) {
+      await updatePractitioner(id, validated.value, session.email);
+    } else {
+      await createPractitioner(validated.value, session.email);
+    }
+  } catch (error) {
+    return fail(describe(error));
+  }
 
-  const result = await commit(summary, session.email, (content) =>
-    upsertPractitioner(content, index, validated.value)
-  );
-  if (!result.ok) return result.state;
-
-  redirect(`/admin/team?saved=${index === null ? "added" : "updated"}`);
+  redirect(`/admin/team?saved=${id ? "updated" : "added"}`);
 }
 
 export async function deletePractitioner(formData: FormData): Promise<void> {
   const session = await requireAdmin();
 
-  const index = parseIndex(formData.get("index"));
-  if (index === "invalid" || index === null) {
-    redirect("/admin/team?error=unknown");
+  const id = practitionerId(formData.get("id"));
+  if (!id) redirect("/admin/team?error=unknown");
+
+  try {
+    await removePractitioner(id, session.email);
+  } catch (error) {
+    redirect(`/admin/team?error=${encodeURIComponent(describe(error))}`);
   }
 
-  const name = String(formData.get("name") ?? "a therapist");
-  const result = await commit(`Remove ${name} from the team`, session.email, (content) =>
-    removePractitioner(content, index)
-  );
-
-  redirect(
-    result.ok ? "/admin/team?saved=removed" : `/admin/team?error=${encodeURIComponent(result.state.message ?? "failed")}`
-  );
+  redirect("/admin/team?saved=removed");
 }
 
 export async function saveClinic(_previous: SaveState, formData: FormData): Promise<SaveState> {
@@ -133,10 +102,11 @@ export async function saveClinic(_previous: SaveState, formData: FormData): Prom
   const validated = validateClinic(formData);
   if (!validated.ok) return fieldErrors(validated.errors);
 
-  const result = await commit("Update clinic contact information", session.email, (content) =>
-    applyClinic(content, validated.value)
-  );
-  if (!result.ok) return result.state;
+  try {
+    await updateClinic(validated.value, session.email);
+  } catch (error) {
+    return fail(describe(error));
+  }
 
   redirect("/admin/clinic?saved=1");
 }

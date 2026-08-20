@@ -1,7 +1,7 @@
 import { PageHero } from "@/components/layout/PageHero";
 import { Section, Container } from "@/components/layout/Section";
-import { clinic, phoneHref, emailHref } from "@/lib/site-data";
 import { pageMetadata } from "@/lib/seo";
+import { getClinic, telHref, mailHref } from "@/lib/content/store";
 
 export const metadata = pageMetadata({
   title: "Privacy Policy | Kinetic Therapy Clinic",
@@ -15,7 +15,10 @@ const crumbs = [
   { name: "Privacy Policy", path: "/privacy-policy" },
 ];
 
-export default function PrivacyPolicyPage() {
+export default async function PrivacyPolicyPage() {
+  const clinic = await getClinic();
+  const phoneHref = telHref(clinic.phone);
+  const emailHref = mailHref(clinic.email);
   return (
     <>
       <PageHero title="Privacy Policy" crumbs={crumbs} />

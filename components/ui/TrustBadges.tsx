@@ -1,6 +1,8 @@
+"use client";
+
 import type { LucideIcon } from "lucide-react";
 import { BadgeDollarSign, Car, Check, Clock, HeartHandshake, ShieldCheck } from "lucide-react";
-import { clinic } from "@/lib/site-data";
+import { useSiteData } from "@/components/providers/SiteDataProvider";
 import { cn } from "@/lib/utils";
 
 /**
@@ -30,6 +32,7 @@ export function TrustBadges({
   tone?: "light" | "dark";
   labels?: string[];
 }) {
+  const { clinic } = useSiteData();
   const badges = labels ?? clinic.trustBadges.map((b) => b.label);
 
   return (

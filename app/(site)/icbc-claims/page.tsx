@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Check, ShieldCheck, PhoneCall, CalendarClock, ClipboardCheck } from "lucide-react";
-import { getService, clinic } from "@/lib/site-data";
+import { getService } from "@/lib/site-data";
 import { pageMetadata } from "@/lib/seo";
 import { Section, Container } from "@/components/layout/Section";
 import { SectionHeading } from "@/components/ui/SectionHeading";
@@ -10,6 +10,7 @@ import { TrustBadges } from "@/components/ui/TrustBadges";
 import { IcbcCallbackForm } from "@/components/icbc/IcbcCallbackForm";
 import { IcbcStickyBar } from "@/components/icbc/IcbcStickyBar";
 import { TrackedCta } from "@/components/icbc/TrackedCta";
+import { getClinic } from "@/lib/content/store";
 
 // Dedicated paid-traffic landing page for "Injured in a car accident?" ads.
 // Kept out of search results (robots: noindex,nofollow) and out of the
@@ -64,7 +65,8 @@ const faqs =
     ].includes(f.question)
   ) ?? [];
 
-export default function IcbcClaimsPage() {
+export default async function IcbcClaimsPage() {
+  const clinic = await getClinic();
   return (
     <>
       {/* Hero: headline + phone-first CTA on the left, callback form on the right */}

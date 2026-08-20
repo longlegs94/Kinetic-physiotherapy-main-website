@@ -15,8 +15,8 @@ import { Section, Container } from "@/components/layout/Section";
 import { ContactForm } from "@/components/cards/ContactForm";
 import { JsonLd } from "@/components/ui/JsonLd";
 import { breadcrumbSchema } from "@/lib/schema";
-import { clinic, phoneHref, emailHref } from "@/lib/site-data";
 import { pageMetadata } from "@/lib/seo";
+import { getClinic, telHref, mailHref } from "@/lib/content/store";
 
 export const metadata = pageMetadata({
   title: "Contact & Location | Kinetic Therapy Clinic Maple Ridge",
@@ -36,7 +36,10 @@ const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComp
   "12005 238b St #103, Maple Ridge, BC V4R 1W1"
 )}`;
 
-export default function ContactPage() {
+export default async function ContactPage() {
+  const clinic = await getClinic();
+  const phoneHref = telHref(clinic.phone);
+  const emailHref = mailHref(clinic.email);
   return (
     <>
       <JsonLd data={breadcrumbSchema(crumbs)} />

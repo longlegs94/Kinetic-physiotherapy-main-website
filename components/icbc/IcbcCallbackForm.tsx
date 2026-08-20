@@ -2,7 +2,7 @@
 
 import { useState, type FormEvent } from "react";
 import { Send, CheckCircle2, AlertCircle, PhoneCall } from "lucide-react";
-import { clinic } from "@/lib/site-data";
+import { useSiteData } from "@/components/providers/SiteDataProvider";
 import { trackEvent } from "@/lib/analytics";
 import { cn } from "@/lib/utils";
 import { CALLBACK_TIMES, isCallablePhone } from "@/lib/contact";
@@ -23,6 +23,7 @@ const labelClass = "mb-1.5 block text-sm font-semibold text-charcoal";
  * stays consistent across the site.
  */
 export function IcbcCallbackForm({ id = "callback-form" }: { id?: string }) {
+  const { clinic } = useSiteData();
   const [status, setStatus] = useState<Status>("idle");
   const [error, setError] = useState<string>("");
 

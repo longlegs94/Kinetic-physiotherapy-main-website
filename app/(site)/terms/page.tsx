@@ -1,7 +1,7 @@
 import { PageHero } from "@/components/layout/PageHero";
 import { Section, Container } from "@/components/layout/Section";
-import { clinic, emailHref, phoneHref } from "@/lib/site-data";
 import { pageMetadata } from "@/lib/seo";
+import { getClinic, telHref, mailHref } from "@/lib/content/store";
 
 export const metadata = pageMetadata({
   title: "Terms of Use | Kinetic Therapy Clinic",
@@ -15,7 +15,10 @@ const crumbs = [
   { name: "Terms", path: "/terms" },
 ];
 
-export default function TermsPage() {
+export default async function TermsPage() {
+  const clinic = await getClinic();
+  const phoneHref = telHref(clinic.phone);
+  const emailHref = mailHref(clinic.email);
   return (
     <>
       <PageHero title="Terms of Use" crumbs={crumbs} />

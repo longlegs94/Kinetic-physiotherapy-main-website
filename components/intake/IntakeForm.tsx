@@ -2,7 +2,7 @@
 
 import { useState, type FormEvent } from "react";
 import { AlertCircle, CheckCircle2, Pencil, Send } from "lucide-react";
-import { clinic } from "@/lib/site-data";
+import { useSiteData } from "@/components/providers/SiteDataProvider";
 import { trackEvent } from "@/lib/analytics";
 import { cn } from "@/lib/utils";
 
@@ -102,6 +102,7 @@ function buildDeliveryText(f: Fields, ai: AiSummary | null): string {
  * key by sending the raw answers instead.
  */
 export function IntakeForm() {
+  const { clinic } = useSiteData();
   const [phase, setPhase] = useState<Phase>("form");
   const [fields, setFields] = useState<Fields>(EMPTY_FIELDS);
   const [ai, setAi] = useState<AiSummary | null>(null);

@@ -14,9 +14,9 @@ import { StaggeredGrid, ScrollItem } from "@/components/motion/StaggeredGrid";
 import { JsonLd } from "@/components/ui/JsonLd";
 import { breadcrumbSchema } from "@/lib/schema";
 import { pageMetadata, SITE_URL, SITE_NAME } from "@/lib/seo";
-import { clinic } from "@/lib/site-data";
 import { mdxComponents } from "@/components/blog/MdxComponents";
 import { getRelatedServicesForPost } from "@/lib/related";
+import { getClinic } from "@/lib/content/store";
 
 export const dynamicParams = false;
 
@@ -56,6 +56,7 @@ export default async function BlogPostPage({
 }: {
   params: Promise<{ slug: string }>;
 }) {
+  const clinic = await getClinic();
   const { slug } = await params;
   const post = getPost(slug);
   if (!post) notFound();

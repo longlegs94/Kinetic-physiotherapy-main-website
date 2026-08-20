@@ -4,13 +4,11 @@ import { isValidEmail } from "@/lib/contact";
  * Validation and mutation for the parts of the content file the portal can
  * edit: the practitioner list and the clinic block.
  *
- * The important property here is that the portal never writes JSON a user
- * supplied. It loads the current file, applies one of the narrow mutations
- * below to a parsed copy, and writes the result. Each mutation rebuilds the
- * affected object field by field from a fixed list, so a crafted form post
- * cannot introduce new keys, replace unrelated sections, or smuggle a value of
- * the wrong type into content that pages render and that JSON-LD publishes to
- * Google. The blast radius of the whole write path is "the fields on the form".
+ * The important property here is that nothing downstream ever sees raw form
+ * input. These validators return a closed set of typed fields, and the store
+ * maps exactly those onto database columns, so a crafted post cannot reach a
+ * column the form doesn't expose — `needs_verification` in particular, which
+ * decides whether an unconfirmed credential is published.
  *
  * Validation follows the lib/contact.ts idiom — plain functions returning a
  * list of human-readable errors, so the same rules can be unit tested without
@@ -157,88 +155,6 @@ export function validatePractitioner(form: {
   return errors.length > 0 ? { ok: false, errors } : { ok: true, value };
 }
 
-/**
- * Builds the practitioner object as it is stored.
- *
- * Optional fields are omitted rather than written as empty strings, so the
- * file keeps the shape it has today and components can keep using presence
- * checks. `needsVerification` is carried over from the existing entry rather
- * than taken from the form: whether a credential has been confirmed is not a
- * claim the portal should let someone make about themselves in passing.
- */
-function buildPractitioner(
-  input: PractitionerInput,
-  previous?: Record<string, unknown>
-): Record<string, unknown> {
-  const record: Record<string, unknown> = {
-    name: input.name,
-    title: input.title,
-    category: input.category,
-  };
-  if (input.bio) record.bio = input.bio;
-  if (input.specialInterests.length > 0) record.specialInterests = input.specialInterests;
-  if (input.languages.length > 0) record.languages = input.languages;
-  record.icbcAccepted = input.icbcAccepted;
-  if (input.schedule) record.schedule = input.schedule;
-  if (input.bookingUrl) record.bookingUrl = input.bookingUrl;
-
-  // Preserve fields the portal doesn't expose, so editing a bio can't silently
-  // drop a photo set elsewhere.
-  if (previous && typeof previous.image === "string") record.image = previous.image;
-  if (previous && previous.needsVerification === true) record.needsVerification = true;
-
-  return record;
-}
-
-type ContentShape = Record<string, unknown> & {
-  practitioners?: unknown;
-  clinic?: unknown;
-};
-
-function practitionerList(content: unknown): Record<string, unknown>[] {
-  const list = (content as ContentShape)?.practitioners;
-  if (!Array.isArray(list)) {
-    throw new Error("The content file has no practitioners list.");
-  }
-  return list as Record<string, unknown>[];
-}
-
-/** Reads a practitioner for editing. Index-based because the file has no ids
- *  and names are not guaranteed unique. */
-export function getPractitioner(content: unknown, index: number): Record<string, unknown> | null {
-  const list = practitionerList(content);
-  return list[index] ?? null;
-}
-
-export function listPractitioners(content: unknown): Record<string, unknown>[] {
-  return practitionerList(content);
-}
-
-export function upsertPractitioner(
-  content: unknown,
-  index: number | null,
-  input: PractitionerInput
-): unknown {
-  const list = practitionerList(content);
-  const next = [...list];
-
-  if (index === null) {
-    next.push(buildPractitioner(input));
-  } else {
-    const previous = next[index];
-    if (!previous) throw new Error("That therapist no longer exists — reload and try again.");
-    next[index] = buildPractitioner(input, previous);
-  }
-
-  return { ...(content as ContentShape), practitioners: next };
-}
-
-export function removePractitioner(content: unknown, index: number): unknown {
-  const list = practitionerList(content);
-  if (!list[index]) throw new Error("That therapist no longer exists — reload and try again.");
-  return { ...(content as ContentShape), practitioners: list.filter((_, i) => i !== index) };
-}
-
 /* ------------------------------------------------------------------ *
  * Clinic block
  * ------------------------------------------------------------------ */
@@ -343,54 +259,4 @@ export function validateClinic(form: { get(name: string): unknown; getAll(name: 
   }
 
   return errors.length > 0 ? { ok: false, errors } : { ok: true, value };
-}
-
-export function applyClinic(content: unknown, input: ClinicInput): unknown {
-  const previous = (content as ContentShape)?.clinic;
-  if (!previous || typeof previous !== "object") {
-    throw new Error("The content file has no clinic block.");
-  }
-  const prev = previous as Record<string, unknown>;
-
-  const clinic: Record<string, unknown> = {
-    name: input.name,
-    positioning: input.positioning,
-    city: input.city,
-    province: input.province,
-    country: input.country,
-    address: input.address,
-    phone: input.phone,
-    email: input.email,
-  };
-  if (input.fax) clinic.fax = input.fax;
-  clinic.janeBookingUrl = input.janeBookingUrl;
-
-  const socials: Record<string, string> = {};
-  if (input.facebook) socials.facebook = input.facebook;
-  if (input.instagram) socials.instagram = input.instagram;
-  if (Object.keys(socials).length > 0) clinic.socials = socials;
-
-  // Hours keep whatever verification flag their row already carried, matched
-  // by the days label, so re-saving the form doesn't quietly mark unconfirmed
-  // hours as confirmed.
-  const previousHours = Array.isArray(prev.hours) ? (prev.hours as Record<string, unknown>[]) : [];
-  clinic.hours = input.hours.map((row) => {
-    const match = previousHours.find((h) => h.days === row.days);
-    return match?.needsVerification === true
-      ? { days: row.days, hours: row.hours, needsVerification: true }
-      : { days: row.days, hours: row.hours, needsVerification: false };
-  });
-
-  // Trust badges are not on this form; carry them through untouched.
-  if (prev.trustBadges !== undefined) clinic.trustBadges = prev.trustBadges;
-
-  return { ...(content as ContentShape), clinic };
-}
-
-export function getClinic(content: unknown): Record<string, unknown> {
-  const clinic = (content as ContentShape)?.clinic;
-  if (!clinic || typeof clinic !== "object") {
-    throw new Error("The content file has no clinic block.");
-  }
-  return clinic as Record<string, unknown>;
 }

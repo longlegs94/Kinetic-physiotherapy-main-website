@@ -1,4 +1,4 @@
-import { clinic, janeBookingUrl, type Service, type Faq } from "./site-data";
+import { clinic as bundledClinic, type Clinic, type Service, type Faq } from "./site-data";
 import { SITE_URL } from "./seo";
 
 /**
@@ -13,7 +13,14 @@ const geo = {
   longitude: -122.601,
 };
 
-export function localBusinessSchema() {
+/**
+ * The clinic's structured data, built from live values.
+ *
+ * Takes the clinic as an argument rather than importing it: this block is what
+ * Google reads for the phone number, address and opening hours, so it has to
+ * reflect what the portal last saved, not what was true at build time.
+ */
+export function localBusinessSchema(clinic: Clinic, janeBookingUrl: string) {
   return {
     "@context": "https://schema.org",
     "@type": "MedicalClinic",
@@ -79,12 +86,12 @@ export function serviceSchema(service: Service) {
     url: `${SITE_URL}/${service.slug}`,
     provider: {
       "@type": "MedicalClinic",
-      name: clinic.name,
+      name: bundledClinic.name,
       "@id": `${SITE_URL}/#clinic`,
     },
     areaServed: {
       "@type": "City",
-      name: `${clinic.city}, ${clinic.province}`,
+      name: `${bundledClinic.city}, ${bundledClinic.province}`,
     },
   };
 }

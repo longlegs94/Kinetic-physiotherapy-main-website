@@ -1,26 +1,53 @@
 import Link from "next/link";
-import { Building2, ExternalLink, Users } from "lucide-react";
+import { Building2, ExternalLink, History, Users } from "lucide-react";
 
 import { getAdminSession } from "@/lib/admin/auth";
 import { SESSION_TTL_SECONDS } from "@/lib/admin/session";
-import { readContent, contentOf } from "@/lib/admin/content-source";
-import { listPractitioners } from "@/lib/admin/content-schema";
+import { listPractitioners, recentChanges } from "@/lib/content/admin-store";
+import { readConfigured, writeConfigured } from "@/lib/content/supabase";
 import { LoadErrorNotice, ReadOnlyNotice } from "@/components/admin/StatusBanners";
 
 export const metadata = { title: "Dashboard" };
 
+/** Relative time, so "3 hours ago" reads faster than a timestamp for the
+ *  question this list answers: has anything changed recently? */
+function timeAgo(iso: string): string {
+  const seconds = Math.max(0, (Date.now() - new Date(iso).getTime()) / 1000);
+  const units: [number, string][] = [
+    [60, "just now"],
+    [3600, "minute"],
+    [86400, "hour"],
+    [2592000, "day"],
+  ];
+  if (seconds < 60) return "just now";
+  for (let i = 1; i < units.length; i += 1) {
+    if (seconds < units[i][0]) {
+      const n = Math.floor(seconds / units[i - 1][0]);
+      return `${n} ${units[i][1]}${n === 1 ? "" : "s"} ago`;
+    }
+  }
+  return new Date(iso).toLocaleDateString("en-CA");
+}
+
 export default async function DashboardPage() {
   const session = await getAdminSession();
-  const source = await readContent();
-  const practitioners = listPractitioners(contentOf(source));
   const hours = Math.round(SESSION_TTL_SECONDS / 3600);
+
+  let count = 0;
+  let loadError: string | null = null;
+  try {
+    count = readConfigured() ? (await listPractitioners()).length : 0;
+  } catch (e) {
+    loadError = e instanceof Error ? e.message : "Couldn't reach the database.";
+  }
+  const changes = await recentChanges(8);
 
   const sections = [
     {
       href: "/admin/team",
       icon: Users,
       title: "Therapists",
-      description: `${practitioners.length} on the public team page. Add someone new, update a bio, or remove a leaver.`,
+      description: `${count} on the public team page. Add someone new, update a bio, or remove a leaver.`,
     },
     {
       href: "/admin/clinic",
@@ -42,8 +69,8 @@ export default async function DashboardPage() {
         </p>
       </div>
 
-      {source.mode === "bundled" && <ReadOnlyNotice />}
-      {source.mode === "error" && <LoadErrorNotice message={source.message} />}
+      {loadError && <LoadErrorNotice message={loadError} />}
+      {!writeConfigured() && !loadError && <ReadOnlyNotice />}
 
       <div className="grid gap-4 sm:grid-cols-2">
         {sections.map(({ href, icon: Icon, title, description }) => (
@@ -60,6 +87,25 @@ export default async function DashboardPage() {
           </Link>
         ))}
       </div>
+
+      {changes.length > 0 && (
+        <div>
+          <h2 className="flex items-center gap-2 font-heading text-sm font-bold uppercase tracking-wide text-charcoal/50">
+            <History className="h-4 w-4" aria-hidden="true" />
+            Recent changes
+          </h2>
+          <ul className="mt-3 divide-y divide-silver/60 rounded-card border border-silver/70 bg-white">
+            {changes.map((change) => (
+              <li key={change.id} className="flex flex-wrap items-baseline gap-x-3 gap-y-1 px-5 py-3">
+                <span className="text-[15px] text-charcoal">{change.summary}</span>
+                <span className="text-sm text-charcoal/50">
+                  {change.actorEmail} · {timeAgo(change.changedAt)}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
 
       <div>
         <h2 className="font-heading text-sm font-bold uppercase tracking-wide text-charcoal/50">

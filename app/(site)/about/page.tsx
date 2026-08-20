@@ -8,9 +8,9 @@ import { ScrollReveal } from "@/components/motion/ScrollReveal";
 import { StaggeredGrid, ScrollItem } from "@/components/motion/StaggeredGrid";
 import { JsonLd } from "@/components/ui/JsonLd";
 import { breadcrumbSchema } from "@/lib/schema";
-import { clinic } from "@/lib/site-data";
 import { pageMetadata } from "@/lib/seo";
 import { BookButton } from "@/components/ui/BookButton";
+import { getClinic } from "@/lib/content/store";
 
 export const metadata = pageMetadata({
   title: "About Kinetic Therapy Clinic | Multidisciplinary Care in Maple Ridge",
@@ -47,7 +47,8 @@ const values = [
   },
 ];
 
-export default function AboutPage() {
+export default async function AboutPage() {
+  const clinic = await getClinic();
   return (
     <>
       <JsonLd data={breadcrumbSchema(crumbs)} />

@@ -1,7 +1,7 @@
 "use client";
 
 import { Phone } from "lucide-react";
-import { clinic, phoneHref } from "@/lib/site-data";
+import { useSiteData } from "@/components/providers/SiteDataProvider";
 import { trackEvent } from "@/lib/analytics";
 import { cn } from "@/lib/utils";
 
@@ -37,6 +37,7 @@ export function CallButton({
   showNumber = true,
   label = "Call the Clinic",
 }: CallButtonProps) {
+  const { clinic, phoneHref } = useSiteData();
   return (
     <a
       href={phoneHref}

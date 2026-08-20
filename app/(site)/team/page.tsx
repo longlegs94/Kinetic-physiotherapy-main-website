@@ -7,9 +7,9 @@ import { FinalCTA } from "@/components/sections/FinalCTA";
 import { StaggeredGrid, ScrollItem } from "@/components/motion/StaggeredGrid";
 import { JsonLd } from "@/components/ui/JsonLd";
 import { breadcrumbSchema } from "@/lib/schema";
-import { practitioners } from "@/lib/site-data";
 import { pageMetadata } from "@/lib/seo";
 import { BookButton } from "@/components/ui/BookButton";
+import { getPractitioners } from "@/lib/content/store";
 
 export const metadata = pageMetadata({
   title: "Our Team in Maple Ridge — Physiotherapists, RMTs & More | Kinetic Therapy Clinic",
@@ -32,7 +32,8 @@ const disciplineOrder = [
   "Naturotherapy and Lactation",
 ];
 
-export default function TeamPage() {
+export default async function TeamPage() {
+  const practitioners = await getPractitioners();
   const groups = disciplineOrder
     .map((category) => ({
       category,

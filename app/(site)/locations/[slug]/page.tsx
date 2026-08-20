@@ -2,7 +2,6 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { MapPin, ParkingCircle, ShieldCheck, ArrowRight } from "lucide-react";
-import { clinic, practitioners } from "@/lib/site-data";
 import { pageMetadata } from "@/lib/seo";
 import { Section, Container } from "@/components/layout/Section";
 import { PageHero } from "@/components/layout/PageHero";
@@ -17,6 +16,7 @@ import { StaggeredGrid, ScrollItem } from "@/components/motion/StaggeredGrid";
 import { JsonLd } from "@/components/ui/JsonLd";
 import { breadcrumbSchema } from "@/lib/schema";
 import { locations, getLocation, resolveLocationServices, locationSchema } from "@/content/locations";
+import { getClinic, getPractitioners } from "@/lib/content/store";
 
 export const dynamicParams = false;
 
@@ -44,6 +44,8 @@ export default async function LocationPage({
 }: {
   params: Promise<{ slug: string }>;
 }) {
+  const practitioners = await getPractitioners();
+  const clinic = await getClinic();
   const { slug } = await params;
   const location = getLocation(slug);
   if (!location) notFound();

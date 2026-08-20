@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { Sparkles, ArrowRight, Phone } from "lucide-react";
 import { trackEvent } from "@/lib/analytics";
-import { janeBookingUrl, clinic, phoneHref } from "@/lib/site-data";
+import { useSiteData } from "@/components/providers/SiteDataProvider";
 
 type ServiceLink = { name: string; slug: string };
 
@@ -25,6 +25,7 @@ const MAX_INPUT_LENGTH = 300;
  * widget. Never throws — falls back to a graceful offline message.
  */
 export function SymptomRouter() {
+  const { clinic, phoneHref, janeBookingUrl } = useSiteData();
   const [input, setInput] = useState("");
   const [pending, setPending] = useState(false);
   const [result, setResult] = useState<Result | null>(null);

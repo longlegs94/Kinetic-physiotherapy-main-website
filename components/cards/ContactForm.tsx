@@ -3,7 +3,7 @@
 import { useState, type FormEvent } from "react";
 import Link from "next/link";
 import { Send, CheckCircle2, AlertCircle, ArrowRight } from "lucide-react";
-import { clinic } from "@/lib/site-data";
+import { useSiteData } from "@/components/providers/SiteDataProvider";
 import { trackEvent } from "@/lib/analytics";
 import { cn } from "@/lib/utils";
 import { CONTACT_CATEGORIES, CALLBACK_TIMES } from "@/lib/contact";
@@ -27,6 +27,7 @@ const labelClass = "mb-1.5 block text-sm font-semibold text-charcoal";
  * Includes a honeypot field for basic spam protection.
  */
 export function ContactForm() {
+  const { clinic } = useSiteData();
   const [status, setStatus] = useState<Status>("idle");
   const [error, setError] = useState<string>("");
   const [category, setCategory] = useState<string>("Booking");

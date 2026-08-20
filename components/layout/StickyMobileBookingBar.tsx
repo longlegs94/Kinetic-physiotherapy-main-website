@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { Calendar, Phone } from "lucide-react";
-import { janeBookingUrl, phoneHref, clinic } from "@/lib/site-data";
+import { useSiteData } from "@/components/providers/SiteDataProvider";
 import { trackEvent } from "@/lib/analytics";
 
 /** Pages that render their own dedicated sticky CTA and must not stack this one. */
@@ -14,6 +14,7 @@ const SUPPRESSED_PATHS = ["/icbc-claims"];
  * the page so booking is always one tap away.
  */
 export function StickyMobileBookingBar() {
+  const { clinic, phoneHref, janeBookingUrl } = useSiteData();
   const pathname = usePathname();
   const [visible, setVisible] = useState(false);
 

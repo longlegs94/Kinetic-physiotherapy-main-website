@@ -1,23 +1,7 @@
 import { describe, expect, it } from "vitest";
 
-import { collectContentEnvProblems } from "@/lib/admin/content-repo";
-import type { ClinicInput, PractitionerInput } from "@/lib/admin/content-schema";
-import {
-  applyClinic,
-  getPractitioner,
-  listPractitioners,
-  removePractitioner,
-  upsertPractitioner,
-  validateClinic,
-  validatePractitioner,
-} from "@/lib/admin/content-schema";
-
-/** The shape of the parts of site-content.json these tests touch. */
-type ContentDoc = {
-  clinic: Record<string, unknown>;
-  practitioners: Record<string, unknown>[];
-  services: unknown[];
-};
+import { validateClinic, validatePractitioner } from "@/lib/admin/content-schema";
+import { collectSupabaseEnvProblems } from "@/lib/content/supabase";
 
 /* ------------------------------------------------------------------ *
  * validatePractitioner
@@ -121,136 +105,6 @@ describe("validatePractitioner", () => {
  * upsertPractitioner / removePractitioner / getPractitioner / listPractitioners
  * ------------------------------------------------------------------ */
 
-function practitionerInput(overrides: Partial<PractitionerInput> = {}): PractitionerInput {
-  return {
-    name: "Priya Singh",
-    title: "Physiotherapist",
-    category: "Physiotherapy",
-    bio: "",
-    specialInterests: [],
-    languages: [],
-    icbcAccepted: false,
-    schedule: "",
-    bookingUrl: "",
-    ...overrides,
-  };
-}
-
-function sampleContent(): ContentDoc {
-  return {
-    clinic: { name: "Kinetic Physiotherapy" },
-    practitioners: [
-      { name: "Alex Chen", title: "RMT", category: "Massage Therapy", icbcAccepted: true },
-      {
-        name: "Bo Nguyen",
-        title: "Physiotherapist",
-        category: "Physiotherapy",
-        icbcAccepted: false,
-        image: "/photos/bo.jpg",
-        needsVerification: true,
-      },
-    ],
-    services: [],
-  };
-}
-
-describe("upsertPractitioner", () => {
-  it("appends when index is null", () => {
-    const content = sampleContent();
-    const result = upsertPractitioner(content, null, practitionerInput({ name: "Cy Park" })) as ContentDoc;
-    expect(result.practitioners).toHaveLength(3);
-    expect(result.practitioners[2].name).toBe("Cy Park");
-  });
-
-  it("replaces in place when given an index, without changing the list length", () => {
-    const content = sampleContent();
-    const input = practitionerInput({ name: "Alex Chen Jr" });
-    const result = upsertPractitioner(content, 0, input) as ContentDoc;
-    expect(result.practitioners).toHaveLength(2);
-    expect(result.practitioners[0].name).toBe("Alex Chen Jr");
-    expect(result.practitioners[1].name).toBe("Bo Nguyen");
-  });
-
-  it(
-    "preserves an existing image and needsVerification:true on edit, so a portal edit can't " +
-      "silently mark an unverified credential verified or drop a photo the form doesn't expose",
-    () => {
-      const content = sampleContent();
-      const input = practitionerInput({ name: "Bo Nguyen", bio: "Updated bio" });
-      const result = upsertPractitioner(content, 1, input) as ContentDoc;
-      expect(result.practitioners[1].image).toBe("/photos/bo.jpg");
-      expect(result.practitioners[1].needsVerification).toBe(true);
-    }
-  );
-
-  it("does not invent needsVerification or image when the previous entry had neither", () => {
-    const content = sampleContent();
-    const result = upsertPractitioner(content, 0, practitionerInput({ name: "Alex Chen" })) as ContentDoc;
-    expect(result.practitioners[0]).not.toHaveProperty("needsVerification");
-    expect(result.practitioners[0]).not.toHaveProperty("image");
-  });
-
-  it("omits optional fields entirely rather than writing empty strings", () => {
-    const content = sampleContent();
-    const result = upsertPractitioner(content, null, practitionerInput()) as ContentDoc;
-    const added = result.practitioners[2];
-    expect(added).not.toHaveProperty("bio");
-    expect(added).not.toHaveProperty("specialInterests");
-    expect(added).not.toHaveProperty("languages");
-    expect(added).not.toHaveProperty("schedule");
-    expect(added).not.toHaveProperty("bookingUrl");
-  });
-
-  it("leaves other top-level keys (clinic, services) untouched", () => {
-    const content = sampleContent();
-    const result = upsertPractitioner(content, null, practitionerInput()) as ContentDoc;
-    expect(result.clinic).toBe(content.clinic);
-    expect(result.services).toBe(content.services);
-  });
-
-  it("throws for an out-of-range index", () => {
-    const content = sampleContent();
-    expect(() => upsertPractitioner(content, 5, practitionerInput())).toThrow();
-  });
-});
-
-describe("removePractitioner", () => {
-  it("removes only the target and leaves the rest in order", () => {
-    const content: ContentDoc = {
-      clinic: { name: "Kinetic Physiotherapy" },
-      practitioners: [
-        { name: "Alex Chen", title: "RMT", category: "Massage Therapy" },
-        { name: "Bo Nguyen", title: "Physiotherapist", category: "Physiotherapy" },
-        { name: "Cy Park", title: "Physiotherapist", category: "Physiotherapy" },
-      ],
-      services: [],
-    };
-    const result = removePractitioner(content, 1) as ContentDoc;
-    expect(result.practitioners.map((p) => p.name)).toEqual(["Alex Chen", "Cy Park"]);
-  });
-
-  it("throws for an out-of-range index", () => {
-    const content = sampleContent();
-    expect(() => removePractitioner(content, 5)).toThrow();
-  });
-});
-
-describe("getPractitioner / listPractitioners", () => {
-  it("getPractitioner returns the entry at the index, or null past the end", () => {
-    const content = sampleContent();
-    expect(getPractitioner(content, 1)?.name).toBe("Bo Nguyen");
-    expect(getPractitioner(content, 5)).toBeNull();
-  });
-
-  it("listPractitioners throws when the content has no practitioners array", () => {
-    expect(() => listPractitioners({ clinic: {} })).toThrow();
-  });
-});
-
-/* ------------------------------------------------------------------ *
- * validateClinic
- * ------------------------------------------------------------------ */
-
 describe("validateClinic", () => {
   function clinicForm(
     overrides: Record<string, string> = {},
@@ -352,132 +206,56 @@ describe("validateClinic", () => {
  * applyClinic
  * ------------------------------------------------------------------ */
 
-function baseClinicContent(): ContentDoc {
-  return {
-    clinic: {
-      name: "Old Name",
-      positioning: "Old tagline",
-      city: "Vancouver",
-      province: "British Columbia",
-      country: "Canada",
-      address: "1 Old St",
-      phone: "604-000-0000",
-      email: "old@example.com",
-      fax: "604-000-1111",
-      janeBookingUrl: "https://old.janeapp.com",
-      socials: { facebook: "https://facebook.com/old" },
-      trustBadges: ["College of Massage Therapists of BC"],
-      hours: [
-        { days: "Mon–Fri", hours: "8:00am–6:00pm", needsVerification: true },
-        { days: "Sat", hours: "9:00am–2:00pm", needsVerification: false },
-      ],
-    },
-    practitioners: [],
-    services: [],
-  };
-}
+describe("collectSupabaseEnvProblems", () => {
+  const URL_OK = "https://abcdefgh.supabase.co";
 
-function clinicInput(overrides: Partial<ClinicInput> = {}): ClinicInput {
-  return {
-    name: "New Name",
-    positioning: "New tagline",
-    city: "Vancouver",
-    province: "British Columbia",
-    country: "Canada",
-    address: "2 New St",
-    phone: "604-111-2222",
-    email: "new@example.com",
-    fax: "",
-    janeBookingUrl: "https://new.janeapp.com",
-    facebook: "",
-    instagram: "",
-    hours: [{ days: "Mon–Fri", hours: "8:00am–6:00pm" }],
-    ...overrides,
-  };
-}
-
-describe("applyClinic", () => {
-  it("writes the edited fields", () => {
-    const result = applyClinic(baseClinicContent(), clinicInput()) as ContentDoc;
-    expect(result.clinic.name).toBe("New Name");
-    expect(result.clinic.address).toBe("2 New St");
-    expect(result.clinic.phone).toBe("604-111-2222");
+  it("is silent when the database isn't configured at all", () => {
+    // A valid state: the site serves the content bundled at build time.
+    expect(collectSupabaseEnvProblems({})).toEqual([]);
   });
 
-  it("omits fax and socials when blank rather than writing empty values", () => {
-    const input = clinicInput({ fax: "", facebook: "", instagram: "" });
-    const result = applyClinic(baseClinicContent(), input) as ContentDoc;
-    expect(result.clinic).not.toHaveProperty("fax");
-    expect(result.clinic).not.toHaveProperty("socials");
+  it("is silent for a complete read-and-write configuration", () => {
+    expect(
+      collectSupabaseEnvProblems({
+        SUPABASE_URL: URL_OK,
+        SUPABASE_ANON_KEY: "anon",
+        SUPABASE_SERVICE_ROLE_KEY: "service",
+      })
+    ).toEqual([]);
   });
 
-  it("carries trustBadges through untouched, since the form does not expose them", () => {
-    const content = baseClinicContent();
-    const result = applyClinic(content, clinicInput()) as ContentDoc;
-    expect(result.clinic.trustBadges).toBe(content.clinic.trustBadges);
+  it("accepts read-only configuration, since a viewer deployment is legitimate", () => {
+    expect(
+      collectSupabaseEnvProblems({ SUPABASE_URL: URL_OK, SUPABASE_ANON_KEY: "anon" })
+    ).toEqual([]);
   });
 
-  it("preserves needsVerification:true on an hours row whose days label is unchanged", () => {
-    // Re-saving the form must not quietly promote an unconfirmed hours row to
-    // confirmed just because the admin edited an unrelated field.
-    const content = baseClinicContent();
-    const input = clinicInput({
-      hours: [
-        { days: "Mon–Fri", hours: "8:00am–6:00pm" },
-        { days: "Sun", hours: "Closed" },
-      ],
+  it("flags a key with no URL to point it at", () => {
+    const problems = collectSupabaseEnvProblems({ SUPABASE_ANON_KEY: "anon" });
+    expect(problems.map((p) => p.variable)).toContain("SUPABASE_URL");
+  });
+
+  it("flags a URL with no key to read with", () => {
+    const problems = collectSupabaseEnvProblems({ SUPABASE_URL: URL_OK });
+    expect(problems.map((p) => p.variable)).toContain("SUPABASE_ANON_KEY");
+  });
+
+  it("flags a malformed URL", () => {
+    const problems = collectSupabaseEnvProblems({
+      SUPABASE_URL: "abcdefgh.supabase.co",
+      SUPABASE_ANON_KEY: "anon",
     });
-    const result = applyClinic(content, input) as ContentDoc;
-    expect(result.clinic.hours).toEqual([
-      { days: "Mon–Fri", hours: "8:00am–6:00pm", needsVerification: true },
-      { days: "Sun", hours: "Closed", needsVerification: false },
-    ]);
+    expect(problems[0].variable).toBe("SUPABASE_URL");
   });
 
-  it("leaves other top-level keys untouched", () => {
-    const content = baseClinicContent();
-    const result = applyClinic(content, clinicInput()) as ContentDoc;
-    expect(result.practitioners).toBe(content.practitioners);
-    expect(result.services).toBe(content.services);
-  });
-});
-
-/* ------------------------------------------------------------------ *
- * collectContentEnvProblems
- * ------------------------------------------------------------------ */
-
-describe("collectContentEnvProblems", () => {
-  it("is silent when neither variable is set", () => {
-    // The default for this repo: content editing off, portal degrades to a
-    // viewer, not a misconfiguration worth failing a build over.
-    expect(collectContentEnvProblems({})).toEqual([]);
-  });
-
-  it("is silent when both are set correctly", () => {
-    const problems = collectContentEnvProblems({
-      CONTENT_GITHUB_TOKEN: "x",
-      CONTENT_GITHUB_REPO: "a/b",
+  it("flags the anon key being pasted in as the service role key", () => {
+    // An easy mistake in a settings screen, and one that produces a portal
+    // whose Save buttons fail on click rather than anything obviously wrong.
+    const problems = collectSupabaseEnvProblems({
+      SUPABASE_URL: URL_OK,
+      SUPABASE_ANON_KEY: "same",
+      SUPABASE_SERVICE_ROLE_KEY: "same",
     });
-    expect(problems).toEqual([]);
-  });
-
-  it("flags a token with no repo to write to", () => {
-    const problems = collectContentEnvProblems({ CONTENT_GITHUB_TOKEN: "x" });
-    expect(problems.map((p) => p.variable)).toContain("CONTENT_GITHUB_REPO");
-  });
-
-  it("flags a repo with no token to authenticate the write", () => {
-    const problems = collectContentEnvProblems({ CONTENT_GITHUB_REPO: "a/b" });
-    expect(problems.map((p) => p.variable)).toContain("CONTENT_GITHUB_TOKEN");
-  });
-
-  it("flags a CONTENT_GITHUB_REPO that is not owner/repo form", () => {
-    const problems = collectContentEnvProblems({
-      CONTENT_GITHUB_TOKEN: "x",
-      CONTENT_GITHUB_REPO: "not-a-slug",
-    });
-    expect(problems).toHaveLength(1);
-    expect(problems[0].variable).toBe("CONTENT_GITHUB_REPO");
-    expect(problems[0].problem).toMatch(/owner\/repo/);
+    expect(problems.map((p) => p.variable)).toContain("SUPABASE_SERVICE_ROLE_KEY");
   });
 });

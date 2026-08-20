@@ -3,9 +3,10 @@ import { SectionHeading } from "@/components/ui/SectionHeading";
 import { PractitionerCard } from "@/components/cards/PractitionerCard";
 import { LinkButton } from "@/components/ui/Button";
 import { StaggeredGrid, ScrollItem } from "@/components/motion/StaggeredGrid";
-import { practitioners } from "@/lib/site-data";
+import { getPractitioners } from "@/lib/content/store";
 
-export function FeaturedPractitioners() {
+export async function FeaturedPractitioners() {
+  const practitioners = await getPractitioners();
   const featured = practitioners.slice(0, 4);
 
   return (

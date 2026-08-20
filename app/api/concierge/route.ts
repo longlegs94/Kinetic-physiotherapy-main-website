@@ -13,7 +13,8 @@ import { isAiAssistantAvailable } from "@/lib/ai-config";
 import { checkRateLimit } from "@/lib/rate-limit";
 import { detectRedFlags, emergencyMessage } from "@/lib/red-flags";
 import { getClientIp, isAllowedOrigin, readJsonObject } from "@/lib/request";
-import { clinic, services } from "@/lib/site-data";
+import { services } from "@/lib/site-data";
+import { getClinic } from "@/lib/content/store";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -38,7 +39,6 @@ const client = new OpenAI({
 
 // Module scope so the system prompt text is byte-stable across requests,
 // which lets OpenAI's automatic prompt caching reuse the cached prefix.
-const SYSTEM_PROMPT = buildSystemPrompt();
 
 const VALID_SLUGS = new Set(services.map((s) => s.slug));
 
@@ -120,6 +120,9 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
+  // Read per request: the prompt quotes the clinic's live hours, phone and
+  // address, and a module constant would freeze them at deploy time.
+  const clinic = await getClinic();
   if (!isAllowedOrigin(request)) {
     return NextResponse.json({ error: "forbidden" }, { status: 403 });
   }
@@ -189,7 +192,7 @@ export async function POST(request: Request) {
     const response = await client.chat.completions.create({
       model: CONCIERGE_MODEL,
       max_completion_tokens: 1024,
-      messages: [{ role: "system", content: SYSTEM_PROMPT }, ...conversation],
+      messages: [{ role: "system", content: buildSystemPrompt(clinic) }, ...conversation],
       response_format: {
         type: "json_schema",
         json_schema: { name: CONCIERGE_SCHEMA_NAME, schema: CONCIERGE_SCHEMA, strict: true },

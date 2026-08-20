@@ -1,36 +1,10 @@
-import { readContent, contentOf } from "@/lib/admin/content-source";
-import { getClinic } from "@/lib/admin/content-schema";
-import { ClinicForm, type ClinicDefaults } from "@/components/admin/ClinicForm";
+import { getClinicForEditing } from "@/lib/content/admin-store";
+import { writeConfigured } from "@/lib/content/supabase";
+import { ClinicForm } from "@/components/admin/ClinicForm";
 import { SuccessMessage } from "@/components/admin/FormFields";
-import {
-  DeployPendingNotice,
-  LoadErrorNotice,
-  ReadOnlyNotice,
-} from "@/components/admin/StatusBanners";
+import { DeployPendingNotice, LoadErrorNotice, ReadOnlyNotice } from "@/components/admin/StatusBanners";
 
 export const metadata = { title: "Clinic information" };
-
-function defaultsFrom(clinic: Record<string, unknown>): ClinicDefaults {
-  const str = (value: unknown): string => (typeof value === "string" ? value : "");
-  const socials = (clinic.socials ?? {}) as Record<string, unknown>;
-  const hours = Array.isArray(clinic.hours) ? (clinic.hours as Record<string, unknown>[]) : [];
-
-  return {
-    name: str(clinic.name),
-    positioning: str(clinic.positioning),
-    city: str(clinic.city),
-    province: str(clinic.province),
-    country: str(clinic.country),
-    address: str(clinic.address),
-    phone: str(clinic.phone),
-    email: str(clinic.email),
-    fax: str(clinic.fax),
-    janeBookingUrl: str(clinic.janeBookingUrl),
-    facebook: str(socials.facebook),
-    instagram: str(socials.instagram),
-    hours: hours.map((row) => ({ days: str(row.days), hours: str(row.hours) })),
-  };
-}
 
 export default async function ClinicPage({
   searchParams,
@@ -38,9 +12,15 @@ export default async function ClinicPage({
   searchParams: Promise<{ saved?: string }>;
 }) {
   const { saved } = await searchParams;
-  const source = await readContent();
-  const clinic = getClinic(contentOf(source));
-  const canEdit = source.mode === "live";
+  const canEdit = writeConfigured();
+
+  let clinic: Awaited<ReturnType<typeof getClinicForEditing>> | null = null;
+  let loadError: string | null = null;
+  try {
+    clinic = await getClinicForEditing();
+  } catch (e) {
+    loadError = e instanceof Error ? e.message : "Couldn't load the clinic details.";
+  }
 
   return (
     <div className="max-w-2xl space-y-6">
@@ -51,29 +31,27 @@ export default async function ClinicPage({
         </p>
       </div>
 
-      {source.mode === "bundled" && <ReadOnlyNotice />}
-      {source.mode === "error" && <LoadErrorNotice message={source.message} />}
+      {loadError && <LoadErrorNotice message={loadError} />}
+      {!canEdit && !loadError && <ReadOnlyNotice />}
       {saved && (
         <SuccessMessage>
-          Contact information saved. It will appear on the website within about a minute.
+          Contact information saved. It&apos;s already live on the website.
         </SuccessMessage>
       )}
-      {canEdit && <DeployPendingNotice />}
+      {canEdit && !loadError && <DeployPendingNotice />}
 
-      <div className="rounded-card border border-silver/70 bg-white p-6 sm:p-7">
-        {canEdit ? (
-          <ClinicForm defaults={defaultsFrom(clinic)} />
-        ) : (
-          <ReadOnlyClinic defaults={defaultsFrom(clinic)} />
-        )}
-      </div>
+      {clinic && (
+        <div className="rounded-card border border-silver/70 bg-white p-6 sm:p-7">
+          {canEdit ? <ClinicForm defaults={clinic} /> : <ReadOnlyClinic defaults={clinic} />}
+        </div>
+      )}
     </div>
   );
 }
 
 /** Plain rendering of the same values when saving isn't available, so the
  *  screen still answers "what does the site currently say?". */
-function ReadOnlyClinic({ defaults }: { defaults: ClinicDefaults }) {
+function ReadOnlyClinic({ defaults }: { defaults: Awaited<ReturnType<typeof getClinicForEditing>> }) {
   const rows: [string, string][] = [
     ["Phone", defaults.phone],
     ["Email", defaults.email],

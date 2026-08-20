@@ -8,7 +8,7 @@
  */
 import { collectEnvProblems } from "../lib/env";
 import { collectAdminEnvProblems } from "../lib/admin/session";
-import { collectContentEnvProblems } from "../lib/admin/content-repo";
+import { collectSupabaseEnvProblems } from "../lib/content/supabase";
 import { collectUnverifiedContent } from "../lib/verification";
 
 const isProduction =
@@ -18,7 +18,7 @@ const isProduction =
 const problems = [
   ...collectEnvProblems(process.env),
   ...collectAdminEnvProblems(process.env),
-  ...collectContentEnvProblems(process.env),
+  ...collectSupabaseEnvProblems(process.env),
 ];
 const unverified = collectUnverifiedContent();
 

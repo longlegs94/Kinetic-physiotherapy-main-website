@@ -6,6 +6,8 @@ import { aiAssistantEnabled } from "@/lib/ai-config";
 import { Analytics } from "@/components/analytics/Analytics";
 import { JsonLd } from "@/components/ui/JsonLd";
 import { localBusinessSchema } from "@/lib/schema";
+import { SiteDataProvider } from "@/components/providers/SiteDataProvider";
+import { getClinic, resolveBookingUrl } from "@/lib/content/store";
 
 /**
  * Chrome for the public marketing site.
@@ -15,18 +17,26 @@ import { localBusinessSchema } from "@/lib/schema";
  * at /admin can opt out of all of this: header, footer, booking bar, concierge
  * bubble, analytics, and the LocalBusiness schema are visitor-facing and have
  * no business wrapping a login form.
+ *
+ * This is also where the clinic's contact details enter the tree. Reading them
+ * once here and passing them down means a phone number changed in the portal
+ * reaches the header, the footer, the booking bar and the structured data in
+ * the same render, rather than each of them holding its own build-time copy.
  */
-export default function SiteLayout({
+export default async function SiteLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const clinic = await getClinic();
+  const janeBookingUrl = resolveBookingUrl(clinic);
+
   return (
-    <>
+    <SiteDataProvider clinic={clinic} janeBookingUrl={janeBookingUrl}>
       <a href="#main" className="skip-link">
         Skip to content
       </a>
-      <JsonLd data={localBusinessSchema()} />
+      <JsonLd data={localBusinessSchema(clinic, janeBookingUrl)} />
       <SiteHeader />
       <main id="main">{children}</main>
       <SiteFooter />
@@ -35,6 +45,6 @@ export default function SiteLayout({
           never appears only to report itself unavailable. */}
       {aiAssistantEnabled && <ConciergeWidget />}
       <Analytics />
-    </>
+    </SiteDataProvider>
   );
 }

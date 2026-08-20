@@ -4,7 +4,8 @@ import { useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
 import { X } from "lucide-react";
-import { navigation, clinic } from "@/lib/site-data";
+import { navigation } from "@/lib/site-data";
+import { useSiteData } from "@/components/providers/SiteDataProvider";
 import { Logo } from "./Logo";
 import { BookButton } from "@/components/ui/BookButton";
 import { CallButton } from "@/components/ui/CallButton";
@@ -18,6 +19,7 @@ export function MobileNavSheet({
   open: boolean;
   onClose: () => void;
 }) {
+  const { clinic } = useSiteData();
   // Lock body scroll while open and close on Escape.
   useEffect(() => {
     if (!open) return;

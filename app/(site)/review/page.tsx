@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { Section, Container } from "@/components/layout/Section";
 import { ReviewOptions } from "./ReviewOptions";
-import { clinic, phoneHref } from "@/lib/site-data";
 import { pageMetadata } from "@/lib/seo";
+import { getClinic, telHref } from "@/lib/content/store";
 
 // Funnel page for SMS/email/QR follow-up after a visit — not meant to be
 // found via organic search, so it's excluded from indexing.
@@ -16,7 +16,9 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
-export default function ReviewPage() {
+export default async function ReviewPage() {
+  const clinic = await getClinic();
+  const phoneHref = telHref(clinic.phone);
   return (
     <Section tone="warm" className="flex min-h-[70vh] items-center pt-32 md:pt-40">
       <Container className="max-w-2xl">

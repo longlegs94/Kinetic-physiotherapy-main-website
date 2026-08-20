@@ -1,7 +1,7 @@
 "use client";
 
 import { Phone, CalendarClock } from "lucide-react";
-import { phoneHref, clinic } from "@/lib/site-data";
+import { useSiteData } from "@/components/providers/SiteDataProvider";
 import { trackEvent } from "@/lib/analytics";
 
 /**
@@ -16,6 +16,7 @@ import { trackEvent } from "@/lib/analytics";
  * instead of two stacked bars.
  */
 export function IcbcStickyBar() {
+  const { clinic, phoneHref } = useSiteData();
   return (
     <div className="fixed inset-x-0 bottom-0 z-[70] md:hidden" aria-hidden="false">
       <div className="mx-3 mb-3 flex gap-2 rounded-pill border border-charcoal/10 bg-warm-white p-2 shadow-card">

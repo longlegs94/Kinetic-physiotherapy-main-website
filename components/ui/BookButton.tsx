@@ -2,7 +2,7 @@
 
 import { Calendar } from "lucide-react";
 import { LinkButton } from "./Button";
-import { janeBookingUrl } from "@/lib/site-data";
+import { useSiteData } from "@/components/providers/SiteDataProvider";
 import { trackEvent } from "@/lib/analytics";
 import { cn } from "@/lib/utils";
 
@@ -19,17 +19,21 @@ type BookButtonProps = {
 /** Primary conversion button. Opens Jane booking and fires an analytics event. */
 export function BookButton({
   label = "Book Now",
-  href = janeBookingUrl,
+  href,
   variant = "primary",
   size = "md",
   className,
   withIcon = false,
   source = "generic",
 }: BookButtonProps) {
-  const isJane = href === janeBookingUrl;
+  const { janeBookingUrl } = useSiteData();
+  // Defaulted here rather than in the parameter list: the booking URL is now
+  // read from the database through a hook, which cannot run in a default.
+  const target = href ?? janeBookingUrl;
+  const isJane = target === janeBookingUrl;
   return (
     <LinkButton
-      href={href}
+      href={target}
       external
       variant={variant}
       size={size}
