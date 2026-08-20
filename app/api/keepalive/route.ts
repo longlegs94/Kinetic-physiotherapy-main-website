@@ -1,4 +1,4 @@
-import { readClient } from "@/lib/content/supabase";
+import { readClient, writeConfigured } from "@/lib/content/supabase";
 
 /**
  * Keeps the Supabase project from pausing.
@@ -14,16 +14,20 @@ import { readClient } from "@/lib/content/supabase";
  * someone happens to visit after the content cache expires — not something to
  * depend on.
  *
- * The response also doubles as a health check: it reports whether the database
- * actually answered, so a paused or broken project is visible in the Vercel
- * cron log rather than discovered the next time someone tries to save.
+ * The response also doubles as a health check. It reports whether the database
+ * answered, and whether the portal's write key is present — the two questions
+ * worth being able to ask of a deployment without signing in. Neither answer
+ * exposes a key or any content; `saving` is a boolean about configuration, not
+ * a credential.
  */
 export const dynamic = "force-dynamic";
 
 export async function GET() {
+  const saving = writeConfigured() ? "configured" : "not configured";
+
   const client = readClient();
   if (!client) {
-    return Response.json({ ok: true, database: "not configured" });
+    return Response.json({ ok: true, database: "not configured", saving });
   }
 
   const startedAt = Date.now();
@@ -32,8 +36,11 @@ export async function GET() {
 
   if (error) {
     console.error("Keepalive: database did not respond —", error.message);
-    return Response.json({ ok: false, database: "unreachable", error: error.message }, { status: 503 });
+    return Response.json(
+      { ok: false, database: "unreachable", saving, error: error.message },
+      { status: 503 }
+    );
   }
 
-  return Response.json({ ok: true, database: "awake", ms });
+  return Response.json({ ok: true, database: "awake", saving, ms });
 }
