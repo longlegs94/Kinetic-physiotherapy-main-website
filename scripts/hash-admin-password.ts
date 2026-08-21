@@ -1,7 +1,7 @@
 /**
  * Generates an `ADMIN_USERS` entry for a staff login.
  *
- *   npm run admin:hash -- someone@kinetictherapyclinic.ca
+ *   npm run admin:hash -- someone@kineticphysio.ca
  *
  * Prompts for the password rather than taking it as an argument, so it never
  * lands in shell history or in the process list where other users on the

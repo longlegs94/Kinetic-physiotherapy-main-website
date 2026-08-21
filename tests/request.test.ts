@@ -13,7 +13,7 @@ import {
 const PROD = {
   NODE_ENV: "production",
   VERCEL_ENV: "production",
-  NEXT_PUBLIC_SITE_URL: "https://www.kinetictherapyclinic.ca",
+  NEXT_PUBLIC_SITE_URL: "https://www.kineticphysio.ca",
 };
 
 describe("isProductionRuntime", () => {
@@ -34,7 +34,7 @@ describe("isProductionRuntime", () => {
 
 describe("isAllowedOrigin in production", () => {
   it("allows the canonical site origin", () => {
-    expect(isAllowedOriginValue("https://www.kinetictherapyclinic.ca", null, PROD)).toBe(true);
+    expect(isAllowedOriginValue("https://www.kineticphysio.ca", null, PROD)).toBe(true);
   });
 
   it("denies a missing Origin header", () => {
@@ -54,7 +54,7 @@ describe("isAllowedOrigin in production", () => {
   });
 
   it("denies a lookalike subdomain", () => {
-    expect(isAllowedOriginValue("https://www.kinetictherapyclinic.ca.evil.com", null, PROD)).toBe(false);
+    expect(isAllowedOriginValue("https://www.kineticphysio.ca.evil.com", null, PROD)).toBe(false);
   });
 
   it("denies a malformed Origin", () => {
@@ -103,7 +103,7 @@ describe("same-origin requests in production", () => {
 
   it("still allows the configured canonical host", () => {
     expect(
-      isAllowedOriginValue("https://www.kinetictherapyclinic.ca", otherAlias, PROD)
+      isAllowedOriginValue("https://www.kineticphysio.ca", otherAlias, PROD)
     ).toBe(true);
   });
 
@@ -145,7 +145,7 @@ describe("isAllowedOrigin(request)", () => {
 describe("allowedOriginHosts", () => {
   it("includes the site and the deploy hostname, de-duplicated", () => {
     const hosts = allowedOriginHosts({ ...PROD, VERCEL_URL: "kinetic-abc.vercel.app" });
-    expect(hosts).toContain("www.kinetictherapyclinic.ca");
+    expect(hosts).toContain("www.kineticphysio.ca");
     expect(hosts).toContain("kinetic-abc.vercel.app");
     expect(new Set(hosts).size).toBe(hosts.length);
   });

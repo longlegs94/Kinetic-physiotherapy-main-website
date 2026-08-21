@@ -35,12 +35,39 @@ The failure lands *after* "Collecting build traces" — long past
 If you ever see that error, the cause is a renamed route handler, not the Vercel
 project.
 
-## 3. Environment variables
+## 3. Pointing the clinic's domain at Vercel
+
+The site is served from `kinetic-physiotherapy-main-website.vercel.app` until
+the domain moves. To go live on **www.kineticphysio.ca**:
+
+1. **Vercel → Project → Settings → Domains → Add** `www.kineticphysio.ca`, then
+   add `kineticphysio.ca` and let Vercel redirect it to the `www` version.
+   Vercel then shows the exact records it wants — prefer those over the table
+   below if they differ.
+2. **At the registrar / DNS host**, replace the existing records:
+
+   | Type | Name | Value |
+   |---|---|---|
+   | `CNAME` | `www` | `cname.vercel-dns.com` |
+   | `A` | `@` | `76.76.21.21` |
+
+   Both names currently resolve elsewhere, so whatever is served there now
+   stops being served once these change.
+3. **Set `NEXT_PUBLIC_SITE_URL` to `https://www.kineticphysio.ca`** (see below)
+   and redeploy. Until this is done the build prints a warning, because
+   canonical URLs, `sitemap.xml`, `robots.txt` and the JSON-LD address would
+   otherwise still name the `vercel.app` host — which tells Google the site
+   lives somewhere other than the domain visitors reach it on.
+
+Certificates are issued by Vercel automatically once the records resolve;
+propagation is usually minutes, occasionally up to a few hours.
+
+## 4. Environment variables
 Set these in **Vercel → Project → Settings → Environment Variables** (see `.env.example`):
 
 | Variable | Required | Notes |
 |---|---|---|
-| `NEXT_PUBLIC_SITE_URL` | Yes | Production URL, no trailing slash (e.g. `https://www.kinetictherapyclinic.ca`). Drives canonical URLs, sitemap, and schema. |
+| `NEXT_PUBLIC_SITE_URL` | Yes | Production URL, no trailing slash (e.g. `https://www.kineticphysio.ca`). Drives canonical URLs, sitemap, and schema. |
 | `NEXT_PUBLIC_JANE_BOOKING_URL` | No | Overrides the Jane URL in content if set. |
 | `WEB3FORMS_KEY` | No | Free key from <https://web3forms.com>, read server-side by `app/api/contact/route.ts`. Preferred over `NEXT_PUBLIC_WEB3FORMS_KEY` — it's never exposed to the browser. Without either set, the relay returns 501 and the contact/intake forms fall back to opening the visitor's email app. |
 | `NEXT_PUBLIC_WEB3FORMS_KEY` | No | Legacy client-side fallback for the same key. Only kept so existing deployments that set this continue to work; new setups should use `WEB3FORMS_KEY` instead. |
@@ -72,7 +99,7 @@ To turn it on:
    never passed as an argument, so it stays out of shell history) and prints the
    line to paste:
    ```bash
-   npm run admin:hash -- someone@kinetictherapyclinic.ca
+   npm run admin:hash -- someone@kineticphysio.ca
    ```
 3. **Set `ADMIN_USERS`** to those lines, separated by newlines, commas or
    semicolons. Only hashes go in here — never a plaintext password, since a

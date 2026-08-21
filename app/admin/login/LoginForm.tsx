@@ -52,7 +52,7 @@ export function LoginForm({ next, configured }: { next: string; configured: bool
           autoComplete="username"
           required
           className={fieldClass}
-          placeholder="you@kinetictherapyclinic.ca"
+          placeholder="you@kineticphysio.ca"
         />
       </div>
 

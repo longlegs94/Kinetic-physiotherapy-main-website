@@ -51,7 +51,7 @@ describe("parseGoogleReviewUrl", () => {
 });
 
 describe("collectEnvProblems", () => {
-  const ok = { NEXT_PUBLIC_SITE_URL: "https://www.kinetictherapyclinic.ca" };
+  const ok = { NEXT_PUBLIC_SITE_URL: "https://www.kineticphysio.ca" };
 
   it("passes a well-formed environment", () => {
     expect(collectEnvProblems(ok)).toEqual([]);
@@ -63,9 +63,9 @@ describe("collectEnvProblems", () => {
   });
 
   it.each([
-    ["http (not https)", "http://www.kinetictherapyclinic.ca"],
-    ["trailing slash", "https://www.kinetictherapyclinic.ca/"],
-    ["not a URL", "kinetictherapyclinic"],
+    ["http (not https)", "http://www.kineticphysio.ca"],
+    ["trailing slash", "https://www.kineticphysio.ca/"],
+    ["not a URL", "kineticphysio"],
   ])("flags a site URL with %s", (_label, NEXT_PUBLIC_SITE_URL) => {
     expect(collectEnvProblems({ NEXT_PUBLIC_SITE_URL }).length).toBeGreaterThan(0);
   });
@@ -106,7 +106,7 @@ describe("collectEnvWarnings", () => {
 
   it("is silent once the real domain is in place", () => {
     expect(
-      collectEnvWarnings({ NEXT_PUBLIC_SITE_URL: "https://www.kinetictherapyclinic.ca" })
+      collectEnvWarnings({ NEXT_PUBLIC_SITE_URL: "https://www.kineticphysio.ca" })
     ).toEqual([]);
   });
 
@@ -119,7 +119,7 @@ describe("collectEnvWarnings", () => {
 
   it("does not warn about a domain that merely contains the words", () => {
     expect(
-      collectEnvWarnings({ NEXT_PUBLIC_SITE_URL: "https://vercel.app.kinetictherapyclinic.ca" })
+      collectEnvWarnings({ NEXT_PUBLIC_SITE_URL: "https://vercel.app.kineticphysio.ca" })
     ).toEqual([]);
   });
 });

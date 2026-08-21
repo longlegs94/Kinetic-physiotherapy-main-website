@@ -107,7 +107,7 @@ fires, its params, and the funnel stage / KPI it feeds (see `ROADMAP.md` §3).
 ## 3. Attribution rules
 
 Jane (the booking system) completes the actual appointment booking **off-site**
-— nothing on kinetictherapyclinic.ca can observe whether a Jane session that
+— nothing on kineticphysio.ca can observe whether a Jane session that
 opened actually resulted in a booked appointment. Everything below is therefore
 an intent/leading-indicator signal, not a confirmed booking. This distinction
 must hold every time these numbers are reported, per `ROADMAP.md`'s "instrument
@@ -191,17 +191,17 @@ hyphenated values everywhere — GA4 treats casing as distinct values.
 
 **Review page**, tagged for a post-visit SMS send:
 ```
-https://www.kinetictherapyclinic.ca/review?utm_source=jane&utm_medium=sms&utm_campaign=review-request
+https://www.kineticphysio.ca/review?utm_source=jane&utm_medium=sms&utm_campaign=review-request
 ```
 
 **Review page**, tagged for the in-clinic QR code:
 ```
-https://www.kinetictherapyclinic.ca/review?utm_source=qr&utm_medium=offline&utm_campaign=review-request
+https://www.kineticphysio.ca/review?utm_source=qr&utm_medium=offline&utm_campaign=review-request
 ```
 
 **ICBC Google Ads landing page** (`/icbc-claims`), tagged for a specific ad group:
 ```
-https://www.kinetictherapyclinic.ca/icbc-claims?utm_source=google&utm_medium=cpc&utm_campaign=icbc&utm_content=exact-icbc-physio
+https://www.kineticphysio.ca/icbc-claims?utm_source=google&utm_medium=cpc&utm_campaign=icbc&utm_content=exact-icbc-physio
 ```
 
 Google Ads' auto-tagging (`gclid`) is also fine to rely on for GA4 ↔ Ads linked

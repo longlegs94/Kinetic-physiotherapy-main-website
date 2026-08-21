@@ -3,7 +3,7 @@ import { clinic } from "./site-data";
 import { getClinic } from "./content/store";
 import { withBrand } from "./brand";
 export const SITE_URL = (
-  process.env.NEXT_PUBLIC_SITE_URL || "https://www.kinetictherapyclinic.ca"
+  process.env.NEXT_PUBLIC_SITE_URL || "https://www.kineticphysio.ca"
 ).replace(/\/$/, "");
 
 /**
