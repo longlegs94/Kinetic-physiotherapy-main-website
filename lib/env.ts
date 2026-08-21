@@ -79,6 +79,39 @@ export const googleReviewUrl: string | null = parseGoogleReviewUrl(
 export type EnvProblem = { variable: string; problem: string };
 
 /**
+ * Configuration that is valid today but will be wrong later.
+ *
+ * Distinct from `collectEnvProblems` because these must not fail a build: the
+ * settings they describe are correct for the deployment as it stands. They are
+ * printed on every build so the moment they stop being correct is not one
+ * nobody notices.
+ */
+export function collectEnvWarnings(env: Record<string, string | undefined>): EnvProblem[] {
+  const warnings: EnvProblem[] = [];
+
+  const siteUrl = env.NEXT_PUBLIC_SITE_URL?.trim();
+  if (siteUrl) {
+    let host: string | null = null;
+    try {
+      host = new URL(siteUrl).hostname.toLowerCase();
+    } catch {
+      // A malformed URL is already reported as a hard problem above.
+    }
+    if (host?.endsWith(".vercel.app")) {
+      warnings.push({
+        variable: "NEXT_PUBLIC_SITE_URL",
+        problem:
+          "points at a vercel.app address. That is right while the site lives there, but it must " +
+          "become the clinic's own domain at DNS cutover — every canonical URL, the sitemap, and " +
+          "the address Google is given for the business all derive from this value.",
+      });
+    }
+  }
+
+  return warnings;
+}
+
+/**
  * Collects the configuration problems that should block a production deploy.
  * Pure over its input so it can be tested without mutating the real
  * environment; `scripts/check-env.mjs` runs it against `process.env` during

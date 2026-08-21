@@ -6,7 +6,7 @@
  * (VERCEL_ENV=preview) stay unblocked so contributors can run the site without
  * a full environment; those surface the same problems as warnings instead.
  */
-import { collectEnvProblems } from "../lib/env";
+import { collectEnvProblems, collectEnvWarnings } from "../lib/env";
 import { collectAdminEnvProblems } from "../lib/admin/session";
 import { collectSupabaseEnvProblems } from "../lib/content/supabase";
 import { collectUnverifiedContent } from "../lib/verification";
@@ -20,12 +20,19 @@ const problems = [
   ...collectAdminEnvProblems(process.env),
   ...collectSupabaseEnvProblems(process.env),
 ];
+const advisories = collectEnvWarnings(process.env);
 const unverified = collectUnverifiedContent();
 
 // Content still flagged needsVerification is only fatal when the owner has
 // explicitly opted into the stricter gate, since clearing every flag needs
 // the clinic to confirm real-world facts (hours, pricing, credentials).
 const enforceContentGate = process.env.REQUIRE_VERIFIED_CONTENT === "1";
+
+// Advisories never block a build; they describe settings that are correct now
+// and will not be later. Printed first so they are not lost under a long list.
+for (const { variable, problem } of advisories) {
+  console.warn(`check-env: heads-up — ${variable} ${problem}`);
+}
 
 if (problems.length === 0 && unverified.length === 0) {
   console.log("check-env: configuration OK");

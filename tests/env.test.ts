@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { collectEnvProblems, parseGoogleReviewUrl } from "@/lib/env";
+import { collectEnvProblems, collectEnvWarnings, parseGoogleReviewUrl } from "@/lib/env";
 
 describe("parseGoogleReviewUrl", () => {
   it("accepts a real writereview link", () => {
@@ -88,5 +88,38 @@ describe("collectEnvProblems", () => {
     // Analytics and the concierge degrade cleanly; blocking a deploy over
     // them would be wrong.
     expect(collectEnvProblems({ ...ok, NEXT_PUBLIC_GA_ID: "", OPENAI_API_KEY: "" })).toEqual([]);
+  });
+});
+
+describe("collectEnvWarnings", () => {
+  it("flags a site URL still pointing at a vercel.app address", () => {
+    // Correct while the site lives there, and wrong the moment DNS moves to
+    // the clinic's own domain — at which point every canonical URL and the
+    // sitemap would still be advertising the deployment address to Google.
+    const warnings = collectEnvWarnings({
+      NEXT_PUBLIC_SITE_URL: "https://kinetic-physiotherapy-main-website.vercel.app",
+    });
+    expect(warnings).toHaveLength(1);
+    expect(warnings[0].variable).toBe("NEXT_PUBLIC_SITE_URL");
+    expect(warnings[0].problem).toMatch(/DNS cutover/);
+  });
+
+  it("is silent once the real domain is in place", () => {
+    expect(
+      collectEnvWarnings({ NEXT_PUBLIC_SITE_URL: "https://www.kinetictherapyclinic.ca" })
+    ).toEqual([]);
+  });
+
+  it("is silent when the variable is unset or malformed", () => {
+    // An absent or broken value is already a hard problem; warning about it
+    // too would just be noise on top of the real error.
+    expect(collectEnvWarnings({})).toEqual([]);
+    expect(collectEnvWarnings({ NEXT_PUBLIC_SITE_URL: "not-a-url" })).toEqual([]);
+  });
+
+  it("does not warn about a domain that merely contains the words", () => {
+    expect(
+      collectEnvWarnings({ NEXT_PUBLIC_SITE_URL: "https://vercel.app.kinetictherapyclinic.ca" })
+    ).toEqual([]);
   });
 });
