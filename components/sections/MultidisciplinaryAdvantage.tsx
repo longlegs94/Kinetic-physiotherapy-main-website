@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { Section, Container } from "@/components/layout/Section";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { useReducedMotionSafe } from "@/components/motion/useReducedMotionSafe";
+import { useClinic } from "@/components/providers/SiteDataProvider";
 import { viewportOnce, easePremium } from "@/lib/motion";
 
 const nodes = [
@@ -18,6 +19,7 @@ const nodes = [
 /** Circular care diagram: nodes orbit a central "Your Recovery Plan" hub. */
 export function MultidisciplinaryAdvantage() {
   const reduced = useReducedMotionSafe();
+  const clinic = useClinic();
   const radius = 140;
   const center = 170;
 
@@ -30,7 +32,7 @@ export function MultidisciplinaryAdvantage() {
             tone="dark"
             title="One clinic. Multiple experts. Better continuity of care."
           >
-            Instead of bouncing between separate clinics, Kinetic Therapy brings multiple
+            Instead of bouncing between separate clinics, {clinic.name} brings multiple
             disciplines together so your care can feel more connected, convenient, and
             complete.
           </SectionHeading>

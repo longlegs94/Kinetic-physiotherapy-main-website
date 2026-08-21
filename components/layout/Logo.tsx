@@ -1,8 +1,11 @@
+"use client";
+
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+import { useClinic } from "@/components/providers/SiteDataProvider";
 
 /**
- * Kinetic Therapy brand mark — the "Kinetic Motion K" from the brand board:
+ * Kinetic brand mark — the "Kinetic Motion K" from the brand board:
  * a charcoal stem with a mint→teal motion ribbon flowing through it.
  * The ribbon animates in once on load (CSS .kt-swoosh; disabled for
  * reduced motion) per the board's "animated logo concept".
@@ -74,11 +77,16 @@ export function Logo({
   className?: string;
 }) {
   const textColor = tone === "light" ? "text-warm-white" : "text-charcoal";
+  // The wordmark stacks the first word over the rest ("KINETIC" / "Physiotherapy"),
+  // so a rename in the staff portal keeps the lockup rather than breaking it.
+  const { name } = useClinic();
+  const [firstWord, ...restWords] = name.split(" ");
+  const rest = restWords.join(" ");
 
   return (
     <Link
       href="/"
-      aria-label="Kinetic Therapy Clinic — home"
+      aria-label={`${name} — home`}
       className={cn("group inline-flex items-center gap-2.5", className)}
     >
       <KineticMark
@@ -87,16 +95,18 @@ export function Logo({
       />
       <span className="flex flex-col leading-none">
         <span className={cn("font-heading text-lg font-bold tracking-tight", textColor)}>
-          KINETIC
+          {firstWord.toUpperCase()}
         </span>
-        <span
-          className={cn(
-            "text-[13px] font-medium tracking-[0.02em]",
-            tone === "light" ? "text-mint" : "text-deep-teal"
-          )}
-        >
-          Therapy
-        </span>
+        {rest && (
+          <span
+            className={cn(
+              "text-[13px] font-medium tracking-[0.02em]",
+              tone === "light" ? "text-mint" : "text-deep-teal"
+            )}
+          >
+            {rest}
+          </span>
+        )}
       </span>
     </Link>
   );

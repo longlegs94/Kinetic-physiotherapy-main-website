@@ -108,6 +108,26 @@ are still edited in the repository.
 **Changes appear on the website immediately.** There is no publish step and no
 rebuild to wait for.
 
+### Renaming the clinic
+
+The clinic's name is one of the fields on `/admin/clinic`, and changing it
+renames the whole site — page titles, search-result descriptions, the logo
+wordmark, the social share image, and the structured data Google reads.
+
+That works because page copy written in the repository marks the brand with a
+`{brand}` placeholder (`lib/brand.ts`) instead of spelling the name out, and
+every page fills it in from the database as it renders. When adding copy that
+names the clinic, write `{brand}` rather than the name — a page that hardcodes
+it will still say the old name after a rename.
+
+The logo stacks the first word of the name over the rest, so "Kinetic
+Physiotherapy" renders as KINETIC / Physiotherapy.
+
+Two places keep a literal copy on purpose: `app/global-error.tsx`, the
+last-resort error screen, which must not depend on anything that could itself
+be the failure; and blog posts, whose bylines are part of the published
+article.
+
 ### How it works
 
 Those two things live in a Supabase (Postgres) database rather than in the repo.

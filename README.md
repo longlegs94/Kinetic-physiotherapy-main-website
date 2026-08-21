@@ -1,6 +1,6 @@
-# Kinetic Therapy Clinic — Website
+# Kinetic Physiotherapy — Website
 
-Premium, fast, SEO-friendly website for **Kinetic Therapy Clinic** in Maple Ridge, BC.
+Premium, fast, SEO-friendly website for **Kinetic Physiotherapy** in Maple Ridge, BC.
 A multidisciplinary clinic offering physiotherapy, massage therapy, chiropractic,
 kinesiology, acupuncture, ICBC/WSBC support, and recovery-focused care.
 

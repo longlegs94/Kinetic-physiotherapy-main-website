@@ -49,7 +49,7 @@ export function SiteFooter() {
                     href={clinic.socials.facebook}
                     target="_blank"
                     rel="noopener noreferrer"
-                    aria-label="Kinetic Therapy Clinic on Facebook"
+                    aria-label={`${clinic.name} on Facebook`}
                     className="flex h-9 w-9 items-center justify-center rounded-full border border-white/15 text-warm-white/70 transition-colors hover:border-mint hover:text-mint"
                   >
                     <Facebook className="h-4 w-4" aria-hidden="true" />
@@ -60,7 +60,7 @@ export function SiteFooter() {
                     href={clinic.socials.instagram}
                     target="_blank"
                     rel="noopener noreferrer"
-                    aria-label="Kinetic Therapy Clinic on Instagram"
+                    aria-label={`${clinic.name} on Instagram`}
                     className="flex h-9 w-9 items-center justify-center rounded-full border border-white/15 text-warm-white/70 transition-colors hover:border-mint hover:text-mint"
                   >
                     <Instagram className="h-4 w-4" aria-hidden="true" />

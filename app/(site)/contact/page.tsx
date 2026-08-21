@@ -15,13 +15,13 @@ import { Section, Container } from "@/components/layout/Section";
 import { ContactForm } from "@/components/cards/ContactForm";
 import { JsonLd } from "@/components/ui/JsonLd";
 import { breadcrumbSchema } from "@/lib/schema";
-import { pageMetadata } from "@/lib/seo";
+import { buildPageMetadata } from "@/lib/seo";
 import { getClinic, telHref, mailHref } from "@/lib/content/store";
 
-export const metadata = pageMetadata({
-  title: "Contact & Location | Kinetic Therapy Clinic Maple Ridge",
+export const generateMetadata = () => buildPageMetadata({
+  title: "Contact & Location | {brand} Maple Ridge",
   description:
-    "Contact Kinetic Therapy Clinic in Maple Ridge. Find our address, phone, email, and hours, or send us a message and we'll help guide you to the right care.",
+    "Contact {brand} in Maple Ridge. Find our address, phone, email, and hours, or send us a message and we'll help guide you to the right care.",
   path: "/contact",
 });
 

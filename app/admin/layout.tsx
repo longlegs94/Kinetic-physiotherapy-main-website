@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 
 import { SITE_NAME } from "@/lib/seo";
+import { getClinic } from "@/lib/content/store";
 
 /**
  * Shell for the staff portal.
@@ -12,15 +13,19 @@ import { SITE_NAME } from "@/lib/seo";
  * renders has to make sense to someone who hasn't signed in yet.
  */
 
-export const metadata: Metadata = {
-  title: {
-    default: `Staff portal | ${SITE_NAME}`,
-    template: `%s | ${SITE_NAME} staff portal`,
-  },
-  // Belt and braces with the Disallow in robots.ts: that file asks crawlers
-  // not to fetch these URLs, this tells any that do anyway not to index them.
-  robots: { index: false, follow: false, nocache: true },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const { name } = await getClinic();
+  const siteName = name || SITE_NAME;
+  return {
+    title: {
+      default: `Staff portal | ${siteName}`,
+      template: `%s | ${siteName} staff portal`,
+    },
+    // Belt and braces with the Disallow in robots.ts: that file asks crawlers
+    // not to fetch these URLs, this tells any that do anyway not to index them.
+    robots: { index: false, follow: false, nocache: true },
+  };
+}
 
 export default function AdminLayout({
   children,

@@ -42,7 +42,7 @@ export default function GlobalError({
       >
         <main style={{ maxWidth: "34rem" }}>
           <h1 style={{ fontSize: "1.75rem", fontWeight: 700, margin: "0 0 0.75rem" }}>
-            Kinetic Therapy Clinic
+            Kinetic Physiotherapy
           </h1>
           <p style={{ fontSize: "1.05rem", lineHeight: 1.6, margin: "0 0 1.5rem", opacity: 0.75 }}>
             Our website is having trouble right now. The clinic is still here — please call us

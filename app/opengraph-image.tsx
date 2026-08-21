@@ -1,15 +1,23 @@
 import { ImageResponse } from "next/og";
 
+import { getClinic } from "@/lib/content/store";
+import { SITE_NAME } from "@/lib/seo";
+
 /**
  * Site-wide OpenGraph/social share image, generated at build time.
  * Applies to any route that doesn't define its own opengraph-image.
  */
 export const runtime = "nodejs";
-export const alt = "Kinetic Therapy Clinic — Maple Ridge";
+// `alt` has to be a static export, so it uses the name bundled at build time
+// rather than the live one. The image itself reads the database below.
+export const alt = `${SITE_NAME} — Maple Ridge`;
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
-export default function OgImage() {
+export default async function OgImage() {
+  const { name } = await getClinic();
+  const [firstWord, ...restWords] = (name || SITE_NAME).split(" ");
+
   return new ImageResponse(
     (
       <div
@@ -55,10 +63,10 @@ export default function OgImage() {
           </svg>
           <div style={{ display: "flex", flexDirection: "column" }}>
             <span style={{ color: "#F7F5F0", fontSize: "30px", fontWeight: 800, letterSpacing: "1px" }}>
-              KINETIC
+              {firstWord.toUpperCase()}
             </span>
             <span style={{ color: "#72E0C0", fontSize: "18px", letterSpacing: "2px" }}>
-              Therapy
+              {restWords.join(" ")}
             </span>
           </div>
         </div>

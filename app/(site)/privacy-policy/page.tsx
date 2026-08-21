@@ -1,12 +1,12 @@
 import { PageHero } from "@/components/layout/PageHero";
 import { Section, Container } from "@/components/layout/Section";
-import { pageMetadata } from "@/lib/seo";
+import { buildPageMetadata } from "@/lib/seo";
 import { getClinic, telHref, mailHref } from "@/lib/content/store";
 
-export const metadata = pageMetadata({
-  title: "Privacy Policy | Kinetic Therapy Clinic",
+export const generateMetadata = () => buildPageMetadata({
+  title: "Privacy Policy | {brand}",
   description:
-    "How Kinetic Therapy Clinic collects, uses, discloses, and protects personal information — including health information submitted through our contact, intake, and AI assistant forms — under BC's Personal Information Protection Act.",
+    "How {brand} collects, uses, discloses, and protects personal information — including health information submitted through our contact, intake, and AI assistant forms — under BC's Personal Information Protection Act.",
   path: "/privacy-policy",
 });
 

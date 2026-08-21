@@ -2,7 +2,7 @@
   "name": "kinetic-therapy-website",
   "version": "1.0.0",
   "private": true,
-  "description": "Premium multidisciplinary clinic website for Kinetic Therapy Clinic, Maple Ridge BC.",
+  "description": "Premium multidisciplinary clinic website for Kinetic Physiotherapy, Maple Ridge BC.",
   "scripts": {
     "dev": "next dev",
     "prebuild": "tsx scripts/check-env.ts",

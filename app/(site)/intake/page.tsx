@@ -4,12 +4,12 @@ import { Section, Container } from "@/components/layout/Section";
 import { IntakeForm } from "@/components/intake/IntakeForm";
 import { JsonLd } from "@/components/ui/JsonLd";
 import { breadcrumbSchema } from "@/lib/schema";
-import { pageMetadata } from "@/lib/seo";
+import { buildPageMetadata } from "@/lib/seo";
 
-export const metadata = pageMetadata({
-  title: "Pre-Visit Intake | Kinetic Therapy Clinic Maple Ridge",
+export const generateMetadata = () => buildPageMetadata({
+  title: "Pre-Visit Intake | {brand} Maple Ridge",
   description:
-    "Get a head start on your first visit to Kinetic Therapy in Maple Ridge. Answer a few questions and we'll prepare a pre-visit summary for our team.",
+    "Get a head start on your first visit to {brand} in Maple Ridge. Answer a few questions and we'll prepare a pre-visit summary for our team.",
   path: "/intake",
   // Kept out of search results: this page exists for patients who already
   // have an appointment, reached from the booking confirmation rather than

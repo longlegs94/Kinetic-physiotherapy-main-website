@@ -1,12 +1,12 @@
 import { PageHero } from "@/components/layout/PageHero";
 import { Section, Container } from "@/components/layout/Section";
-import { pageMetadata } from "@/lib/seo";
+import { buildPageMetadata } from "@/lib/seo";
 import { getClinic, telHref, mailHref } from "@/lib/content/store";
 
-export const metadata = pageMetadata({
-  title: "Terms of Use | Kinetic Therapy Clinic",
+export const generateMetadata = () => buildPageMetadata({
+  title: "Terms of Use | {brand}",
   description:
-    "Terms governing the use of the Kinetic Therapy Clinic website, including the informational nature of its content, the AI assistant, third-party booking, and insurance disclaimers.",
+    "Terms governing the use of the {brand} website, including the informational nature of its content, the AI assistant, third-party booking, and insurance disclaimers.",
   path: "/terms",
 });
 

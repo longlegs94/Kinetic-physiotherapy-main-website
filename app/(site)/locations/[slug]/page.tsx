@@ -2,7 +2,8 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { MapPin, ParkingCircle, ShieldCheck, ArrowRight } from "lucide-react";
-import { pageMetadata } from "@/lib/seo";
+import { buildPageMetadata } from "@/lib/seo";
+import { withBrand } from "@/lib/brand";
 import { Section, Container } from "@/components/layout/Section";
 import { PageHero } from "@/components/layout/PageHero";
 import { SectionHeading } from "@/components/ui/SectionHeading";
@@ -32,7 +33,7 @@ export async function generateMetadata({
   const { slug } = await params;
   const location = getLocation(slug);
   if (!location) return {};
-  return pageMetadata({
+  return buildPageMetadata({
     title: location.metaTitle,
     description: location.metaDescription,
     path: `/locations/${slug}`,
@@ -67,11 +68,11 @@ export default async function LocationPage({
 
   return (
     <>
-      <JsonLd data={[locationSchema(location), breadcrumbSchema(crumbs)]} />
+      <JsonLd data={[locationSchema(location, clinic.name), breadcrumbSchema(crumbs)]} />
 
       <PageHero
         title={location.heroTitle}
-        subtitle={location.heroSubtitle}
+        subtitle={withBrand(location.heroSubtitle, clinic.name)}
         crumbs={crumbs}
         actions={
           <>
@@ -91,7 +92,7 @@ export default async function LocationPage({
           <SectionHeading eyebrow={`Serving ${location.name}`} title={location.introTitle} />
           <div className="mt-6 space-y-4 leading-relaxed text-charcoal/80">
             {location.intro.map((paragraph, i) => (
-              <p key={i}>{paragraph}</p>
+              <p key={i}>{withBrand(paragraph, clinic.name)}</p>
             ))}
           </div>
         </Container>

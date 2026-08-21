@@ -13,7 +13,7 @@ import { KineticMotionLine } from "@/components/motion/KineticMotionLine";
 import { StaggeredGrid, ScrollItem } from "@/components/motion/StaggeredGrid";
 import { JsonLd } from "@/components/ui/JsonLd";
 import { breadcrumbSchema } from "@/lib/schema";
-import { pageMetadata, SITE_URL, SITE_NAME } from "@/lib/seo";
+import { buildPageMetadata, SITE_URL } from "@/lib/seo";
 import { mdxComponents } from "@/components/blog/MdxComponents";
 import { getRelatedServicesForPost } from "@/lib/related";
 import { getClinic } from "@/lib/content/store";
@@ -32,8 +32,8 @@ export async function generateMetadata({
   const { slug } = await params;
   const post = getPost(slug);
   if (!post) return {};
-  const meta = pageMetadata({
-    title: `${post.title} | ${SITE_NAME}`,
+  const meta = await buildPageMetadata({
+    title: `${post.title} | {brand}`,
     description: post.description,
     path: `/blog/${slug}`,
   });

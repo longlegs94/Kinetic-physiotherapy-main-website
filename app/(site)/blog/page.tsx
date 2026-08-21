@@ -6,12 +6,12 @@ import { StaggeredGrid, ScrollItem } from "@/components/motion/StaggeredGrid";
 import { JsonLd } from "@/components/ui/JsonLd";
 import { breadcrumbSchema } from "@/lib/schema";
 import { getAllPosts } from "@/lib/blog";
-import { pageMetadata } from "@/lib/seo";
+import { buildPageMetadata } from "@/lib/seo";
 
-export const metadata = pageMetadata({
-  title: "Resources & Blog | Recovery, Injury & Wellness | Kinetic Therapy",
+export const generateMetadata = () => buildPageMetadata({
+  title: "Resources & Blog | Recovery, Injury & Wellness | {brand}",
   description:
-    "Practical guides on physiotherapy, massage, ICBC recovery, active rehab, and pain management in Maple Ridge from the team at Kinetic Therapy Clinic.",
+    "Practical guides on physiotherapy, massage, ICBC recovery, active rehab, and pain management in Maple Ridge from the team at {brand}.",
   path: "/blog",
 });
 

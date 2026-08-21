@@ -4,13 +4,13 @@ import { PageHero } from "@/components/layout/PageHero";
 import { Section, Container } from "@/components/layout/Section";
 import { JsonLd } from "@/components/ui/JsonLd";
 import { breadcrumbSchema } from "@/lib/schema";
-import { pageMetadata } from "@/lib/seo";
+import { buildPageMetadata } from "@/lib/seo";
 import { locations } from "@/content/locations";
 
-export const metadata = pageMetadata({
-  title: "Service Areas | Kinetic Therapy Clinic Maple Ridge",
+export const generateMetadata = () => buildPageMetadata({
+  title: "Service Areas | {brand} Maple Ridge",
   description:
-    "Kinetic Therapy Clinic on 238B Street serves Maple Ridge and neighbouring communities including Pitt Meadows, Albion, Silver Valley, and Websters Corners.",
+    "{brand} on 238B Street serves Maple Ridge and neighbouring communities including Pitt Meadows, Albion, Silver Valley, and Websters Corners.",
   path: "/locations",
 });
 

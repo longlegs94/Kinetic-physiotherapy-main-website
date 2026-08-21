@@ -10,6 +10,8 @@ import { TrustBadges } from "@/components/ui/TrustBadges";
 import { KineticMotionLine } from "@/components/motion/KineticMotionLine";
 import { useReducedMotionSafe } from "@/components/motion/useReducedMotionSafe";
 import { homepage } from "@/lib/site-data";
+import { useClinic } from "@/components/providers/SiteDataProvider";
+import { withBrand } from "@/lib/brand";
 import { heroLine, easePremium } from "@/lib/motion";
 import { trackEvent } from "@/lib/analytics";
 
@@ -46,6 +48,7 @@ const treatmentPoints = [
 
 export function Hero() {
   const { hero } = homepage;
+  const clinic = useClinic();
   const reduced = useReducedMotionSafe();
 
   const container = reduced
@@ -72,7 +75,7 @@ export function Hero() {
             variants={reduced ? undefined : heroLine}
             className="inline-block rounded-pill bg-sage/70 px-4 py-1.5 text-sm font-semibold text-deep-teal"
           >
-            {hero.eyebrow}
+            {withBrand(hero.eyebrow, clinic.name)}
           </motion.span>
 
           <h1 className="mt-5 text-hero-lg font-extrabold text-charcoal">

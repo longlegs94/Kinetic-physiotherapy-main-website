@@ -2,6 +2,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 
 import { adminPortalConfigured, getAdminSession, isSafeRedirect } from "@/lib/admin/auth";
+import { getClinic } from "@/lib/content/store";
 import { KineticMark } from "@/components/layout/Logo";
 
 import { LoginForm } from "./LoginForm";
@@ -28,6 +29,8 @@ export default async function LoginPage({
   const session = await getAdminSession();
   if (session) redirect(safeNext || "/admin");
 
+  const { name: clinicName } = await getClinic();
+
   return (
     <main className="flex min-h-screen items-center justify-center px-5 py-16">
       <div className="w-full max-w-[420px]">
@@ -35,10 +38,10 @@ export default async function LoginPage({
           <Link
             href="/"
             className="inline-flex items-center gap-2.5 text-charcoal"
-            aria-label="Kinetic Therapy Clinic home"
+            aria-label={`${clinicName} home`}
           >
             <KineticMark className="h-9 w-9" />
-            <span className="font-heading text-lg font-bold">Kinetic Therapy</span>
+            <span className="font-heading text-lg font-bold">{clinicName}</span>
           </Link>
           <h1 className="mt-6 font-heading text-3xl font-bold text-charcoal">Staff portal</h1>
           <p className="mt-2 text-[15px] text-charcoal/60">

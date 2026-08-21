@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Check, ShieldCheck, PhoneCall, CalendarClock, ClipboardCheck } from "lucide-react";
 import { getService } from "@/lib/site-data";
-import { pageMetadata } from "@/lib/seo";
+import { buildPageMetadata } from "@/lib/seo";
 import { Section, Container } from "@/components/layout/Section";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { BookButton } from "@/components/ui/BookButton";
@@ -16,15 +16,18 @@ import { getClinic } from "@/lib/content/store";
 // Kept out of search results (robots: noindex,nofollow) and out of the
 // sitemap so it never competes with the organic /icbc-physio-maple-ridge
 // service page for the same queries.
-export const metadata: Metadata = {
-  ...pageMetadata({
-    title: "Injured in a Car Accident? ICBC Physiotherapy in Maple Ridge | Kinetic Therapy Clinic",
-    description:
-      "Injured in a car accident? Our Maple Ridge team can help you understand your ICBC treatment options. Call now or request a callback — no obligation.",
-    path: "/icbc-claims",
-  }),
-  robots: { index: false, follow: false },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  return {
+    ...(await buildPageMetadata({
+      title:
+        "Injured in a Car Accident? ICBC Physiotherapy in Maple Ridge | {brand}",
+      description:
+        "Injured in a car accident? Our Maple Ridge team can help you understand your ICBC treatment options. Call now or request a callback — no obligation.",
+      path: "/icbc-claims",
+    })),
+    robots: { index: false, follow: false },
+  };
+}
 
 const service = getService("icbc-physio-maple-ridge");
 

@@ -8,14 +8,14 @@ import { ScrollReveal } from "@/components/motion/ScrollReveal";
 import { StaggeredGrid, ScrollItem } from "@/components/motion/StaggeredGrid";
 import { JsonLd } from "@/components/ui/JsonLd";
 import { breadcrumbSchema } from "@/lib/schema";
-import { pageMetadata } from "@/lib/seo";
+import { buildPageMetadata } from "@/lib/seo";
 import { BookButton } from "@/components/ui/BookButton";
 import { getClinic } from "@/lib/content/store";
 
-export const metadata = pageMetadata({
-  title: "About Kinetic Therapy Clinic | Multidisciplinary Care in Maple Ridge",
+export const generateMetadata = () => buildPageMetadata({
+  title: "About {brand} | Multidisciplinary Care in Maple Ridge",
   description:
-    "Kinetic Therapy is a modern multidisciplinary clinic in Maple Ridge bringing physiotherapy, massage, chiropractic, kinesiology, and acupuncture together for connected, whole-person care.",
+    "{brand} is a modern multidisciplinary clinic in Maple Ridge bringing physiotherapy, massage, chiropractic, kinesiology, and acupuncture together for connected, whole-person care.",
   path: "/about",
 });
 
@@ -63,7 +63,7 @@ export default async function AboutPage() {
         <Container>
           <div className="grid gap-10 lg:grid-cols-2 lg:items-start">
             <SectionHeading eyebrow="Our story" title="Recovery, organized around you.">
-              Kinetic Therapy is a multidisciplinary clinic in {clinic.city} helping patients
+              {clinic.name} is a multidisciplinary clinic in {clinic.city} helping patients
               recover from pain, injury, accidents, and mobility limitations through connected
               hands-on care, movement rehab, and wellness services.
             </SectionHeading>

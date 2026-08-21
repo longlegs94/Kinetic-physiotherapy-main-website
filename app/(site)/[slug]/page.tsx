@@ -6,10 +6,10 @@ import {
   services,
   getService,
   resolveRelated,
-  practitioners,
   faqs as globalFaqs,
 } from "@/lib/site-data";
-import { pageMetadata } from "@/lib/seo";
+import { buildPageMetadata } from "@/lib/seo";
+import { getClinic, getPractitioners } from "@/lib/content/store";
 import { Section, Container } from "@/components/layout/Section";
 import { PageHero } from "@/components/layout/PageHero";
 import { SectionHeading } from "@/components/ui/SectionHeading";
@@ -34,13 +34,12 @@ export function generateStaticParams() {
 }
 
 const titleMap: Record<string, string> = {
-  "physiotherapy-maple-ridge": "Physiotherapy Maple Ridge | Kinetic Therapy Clinic",
+  "physiotherapy-maple-ridge": "Physiotherapy Maple Ridge | {brand}",
   "massage-therapy-maple-ridge":
-    "Massage Therapy Maple Ridge | RMT & Therapeutic Massage | Kinetic Therapy",
-  "chiropractor-maple-ridge":
-    "Chiropractor Maple Ridge | Chiropractic Care | Kinetic Therapy",
+    "Massage Therapy Maple Ridge | RMT & Therapeutic Massage | {brand}",
+  "chiropractor-maple-ridge": "Chiropractor Maple Ridge | Chiropractic Care | {brand}",
   "icbc-physio-maple-ridge":
-    "ICBC Physiotherapy Maple Ridge | Accident Recovery | Kinetic Therapy",
+    "ICBC Physiotherapy Maple Ridge | Accident Recovery | {brand}",
 };
 
 export async function generateMetadata({
@@ -51,8 +50,8 @@ export async function generateMetadata({
   const { slug } = await params;
   const service = getService(slug);
   if (!service) return {};
-  return pageMetadata({
-    title: titleMap[slug] ?? `${service.name} Maple Ridge | Kinetic Therapy Clinic`,
+  return buildPageMetadata({
+    title: titleMap[slug] ?? `${service.name} Maple Ridge | {brand}`,
     description: service.heroSubtitle,
     path: `/${slug}`,
   });
@@ -66,6 +65,8 @@ export default async function ServicePage({
   const { slug } = await params;
   const service = getService(slug);
   if (!service) notFound();
+
+  const [clinic, practitioners] = await Promise.all([getClinic(), getPractitioners()]);
 
   const related = resolveRelated(service.relatedServices);
   const relatedPosts = getRelatedPostsForService(slug);
@@ -154,7 +155,7 @@ export default async function ServicePage({
         <Container>
           <div className="grid gap-8 lg:grid-cols-2 lg:items-center">
             <SectionHeading
-              eyebrow="Why Kinetic Therapy"
+              eyebrow={`Why ${clinic.name}`}
               tone="dark"
               title="Connected care, all in one place."
             >

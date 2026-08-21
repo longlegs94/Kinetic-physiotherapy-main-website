@@ -6,6 +6,7 @@ import { Check, ChevronDown, CalendarClock, Stethoscope } from "lucide-react";
 import type { Practitioner } from "@/lib/site-data";
 import { BookButton } from "@/components/ui/BookButton";
 import { useReducedMotionSafe } from "@/components/motion/useReducedMotionSafe";
+import { useClinic } from "@/components/providers/SiteDataProvider";
 import { easePremium } from "@/lib/motion";
 import { cn } from "@/lib/utils";
 
@@ -32,6 +33,7 @@ function slugify(name: string) {
  */
 export function PractitionerCard({ practitioner }: { practitioner: Practitioner }) {
   const p = practitioner;
+  const clinic = useClinic();
   const [open, setOpen] = useState(false);
   const reduced = useReducedMotionSafe();
   const panelId = `bio-${slugify(p.name)}`;
@@ -60,7 +62,7 @@ export function PractitionerCard({ practitioner }: { practitioner: Practitioner 
             // eslint-disable-next-line @next/next/no-img-element
             <img
               src={p.image}
-              alt={`${p.name}, ${p.title} at Kinetic Therapy Clinic`}
+              alt={`${p.name}, ${p.title} at ${clinic.name}`}
               className="h-full w-full object-cover transition-transform duration-300 ease-premium group-hover:scale-[1.05]"
             />
           ) : (

@@ -2,6 +2,7 @@ import Link from "next/link";
 import { LogOut } from "lucide-react";
 
 import { requireAdmin } from "@/lib/admin/auth";
+import { getClinic } from "@/lib/content/store";
 import { KineticMark } from "@/components/layout/Logo";
 
 import { logout } from "../actions";
@@ -31,6 +32,7 @@ export default async function PortalLayout({
   children: React.ReactNode;
 }) {
   const session = await requireAdmin();
+  const clinic = await getClinic();
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -73,7 +75,7 @@ export default async function PortalLayout({
 
       <footer className="border-t border-silver/70 px-5 py-5 sm:px-8">
         <div className="mx-auto flex w-full max-w-container items-center justify-between text-xs text-charcoal/45">
-          <span>Kinetic Therapy Clinic</span>
+          <span>{clinic.name}</span>
           <Link href="/" className="hover:text-deep-teal">
             View the live site
           </Link>

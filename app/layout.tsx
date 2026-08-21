@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Sora, Inter } from "next/font/google";
 import "./globals.css";
 import { SITE_URL, SITE_NAME } from "@/lib/seo";
+import { getClinic } from "@/lib/content/store";
 
 /**
  * Root layout — deliberately just the document shell.
@@ -30,30 +31,35 @@ const inter = Inter({
   display: "swap",
 });
 
-export const metadata: Metadata = {
-  metadataBase: new URL(SITE_URL),
-  title: {
-    default:
-      "Kinetic Therapy Clinic Maple Ridge | Physio, Massage, Chiro, Kinesiology & Acupuncture",
-    template: `%s | ${SITE_NAME}`,
-  },
-  description:
-    "Kinetic Therapy is a multidisciplinary clinic in Maple Ridge offering physiotherapy, massage therapy, chiropractic, kinesiology, acupuncture, ICBC support, and recovery-focused care.",
-  keywords: [
-    "physiotherapy Maple Ridge",
-    "massage therapy Maple Ridge",
-    "chiropractor Maple Ridge",
-    "ICBC physio Maple Ridge",
-    "acupuncture Maple Ridge",
-    "kinesiology Maple Ridge",
-  ],
-  icons: {
-    icon: [
-      { url: "/favicon.svg", type: "image/svg+xml" },
+export async function generateMetadata(): Promise<Metadata> {
+  // The clinic can rename itself from the staff portal, so the title template
+  // every page inherits is read per request rather than baked into the bundle.
+  // getClinic falls back to the bundled copy when the database is unreachable.
+  const { name } = await getClinic();
+  const siteName = name || SITE_NAME;
+  return {
+    metadataBase: new URL(SITE_URL),
+    title: {
+      default: `${siteName} Maple Ridge | Physio, Massage, Chiro, Kinesiology & Acupuncture`,
+      template: `%s | ${siteName}`,
+    },
+    description: `${siteName} is a multidisciplinary clinic in Maple Ridge offering physiotherapy, massage therapy, chiropractic, kinesiology, acupuncture, ICBC support, and recovery-focused care.`,
+    keywords: [
+      "physiotherapy Maple Ridge",
+      "massage therapy Maple Ridge",
+      "chiropractor Maple Ridge",
+      "ICBC physio Maple Ridge",
+      "acupuncture Maple Ridge",
+      "kinesiology Maple Ridge",
     ],
-  },
-  robots: { index: true, follow: true },
-};
+    icons: {
+      icon: [
+        { url: "/favicon.svg", type: "image/svg+xml" },
+      ],
+    },
+    robots: { index: true, follow: true },
+  };
+}
 
 export const viewport: Viewport = {
   themeColor: "#111416",

@@ -1,5 +1,6 @@
 import { getService, clinic, type Service } from "@/lib/site-data";
 import { SITE_URL } from "@/lib/seo";
+import { withBrand } from "@/lib/brand";
 
 /**
  * Typed data for the four local-SEO "service area" landing pages
@@ -36,10 +37,10 @@ export const locations: LocationArea[] = [
     name: "Pitt Meadows",
     heroTitle: "Physiotherapy & Multidisciplinary Clinic Near Pitt Meadows",
     heroSubtitle:
-      "Kinetic Therapy Clinic is a short drive from Pitt Meadows, offering physiotherapy, massage therapy, chiropractic, kinesiology, and acupuncture from one Maple Ridge location.",
-    metaTitle: "Physiotherapy Near Pitt Meadows, BC | Kinetic Therapy Clinic",
+      "{brand} is a short drive from Pitt Meadows, offering physiotherapy, massage therapy, chiropractic, kinesiology, and acupuncture from one Maple Ridge location.",
+    metaTitle: "Physiotherapy Near Pitt Meadows, BC | {brand}",
     metaDescription:
-      "Multidisciplinary clinic near Pitt Meadows offering physiotherapy, massage, chiropractic, kinesiology, acupuncture, and ICBC treatment support. Book online at Kinetic Therapy Clinic.",
+      "Multidisciplinary clinic near Pitt Meadows offering physiotherapy, massage, chiropractic, kinesiology, acupuncture, and ICBC treatment support. Book online at {brand}.",
     introTitle: "Multidisciplinary care, just over the border.",
     intro: [
       "Pitt Meadows is its own city, bordered by Maple Ridge along the Lougheed Highway and Harris Road corridor. Plenty of Pitt Meadows residents already cross into Maple Ridge for schools, shopping, and appointments, and our clinic on 238B Street is a short drive from most Pitt Meadows neighbourhoods — whether you're coming from the town centre, Highway 7, or the airport and industrial area.",
@@ -62,9 +63,9 @@ export const locations: LocationArea[] = [
     heroTitle: "Physiotherapy & Multidisciplinary Clinic Near Albion, Maple Ridge",
     heroSubtitle:
       "Serving Albion families with physiotherapy, massage therapy, chiropractic, kinesiology, and acupuncture at our 238B Street clinic in Maple Ridge.",
-    metaTitle: "Physiotherapy Near Albion, Maple Ridge | Kinetic Therapy Clinic",
+    metaTitle: "Physiotherapy Near Albion, Maple Ridge | {brand}",
     metaDescription:
-      "Kinetic Therapy Clinic is the multidisciplinary clinic near Albion, Maple Ridge for physiotherapy, massage, kinesiology, chiropractic, and more. Book online today.",
+      "{brand} is the multidisciplinary clinic near Albion, Maple Ridge for physiotherapy, massage, kinesiology, chiropractic, and more. Book online today.",
     introTitle: "Your neighbourhood team for a growing community.",
     intro: [
       "Albion is one of Maple Ridge's fastest-growing neighbourhoods, stretching east along 240th Street toward Kanaka Creek Regional Park and filling in with new townhomes, single-family subdivisions, and young families. As Albion keeps growing, so does the need for local healthcare that doesn't mean a long drive across town.",
@@ -86,10 +87,10 @@ export const locations: LocationArea[] = [
     name: "Silver Valley",
     heroTitle: "Physiotherapy & Multidisciplinary Clinic Near Silver Valley",
     heroSubtitle:
-      "Kinetic Therapy Clinic supports Silver Valley's active, trail-going community with physiotherapy, chiropractic, kinesiology, massage therapy, and acupuncture.",
-    metaTitle: "Physiotherapy Near Silver Valley, Maple Ridge | Kinetic Therapy Clinic",
+      "{brand} supports Silver Valley's active, trail-going community with physiotherapy, chiropractic, kinesiology, massage therapy, and acupuncture.",
+    metaTitle: "Physiotherapy Near Silver Valley, Maple Ridge | {brand}",
     metaDescription:
-      "Multidisciplinary clinic near Silver Valley offering physiotherapy, chiropractic, kinesiology, and massage for hikers, riders, and families. Book with Kinetic Therapy Clinic.",
+      "Multidisciplinary clinic near Silver Valley offering physiotherapy, chiropractic, kinesiology, and massage for hikers, riders, and families. Book with {brand}.",
     introTitle: "Trail-ready care for a hillside community.",
     intro: [
       "Silver Valley sits in the north end of Maple Ridge, climbing toward Golden Ears Provincial Park and the Alouette River, with an extensive trail network for hiking, mountain biking, and trail running right out the front door of many homes. It's also one of Maple Ridge's newer hillside neighbourhoods, built with plenty of stairs and slopes of its own.",
@@ -111,10 +112,10 @@ export const locations: LocationArea[] = [
     name: "Websters Corners",
     heroTitle: "Physiotherapy & Multidisciplinary Clinic Near Websters Corners",
     heroSubtitle:
-      "Kinetic Therapy Clinic offers Websters Corners residents physiotherapy, chiropractic, massage therapy, and ICBC treatment support without a drive into Metro Vancouver.",
-    metaTitle: "Physiotherapy Near Websters Corners, Maple Ridge | Kinetic Therapy Clinic",
+      "{brand} offers Websters Corners residents physiotherapy, chiropractic, massage therapy, and ICBC treatment support without a drive into Metro Vancouver.",
+    metaTitle: "Physiotherapy Near Websters Corners, Maple Ridge | {brand}",
     metaDescription:
-      "Kinetic Therapy Clinic is a multidisciplinary clinic near Websters Corners for physiotherapy, chiropractic, massage, and ICBC treatment support. Book online today.",
+      "{brand} is a multidisciplinary clinic near Websters Corners for physiotherapy, chiropractic, massage, and ICBC treatment support. Book online today.",
     introTitle: "Multidisciplinary care without the long drive into town.",
     intro: [
       "Websters Corners is a rural, acreage-style community in east Maple Ridge along Dewdney Trunk Road toward Whonnock, with roots in farming and forestry that still shape the area today. Longer driveways and gravel roads are part of daily life out here, so residents are used to travelling a little further for services — including healthcare.",
@@ -146,17 +147,17 @@ export function resolveLocationServices(slugs: string[]): Service[] {
  * JSON-LD Service node describing the clinic's coverage of a specific
  * community — pairs with breadcrumbSchema() from lib/schema.ts.
  */
-export function locationSchema(location: LocationArea) {
+export function locationSchema(location: LocationArea, clinicName: string = clinic.name) {
   return {
     "@context": "https://schema.org",
     "@type": "Service",
     serviceType: "Physiotherapy and multidisciplinary rehabilitation",
-    name: `${clinic.name} — serving ${location.name}`,
-    description: location.metaDescription,
+    name: `${clinicName} — serving ${location.name}`,
+    description: withBrand(location.metaDescription, clinicName),
     url: `${SITE_URL}/locations/${location.slug}`,
     provider: {
       "@type": "MedicalClinic",
-      name: clinic.name,
+      name: clinicName,
       "@id": `${SITE_URL}/#clinic`,
     },
     areaServed: {

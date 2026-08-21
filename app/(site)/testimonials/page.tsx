@@ -6,13 +6,13 @@ import { StaggeredGrid, ScrollItem } from "@/components/motion/StaggeredGrid";
 import { JsonLd } from "@/components/ui/JsonLd";
 import { breadcrumbSchema } from "@/lib/schema";
 import { testimonials } from "@/lib/site-data";
-import { pageMetadata } from "@/lib/seo";
+import { buildPageMetadata } from "@/lib/seo";
 import { BookButton } from "@/components/ui/BookButton";
 
-export const metadata = pageMetadata({
-  title: "Patient Reviews & Testimonials | Kinetic Therapy Maple Ridge",
+export const generateMetadata = () => buildPageMetadata({
+  title: "Patient Reviews & Testimonials | {brand} Maple Ridge",
   description:
-    "Read what patients across Maple Ridge say about their care at Kinetic Therapy Clinic — physiotherapy, massage, chiropractic, kinesiology, and acupuncture.",
+    "Read what patients across Maple Ridge say about their care at {brand} — physiotherapy, massage, chiropractic, kinesiology, and acupuncture.",
   path: "/testimonials",
 });
 

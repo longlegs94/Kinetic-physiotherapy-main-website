@@ -1,6 +1,6 @@
 # Website data-processing brief — for legal review
 
-**Prepared for:** legal counsel advising Kinetic Therapy Clinic (Maple Ridge, BC)
+**Prepared for:** legal counsel advising Kinetic Physiotherapy (Maple Ridge, BC)
 **Subject:** personal information collected and transmitted by the clinic's public website
 **Status:** factual technical description, prepared by the website developer
 **Revised:** the AI provider named in §4.2 changed from Anthropic to OpenAI after this
@@ -36,7 +36,7 @@ Specific open questions are collected in §8.
 
 ## 2. The business and the site
 
-Kinetic Therapy Clinic is a private multidisciplinary physiotherapy clinic in Maple Ridge,
+Kinetic Physiotherapy is a private multidisciplinary physiotherapy clinic in Maple Ridge,
 British Columbia, offering physiotherapy, massage therapy, chiropractic, kinesiology,
 acupuncture and related services, including treatment of ICBC and WorkSafeBC claims.
 

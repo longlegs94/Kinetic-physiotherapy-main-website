@@ -412,7 +412,7 @@ export function IntakeForm() {
         <label className="flex items-start gap-3 text-sm text-charcoal/80">
           <input type="checkbox" required className="mt-1 h-4 w-4 accent-teal-700" />
           <span>
-            I understand this form sends health information to Kinetic Therapy Clinic to
+            I understand this form sends health information to {clinic.name} to
             prepare for my visit, and that it is not monitored for urgent medical needs.
           </span>
         </label>

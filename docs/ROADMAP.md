@@ -1,4 +1,4 @@
-# Kinetic Therapy Clinic — Product & Growth Roadmap
+# Kinetic Physiotherapy — Product & Growth Roadmap
 
 *Written from the seat of CPO/CEO. Last updated: July 2026.*
 

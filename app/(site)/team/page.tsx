@@ -7,14 +7,14 @@ import { FinalCTA } from "@/components/sections/FinalCTA";
 import { StaggeredGrid, ScrollItem } from "@/components/motion/StaggeredGrid";
 import { JsonLd } from "@/components/ui/JsonLd";
 import { breadcrumbSchema } from "@/lib/schema";
-import { pageMetadata } from "@/lib/seo";
+import { buildPageMetadata } from "@/lib/seo";
 import { BookButton } from "@/components/ui/BookButton";
 import { getPractitioners } from "@/lib/content/store";
 
-export const metadata = pageMetadata({
-  title: "Our Team in Maple Ridge — Physiotherapists, RMTs & More | Kinetic Therapy Clinic",
+export const generateMetadata = () => buildPageMetadata({
+  title: "Our Team in Maple Ridge — Physiotherapists, RMTs & More | {brand}",
   description:
-    "Meet the multidisciplinary team at Kinetic Therapy Clinic in Maple Ridge — physiotherapists, registered massage therapists, kinesiologist, acupuncturist, and more, working together on your recovery.",
+    "Meet the multidisciplinary team at {brand} in Maple Ridge — physiotherapists, registered massage therapists, kinesiologist, acupuncturist, and more, working together on your recovery.",
   path: "/team",
 });
 

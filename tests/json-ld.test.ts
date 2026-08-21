@@ -4,7 +4,7 @@ import { __serializeForScript as serialize } from "@/components/ui/JsonLd";
 
 describe("JSON-LD script serialization", () => {
   it("round-trips to the original data", () => {
-    const data = { "@type": "LocalBusiness", name: "Kinetic Therapy Clinic" };
+    const data = { "@type": "LocalBusiness", name: "Kinetic Physiotherapy" };
     expect(JSON.parse(serialize(data))).toEqual(data);
   });
 
@@ -50,7 +50,7 @@ describe("JSON-LD script serialization", () => {
 
   it("leaves ordinary content byte-identical to JSON.stringify", () => {
     // No gratuitous rewriting: only the dangerous characters change.
-    const data = { name: "Kinetic Therapy Clinic", phone: "(604) 467-2113" };
+    const data = { name: "Kinetic Physiotherapy", phone: "(604) 467-2113" };
     expect(serialize(data)).toBe(JSON.stringify(data));
   });
 });

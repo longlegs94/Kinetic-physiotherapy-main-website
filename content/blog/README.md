@@ -8,7 +8,7 @@ description: "..."   # used for SEO meta + OpenGraph
 date: "YYYY-MM-DD"
 excerpt: "..."       # short teaser for cards
 tags: ["Tag"]
-author: "Kinetic Therapy Clinic"
+author: "Kinetic Physiotherapy"
 draft: true          # set to false to publish
 ```
 

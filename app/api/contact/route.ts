@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import { validateContactPayload, type FormName } from "@/lib/contact";
 import { checkRateLimit } from "@/lib/rate-limit";
 import { getClientIp, isAllowedOrigin, readJsonObject } from "@/lib/request";
+import { getClinic } from "@/lib/content/store";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -73,10 +74,11 @@ export async function POST(request: Request) {
     "icbc-callback": "ICBC callback request",
   };
   const subjectPrefix = subjectPrefixes[formName];
+  const { name: clinicName } = await getClinic();
   const finalSubject =
     subject || (category
-      ? `${subjectPrefix} (${category}) — Kinetic Therapy`
-      : `${subjectPrefix} — Kinetic Therapy`);
+      ? `${subjectPrefix} (${category}) — ${clinicName}`
+      : `${subjectPrefix} — ${clinicName}`);
 
   try {
     const res = await fetch("https://api.web3forms.com/submit", {
@@ -88,7 +90,7 @@ export async function POST(request: Request) {
       body: JSON.stringify({
         access_key: accessKey,
         subject: finalSubject,
-        from_name: "Kinetic Therapy Website",
+        from_name: `${clinicName} Website`,
         name,
         email,
         phone: phone || undefined,

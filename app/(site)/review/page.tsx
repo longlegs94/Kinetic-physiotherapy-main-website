@@ -1,20 +1,22 @@
 import type { Metadata } from "next";
 import { Section, Container } from "@/components/layout/Section";
 import { ReviewOptions } from "./ReviewOptions";
-import { pageMetadata } from "@/lib/seo";
+import { buildPageMetadata } from "@/lib/seo";
 import { getClinic, telHref } from "@/lib/content/store";
 
 // Funnel page for SMS/email/QR follow-up after a visit — not meant to be
 // found via organic search, so it's excluded from indexing.
-export const metadata: Metadata = {
-  ...pageMetadata({
-    title: "Leave a Review | Kinetic Therapy Clinic Maple Ridge",
-    description:
-      "How was your visit to Kinetic Therapy Clinic? Leave a Google review or share private feedback with our team.",
-    path: "/review",
-  }),
-  robots: { index: false, follow: false },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  return {
+    ...(await buildPageMetadata({
+      title: "Leave a Review | {brand} Maple Ridge",
+      description:
+        "How was your visit to {brand}? Leave a Google review or share private feedback with our team.",
+      path: "/review",
+    })),
+    robots: { index: false, follow: false },
+  };
+}
 
 export default async function ReviewPage() {
   const clinic = await getClinic();

@@ -12,14 +12,15 @@ import { StaggeredGrid, ScrollItem } from "@/components/motion/StaggeredGrid";
 import { JsonLd } from "@/components/ui/JsonLd";
 import { breadcrumbSchema } from "@/lib/schema";
 import { services, serviceCategories, getServicesByCategory } from "@/lib/site-data";
-import { pageMetadata } from "@/lib/seo";
+import { buildPageMetadata } from "@/lib/seo";
+import { getClinic } from "@/lib/content/store";
 import { BookButton } from "@/components/ui/BookButton";
 import { LinkButton } from "@/components/ui/Button";
 
-export const metadata = pageMetadata({
-  title: "Services in Maple Ridge — Physio, Massage, Chiro & More | Kinetic Therapy Clinic",
+export const generateMetadata = () => buildPageMetadata({
+  title: "Services in Maple Ridge — Physio, Massage, Chiro & More | {brand}",
   description:
-    "Explore Kinetic Therapy's multidisciplinary services in Maple Ridge: physiotherapy, massage therapy, chiropractic, kinesiology, acupuncture, ICBC support, pregnancy massage, shockwave, orthotics and bracing.",
+    "Explore {brand}'s multidisciplinary services in Maple Ridge: physiotherapy, massage therapy, chiropractic, kinesiology, acupuncture, ICBC support, pregnancy massage, shockwave, orthotics and bracing.",
   path: "/services",
 });
 
@@ -42,7 +43,8 @@ const categoryIntros: Record<string, string> = {
     "Guided support for ICBC and injury claims so you can focus on recovering.",
 };
 
-export default function ServicesPage() {
+export default async function ServicesPage() {
+  const clinic = await getClinic();
   // Categories that actually contain services, in intended order.
   const usedCategories = serviceCategories.filter(
     (c) => getServicesByCategory(c).length > 0
@@ -53,7 +55,7 @@ export default function ServicesPage() {
       <JsonLd data={breadcrumbSchema(crumbs)} />
       <PageHero
         title="Everything your recovery needs, under one roof."
-        subtitle="From physiotherapy and massage therapy to chiropractic, kinesiology, acupuncture, ICBC care, and recovery support — Kinetic Therapy helps you find the right treatment path without bouncing between clinics."
+        subtitle={`From physiotherapy and massage therapy to chiropractic, kinesiology, acupuncture, ICBC care, and recovery support — ${clinic.name} helps you find the right treatment path without bouncing between clinics.`}
         crumbs={crumbs}
         actions={
           <>

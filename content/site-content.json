@@ -1,7 +1,7 @@
 {
   "contentUpdated": "2026-08-07",
   "clinic": {
-    "name": "Kinetic Therapy Clinic",
+    "name": "Kinetic Physiotherapy",
     "positioning": "Modern multidisciplinary care for pain, recovery, movement, and long-term health.",
     "city": "Maple Ridge",
     "province": "BC",
@@ -80,7 +80,7 @@
   ],
   "homepage": {
     "hero": {
-      "eyebrow": "Kinetic Therapy Clinic Maple Ridge",
+      "eyebrow": "{brand} Maple Ridge",
       "titleLines": [
         "Move better.",
         "Recover stronger.",
@@ -672,14 +672,14 @@
       "name": "Dilpreet Sandhu",
       "title": "Registered Massage Therapist",
       "category": "Massage Therapy",
-      "bio": "Dilpreet is a Registered Massage Therapist at Kinetic Therapy, providing therapeutic massage to help ease muscle tension, support recovery, and improve how you move and feel.",
+      "bio": "Dilpreet is a Registered Massage Therapist at Kinetic Physiotherapy, providing therapeutic massage to help ease muscle tension, support recovery, and improve how you move and feel.",
       "icbcAccepted": true
     },
     {
       "name": "Jason Shi",
       "title": "Registered Massage Therapist",
       "category": "Massage Therapy",
-      "bio": "Jason is a Registered Massage Therapist at Kinetic Therapy, offering hands-on massage care for muscle tension, soreness, stress, and injury recovery.",
+      "bio": "Jason is a Registered Massage Therapist at Kinetic Physiotherapy, offering hands-on massage care for muscle tension, soreness, stress, and injury recovery.",
       "icbcAccepted": true
     },
     {
@@ -708,14 +708,14 @@
       "name": "Ziming Zhao",
       "title": "Acupuncturist",
       "category": "Acupuncture & TCM",
-      "bio": "Ziming is an acupuncturist at Kinetic Therapy, providing acupuncture and traditional Chinese medicine to support pain relief, tension, stress, and whole-body wellness.",
+      "bio": "Ziming is an acupuncturist at Kinetic Physiotherapy, providing acupuncture and traditional Chinese medicine to support pain relief, tension, stress, and whole-body wellness.",
       "icbcAccepted": true
     },
     {
       "name": "Stefanie Henderlin",
       "title": "Registered Naturotherapy Practitioner / Certified Breastfeeding Specialist",
       "category": "Naturotherapy and Lactation",
-      "bio": "Stefanie is a registered naturotherapy practitioner and certified breastfeeding specialist at Kinetic Therapy, offering natural wellness support and lactation care."
+      "bio": "Stefanie is a registered naturotherapy practitioner and certified breastfeeding specialist at Kinetic Physiotherapy, offering natural wellness support and lactation care."
     }
   ],
   "testimonials": [
